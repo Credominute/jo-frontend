@@ -1,0 +1,220 @@
+@use "../mixins";
+@use "../variables" as v;
+@use "./link_button" with(
+    $button-font-color: v.$header-menu-color,
+    $button-font-color-hover: v.$header-menu-color-hover,
+    $button-border-color: v.$header-menu-color,
+    $button-border-color-hover: v.$header-menu-color-hover,
+    $button-background-color: v.$header-menu-background-color,
+    $button-background-color-hover: v.$header-menu-background-color-hover,
+    $button-fontsize: 1.1rem,
+    $button-padding: 1.15rem 1rem,
+    $button-fontweight: 700,
+    $button-border-radius: 2rem
+);
+
+header {
+    width: 100%;
+    z-index: 998;
+    vertical-align: middle;
+    height: 7rem;
+    margin: 0;
+    font-family: Paris2024, sans-serif;
+    background-color: v.$header-background-color;
+    color: v.$header-color;
+
+    @include mixins.media-max("phone-down") {
+        height: 5rem;
+    }
+
+    .flex-header {
+        /*conteneur flex*/
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        height: 100%;
+
+        // Left part : title
+        .title {
+            padding: 0 1rem;
+            height: 4rem;
+            width: 45%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            h1 {
+                text-align: center;
+                margin: 0;
+                padding: 0;
+                font-size: 3rem;
+            }
+
+            @include mixins.media-max("desktop-down") {
+                width: 40%;
+
+                h1 {
+                    font-size: 2.5rem;
+                }
+            }
+
+            // The menu burger ies displayed so there is more place for the title
+            @include mixins.media-max("desktop-up") {
+                width: 50%;
+
+                h1 {
+                    font-size: 2rem;
+                }
+            }
+
+            @include mixins.media-max("tablet-up") {
+                width: 45%;
+
+                h1 {
+                    font-size: 1.6rem;
+                }
+            }
+
+            @include mixins.media-max("phone-down") {
+                h1 {
+                    font-size: 1.2rem;
+                }
+            }
+
+            @include mixins.media-max("phone-between") {
+                width: 40%;
+                h1 {
+                    font-size: 1rem;
+                }
+            }
+
+            @include mixins.media-max("phone-up") {
+                display: none;
+            }
+        }
+
+        // Middle part : logo
+        .logo {
+            height: 85%;
+
+            img {
+                height: 100%;
+            }   
+
+            @include mixins.media-max("phone-up") {
+                margin-left: 1rem;
+            }
+        }
+
+        // Right part : navigation
+        nav {
+            margin: auto 1rem;
+            height: 4rem;
+            width: 45%;
+
+            @include mixins.media-max("desktop-up") {
+                display: flex;
+                flex-direction: column;
+                align-items: flex-end;
+                margin:0;
+            }
+
+            @include mixins.media-max("phone-up") {
+                width: 75%;
+            }
+        
+            // Display links horizontally
+            .main_pages {
+                display: flex;
+                justify-content: flex-end;
+                align-items: center;
+                height: 100%;
+
+                @include mixins.media-max("desktop-up") {
+                    display: none;
+                    flex-direction: column;
+                    background: v.$header-background-color;
+                    width:auto;
+                    height: auto;
+                    padding: 1rem 0 0 0;
+                    z-index: 999;
+                }
+        
+                // display the links as a button
+                a, div button {
+                    height: 50%;
+                    width: auto;
+                    margin: 0 0.15rem;
+                    flex-shrink: 0;
+
+                    @include mixins.media-max("desktop-down") {
+                        font-size: 1rem;
+                        padding: 1.15rem 0.75rem;
+                    }
+
+                    @include mixins.media-max("desktop-up") {
+                        font-size: 1.1rem;
+                        padding: 1.25rem 1rem;
+                        border-right: v.$header-menu-background-color 0.5rem solid;
+                        border-left: v.$header-menu-background-color 0.5rem solid;
+                        border-bottom: none;
+                        border-top: none;
+                        border-radius: 0;
+                        height: 2rem;
+                        margin: 0;
+                        width: 100%;
+
+                        &:hover, &:active {
+                            border: none;
+                            background-color: v.$header-menu-background-color;
+                            color: v.$header-menu-color;
+                            border-right: v.$header-menu-color 0.5rem solid;
+                            border-left: v.$header-menu-color 0.5rem solid;
+                        }
+                    }
+
+                    @include mixins.media-max("phone-down") {
+                        font-size: 0.95rem;
+                        padding: 1.15rem 0.9rem;
+                    }
+
+                    @include mixins.media-max("phone-between") {
+                        font-size: 0.8rem;
+                        padding: 1.1rem 0.65rem;
+                    }
+
+                    @include mixins.media-max("phone-up") {
+                        font-size: 0.9rem;
+                        padding: 1.15rem 0.75rem;
+                    }
+                }
+            }
+        
+            .burger {
+                display: none;
+
+                // Displays the menu burger
+                @include mixins.media-max("desktop-up") {
+                    display: flex;
+                    font-size: 2.75rem;
+                    font-weight: 800;
+                    padding-left: 0.5rem;
+                    color: v.$header-menu-color;
+                    cursor: pointer;
+                    margin-right: 1rem;
+
+                    p {
+                        margin: 0;
+                    }
+                }
+            }
+
+            // when the menu burger is clicked, the links are displayed
+            @include mixins.media-max("desktop-up") {      
+                .is-open {
+                    display: flex;
+                }
+            }
+        }
+    }
+}

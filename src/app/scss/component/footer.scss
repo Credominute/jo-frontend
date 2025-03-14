@@ -1,0 +1,275 @@
+@use '../global.scss';
+@use '../mixins.scss';
+@use '../variables.scss' as v;
+
+footer {
+    width: 100%;
+    height: 15rem;
+    background-color: v.$footer-background-color;
+    box-shadow: 1px 1px 2px v.$footer-background-color;
+    color: v.$footer-color;
+    font-family: Paris2024, sans-serif;
+    z-index: 999;
+    margin: 0.5rem 0 0 0;
+
+    @include mixins.media-max("desktop-down") {
+        height: 23rem;
+    }
+
+    @include mixins.media-max("between-phone-tablet") {
+        border-radius: 2rem;
+    }
+
+    .flex-footer {
+        /*conteneur flex*/
+        display: flex;
+        justify-content: space-between;
+        height: 100%;
+
+        @include mixins.media-max("desktop-down") {
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .footer-left {
+            display: flex;
+            justify-content: space-evenly;
+            align-items: center;
+            width: 60%;
+            height: 100%;
+            gap: 0 1rem;
+
+            @include mixins.media-max("desktop-down") {
+                width: 95%;
+                height: 50%;
+                border-bottom: v.$footer-color 0.1rem solid;
+                border-radius: 1.5rem;
+
+            }
+
+            @include mixins.media-max("between-phone-tablet") {
+                width: 100%;
+            }
+
+            @include mixins.media-max("phone-between") {
+                height: 35%;
+            }
+
+            @include mixins.media-max("phone-up") {
+                height: 25%;
+            }
+
+            .footer-logo {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                height: 100%;
+
+                img {
+                    height: 80%;
+                    width: auto;
+                }
+
+                @include mixins.media-max("between-phone-tablet") {
+                    display: none;
+                }
+            }
+
+            .content-info {
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                gap: 1.5rem;
+                align-items: center;
+                height: 95%;
+
+                @include mixins.media-max("desktop-down") {
+                    gap: 0.8rem;
+                }
+
+                @include mixins.media-max("tablet-down") {
+                    gap: 1rem;
+                }
+
+                @include mixins.media-max("phone-between") {
+                    gap: 0.5rem;
+                }
+
+                @include mixins.media-max("phone-up") {
+                    gap: 0.25rem;
+                }
+
+                .content-info-socials {
+                    display: flex;
+                    flex-direction: row;
+                    justify-content: center;
+                    align-items: center;
+                    gap: 1.5rem;
+                    width: 100%;
+                    height: 3rem;
+                    text-align: center;
+
+                    @include mixins.media-max("tablet-down") {
+                        height: 2.5rem;
+                    }
+
+                    @include mixins.media-max("between-phone-tablet") {
+                        height: 2rem;
+                    }
+
+                    .content-info-socials-item {
+
+                        height: 100%;
+
+                        img {
+                            height: 100%;
+                            width: auto;
+                            align-items: center;
+                            border-radius: 50%;
+                        }
+                    }
+                }
+
+                .footer-nav {
+                    list-style: none;
+                    display: flex;
+                    justify-content: center;
+                    gap: 0 1.5rem;
+
+                    @include mixins.media-max("tablet-down") {
+                        gap: 0 0.9rem;
+                    }
+
+                    @include mixins.media-max("phone-between") {
+                        gap: 0 0.75rem;
+                    }
+
+                    @include mixins.media-max("phone-up") {
+                        display: none;
+                    }
+
+                    a {
+                        color: v.$footer-color;
+                        font-size: 1.2rem;
+                        text-decoration: none;
+                        transition: color 0.3s;
+                        padding-bottom: 0.2rem;
+
+                        @include mixins.media-max("tablet-down") {
+                            font-size: 1rem;
+                        }
+
+                        @include mixins.media-max("phone-between") {
+                            font-size: 0.8rem;
+                        }
+
+                        &:hover {
+                            border-bottom: solid 0.15rem v.$footer-color;
+
+                            @include mixins.media-max("tablet-down") {
+                                border-bottom-width: 0.1rem;
+                            }
+                        }
+                    }
+                }
+
+                .content-info-copyright {
+                    font-size: 1.2rem;
+                    font-weight: bold;
+                    padding: 0.5rem 0;
+                    text-align: center;
+
+                    @include mixins.media-max("tablet-down") {
+                        font-size: 1rem;
+                    }
+
+                    @include mixins.media-max("phone-between") {
+                        font-size: 0.8rem;
+                    }
+
+                    @include mixins.media-max("phone-up") {
+                        padding: 0.5rem 0.5rem;
+                    }
+                }
+            }
+        }
+
+        .partners {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            align-content: center;
+            width: 40%;
+            height: 90%;
+            margin: auto;
+
+            @include mixins.media-max("desktop-down") {
+                width: 95%;
+                border-top: v.$footer-color 0.1rem solid;
+                border-radius: 1.5rem;
+                height: 50%;
+            }
+
+            @include mixins.media-max("between-phone-tablet") {
+                width: 100%;
+            }
+
+            @include mixins.media-max("phone-between") {
+                height: 65%;
+            }
+
+            @include mixins.media-max("phone-up") {
+                height: 75%;
+            }
+
+            .partners-title {
+                font-size: 1.5rem;
+                font-weight: bold;
+                padding: 1rem 0.5rem;
+
+                @include mixins.media-max("tablet-down") {
+                    font-size: 1rem;
+                }
+
+                @include mixins.media-max("phone-up") {
+                    font-size: 0.8rem;
+                }
+            }
+
+            .partner-content {
+                display: flex;
+                justify-content: center;
+                align-content: center;
+                gap: 0.75rem 1rem;
+                flex-wrap: wrap;
+                padding: 0 2rem;
+
+                @include mixins.media-max("tablet-down") {
+                    gap: 0.5rem 0.75rem;
+                    font-size: 0.8rem;
+                }
+
+                @include mixins.media-max("phone-down") {
+                    gap: 0.3rem 0.6rem;
+                }
+
+                @include mixins.media-max("phone-up") {
+                    gap: 0.25rem 0.5rem;
+                    padding: 0 1rem;
+                }
+            }
+
+            .partners-etc {
+                font-size: 1.2rem;
+                font-weight: bold;
+                padding: 1rem 0.5rem;
+
+                @include mixins.media-max("tablet-down") {
+                    font-size: 0.8rem;
+                }
+            }
+        }
+    }
+}
