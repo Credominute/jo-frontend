@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 
-import { CommandService } from '../command.service';
+import { CommandService } from './command.service';
 
 describe('CommandService', () => {
   let service: CommandService;

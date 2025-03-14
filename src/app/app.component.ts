@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
-import { HeaderComponent } from './layout/header/header.component';
-import { FooterComponent } from './layout/footer/footer.component';
+import { HeaderComponent } from './component/header/header.component';
+import { FooterComponent } from './component/footer/footer.component';
 import { RouterOutlet } from '@angular/router';
 
 
@@ -12,4 +12,5 @@ import { RouterOutlet } from '@angular/router';
 })
 export class AppComponent {
   title = 'JO-FrontEnd';
+
 }

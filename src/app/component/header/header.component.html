@@ -1,0 +1,19 @@
+<header>
+    <div class="flex-header">
+        <div class="title">
+            <h1>Jeux Olympiques 2024</h1>
+        </div>
+        <div class="logo"><img src="assets/images/logo/logo_jo_2024.svg" alt="logo"></div>
+
+        <nav role="navigation" aria-label="Navigation principale">
+            <div class="burger" (click)="toggleMenu()" (keypress)="toggleMenu()">
+                <p>☰</p>
+            </div>
+            <div class="main_pages" [class.is-open]="isMenuOpen">
+                <a routerLink="/" routerLinkActive="selected" aria-label="Accueil" (click)="toggleMenu()">Accueil</a>
+                <a routerLink="/offers" routerLinkActive="selected" aria-label="Offres" (click)="toggleMenu()">Offres de billets</a>
+                <a routerLink="/login" (click)="toggleMenu()">Connexion ou inscription</a>
+            </div>
+        </nav>
+    </div>
+</header>
