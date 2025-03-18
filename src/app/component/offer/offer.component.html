@@ -1,0 +1,39 @@
+<article class="offer card" [ngClass]="{'edit': mode=='edit', 'hide': !offer.visible}">
+    <header [ngClass]="{'hide': !offer.visible}">
+        <h4>{{offer.title}}</h4>
+    </header>
+    <img src="{{offer.image_url}}" alt="{{offer.nb_people}} stickman pour l'offre {{offer.title}}">
+    <div class="content">
+        <p>{{offer.description}}</p>
+    </div>
+    <div class="infos" [ngClass]="{'hide': !offer.visible}">
+        <p>{{offer.nb_people}} personne(s)</p>
+        <p>Prix : {{offer.price}} €</p>
+    </div>
+    <footer *ngIf="!isAdmin">
+        <div class="offer-quantity">
+            <button (click)="downOffer()" class="btn-down">-</button>
+            <div class="quantity">
+                <label for="quantityInput">Quantité d'offres</label>
+                <input #quantityInput type="text" value="{{quantity}}" (change)="changeOffer(quantityInput.value)" />
+            </div>
+            <button (click)="upOffer()" class="btn-up">+</button>
+        </div>
+        <div class="offer-actions">
+            <button id="choice_offer{{offer.offer_id}}" (click)="choiceOffer()" class="btn-choice">Choisir</button>
+            <button class="btn-shoppingcart" (click)="scroll()">Voir mon panier</button>
+        </div>
+    </footer>
+    <footer *ngIf="isAdmin" [ngClass]="{'hide': !offer.visible}">
+        <div class="offer-actions" [ngClass]="{'admin': isAdmin}">
+            <div class="offer-actions-edit">
+                <button (click)="editOffer()" class="btn-edit" *ngIf="mode==='view'" [ngClass]="{'hide': !offer.visible}">Modifier</button>
+                <button (click)="saveOffer()" class="btn-update" *ngIf="mode==='edit'" [ngClass]="{'hide': !offer.visible}">Enregistrer</button>
+            </div>
+            <div class="offer-actions-visibility">
+                <button (click)="hideOffer()" class="btn-hide" *ngIf="offer.visible">Cacher</button>
+                <button (click)="visibleOffer()" class="btn-visible" *ngIf="!offer.visible" [ngClass]="{'hide': !offer.visible}">Voir</button>
+            </div>
+        </div>
+    </footer>
+</article>

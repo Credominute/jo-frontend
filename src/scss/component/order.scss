@@ -1,0 +1,94 @@
+@use "../mixins";
+@use "../variables" as v;
+
+.order {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    padding: 1rem;
+    border: 0.2rem solid v.$primary-color;
+    border-radius: 0.5rem;
+    box-shadow: 0 0 0.75rem rgba(0, 0, 0, 0.5);
+    box-sizing: border-box;
+
+    .order-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 2rem;
+
+        @include mixins.media-max("phone-between") {
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .order-presentation {
+            display: flex;
+            gap: 2rem;
+
+            @include mixins.media-max("tablet-up") {
+                flex-direction: column;
+                align-items: center;
+                gap: 0.5rem;
+            }
+
+            h3,
+            p {
+                margin: 0;
+            }
+        }
+
+        .order-actions {
+            display: flex;
+            gap: 2rem;
+
+            @include mixins.media-max("between-phone-tablet") {
+                gap: 1rem;
+            }
+
+            @include mixins.media-max("phone-down") {
+                flex-direction: column;
+                align-items: center;
+                gap: 0.5rem;
+            }
+
+            a {
+                all: unset;
+                color: v.$primary-color;
+                font-size: 1rem;
+                font-weight: 600;
+                text-decoration: underline;
+
+                @include mixins.media-max("between-phone-tablet") {
+                    font-size: 0.9rem;
+                }
+
+                @include mixins.media-max("phone-down") {
+                    font-size: 1rem;
+                }
+
+                &:hover {
+                    cursor: pointer;
+                }
+            }
+        }
+    }
+
+    .order-content {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+
+        .order-details {
+            display: flex;
+            justify-content: center;
+        }
+
+        .order-ticket {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+    }
+}

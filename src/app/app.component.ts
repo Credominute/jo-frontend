@@ -1,16 +1,18 @@
 import { Component } from '@angular/core';
-import { HeaderComponent } from './component/header/header.component';
-import { FooterComponent } from './component/footer/footer.component';
-import { RouterOutlet } from '@angular/router';
-
+import { RouterOutlet } from '@angular/router'; 
+import { HeaderComponent } from './component/header/header.component'; 
+import { FooterComponent } from './component/footer/footer.component'; 
+import { ModalService } from './services/modal/modal.service';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, HeaderComponent, FooterComponent],
+  standalone: true,
+  imports: [RouterOutlet, HeaderComponent, FooterComponent], 
   templateUrl: './app.component.html',
-  styleUrl: './app.component.css'
+  styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
-  title = 'JO-FrontEnd';
+  title = 'jo-frontend';
 
+  constructor(protected modalService: ModalService) {}
 }
