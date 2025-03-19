@@ -1,10 +1,12 @@
 import { Component, ViewEncapsulation, ElementRef, Input, OnInit, OnDestroy } from '@angular/core';
-
+import { CommonModule } from '@angular/common';
 import { ModalService } from '../../services/modal/modal.service';
 
 @Component({
     selector: 'jw-modal',
     templateUrl: 'modal.component.html',
+    standalone: true,
+    imports: [CommonModule],
     styleUrls: ['/src/scss/component/modal.scss'],
     encapsulation: ViewEncapsulation.None
 })

@@ -1,1 +1,54 @@
-<p>payment works!</p>
+<section class="section">
+    <div class="shopping-cart">
+        <h2>Récapitulatif de la commande</h2>
+        <app-shopping-cart [itemsArray]="itemsArray" mode="read" />
+    </div>
+    <div class="payment-container">
+        <h2>Paiement</h2>
+        <form [formGroup]="paymentForm" class="container">
+            <div class="cardNumber-container">
+                <label for="cardNumber">Numéro de carte</label>
+                <input type="text" class="form-control" id="cardNumber" formControlName="cardNumber"
+                    placeholder="Entrer votre numéro de carte" required>
+                <div *ngIf="cardNumberFC.touched && cardNumberFC.invalid" class="error">
+                    <div *ngIf="cardNumberFC.errors?.['required']">Le numéro de carte bleue est requis.</div>
+                    <div *ngIf="cardNumberFC.errors?.['pattern']">Le numéros de carte bleue doit être une numéro à 16 chiffres</div>
+                </div>
+            </div>
+            <div class="expiryCvv-container">
+                <div class="expiryDate-container">
+                    <label for="expiryDate">Date d'expiration</label>
+                    <input type="text" class="form-control" id="expiryDate" formControlName="expiryDate"
+                        placeholder="09/25" required>
+                    <div *ngIf="expiryDateFC.touched && expiryDateFC.invalid" class="error">
+                        <div *ngIf="expiryDateFC.errors?.['required']">La date d'expiration est requise</div>
+                        <div *ngIf="expiryDateFC.errors?.['pattern']">La date doit être au format MM/YY</div>
+                        <div *ngIf="expiryDateFC.errors?.['expiryDate']">La date doit être supérieure à la date actuelle</div>
+                    </div>
+                </div>
+                <div class="cvv-container">
+                    <label for="cvv">CVC</label>
+                    <input type="text" class="form-control" id="cvv" formControlName="cvv" placeholder="555" required>
+                    <div *ngIf="cvvFC.touched && cvvFC.invalid" class="error">
+                        <div *ngIf="cvvFC.errors?.['required']">Le CVC est requis</div>
+                        <div *ngIf="cvvFC.errors?.['pattern']">Le CVC doit être valide</div>
+                    </div>
+                </div>
+            </div>
+            <div class="name-container">
+                <label for="name">Nom</label>
+                <input type="text" class="form-control" id="name" formControlName="name"
+                    placeholder="Entrer le nom sur la carte" required>
+                <div *ngIf="nameFC.touched && nameFC.invalid" class="error">
+                    <div *ngIf="nameFC.errors?.['required']">Le nom est requis.</div>
+                    <div *ngIf="nameFC.errors?.['pattern']">Le nom comporte que des lettres.</div>
+                </div>
+            </div>
+            <div class="actions-container">
+                <button type="button" id="payBtn" (click)="pay()" [disabled]="paymentForm.invalid">Payer</button>
+            </div>
+            <div id="test">
+            </div>
+        </form>
+    </div>
+</section>

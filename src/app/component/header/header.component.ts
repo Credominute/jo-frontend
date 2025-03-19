@@ -1,11 +1,13 @@
 import { Component, inject } from '@angular/core';
 import { ModalService } from '../../services/modal/modal.service';
 import { AuthService } from '../../services/authenticate/auth.service';
+import { CommonModule } from '@angular/common';
+
 
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [],
+  imports: [CommonModule],
   templateUrl: './header.component.html',
   styleUrls: ['/src/scss/component/header.scss'],
 })

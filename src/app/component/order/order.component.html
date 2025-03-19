@@ -1,0 +1,26 @@
+<div class="order">
+    <div class="order-header">
+        <div class="order-presentation">
+            <h3>{{order.name}}</h3>
+            <p>passée le {{order.date_time.split("T")[0]}}</p>
+        </div>
+        <div class="order-actions">
+            <a (click)="showDetails()" *ngIf="!showDetailsOrder">Voir les détails</a>
+            <a (click)="showDetails()" *ngIf="showDetailsOrder">Masquer les détails</a>
+            <a (click)="showTicket()" *ngIf="!showTicketOrder">Voir le billet</a>
+            <a (click)="showTicket()" *ngIf="showTicketOrder">Masquer le billet</a>
+        </div>
+    </div>
+    <div class="order-content">
+        @if(showDetailsOrder) {
+            <div class="order-details">
+                <app-shopping-cart [itemsArray]="order.details" mode="read" />
+            </div>
+        }
+        @if(showTicketOrder) {
+            <div class="order-ticket">
+                <app-ticket [ticket]="order.ticket" [orderName]="order.name"/>
+            </div>
+        }
+    </div>
+</div>

@@ -6,7 +6,7 @@ import { CommonModule } from '@angular/common';
   selector: 'app-footer',
   standalone: true,
   templateUrl: './footer.component.html',
-  styleUrl: '/src/scss/component/footer.scss',
+  styleUrls: ['/src/scss/component/footer.scss'],
   imports: [CommonModule]
 })
 export class FooterComponent implements OnInit {
@@ -26,11 +26,11 @@ export class FooterComponent implements OnInit {
   }
 
   fctMouseOver(event: any, name:string) : void {
-    event.srcElement.src = event.srcElement.src.replace(name, name + "-gold");
+    event.target.src = event.target.src.replace(name, name + "-gold");
   }
  
   fctMouseOut(event: any, name:string) : void {
-    event.srcElement.src = event.srcElement.src.replace(name, "");
+    event.target.src = event.target.src.replace(name, "");
   }
 
 }
