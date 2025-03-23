@@ -7,7 +7,7 @@ import { ShoppingCartItem } from '../../models/shoppingCartItem.model';
     selector: 'app-shopping-cart',
     standalone: true,
     templateUrl: './shopping-cart.component.html',
-    styleUrl: '/src/scss/component/shopping-cart.scss',
+    styleUrl: '/src/scss/components/shopping-cart.scss',
     imports: [ShoppingCartItemComponent, CurrencyPipe, CommonModule]
 })
 export class ShoppingCartComponent {

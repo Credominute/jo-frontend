@@ -1,0 +1,102 @@
+@use "../variables" as v;
+@use "../mixins";
+
+header {
+    height: 3rem;
+    width: 100%;
+    z-index: 998;
+    vertical-align: middle;
+    margin: 0;
+    font-family: Paris2024, sans-serif;
+    background-color: v.$header-background-color;
+    color: v.$header-color;
+    border-top: 0.2rem solid v.$header-menu-color;
+
+    @include mixins.media-max("phone-between") {
+        height: 5rem;
+    }
+
+    .flex-header {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100%;
+
+        @include mixins.media-max("phone-down") {
+            justify-content: space-between;
+        }
+
+        @include mixins.media-max("phone-between") {
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+
+
+        .title {
+            padding: 0 2rem;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            @include mixins.media-max("phone-down") {
+                padding: 0 1rem;
+            }
+
+            h2 {
+                text-align: center;
+                margin: 0;
+                padding-bottom: 0.25rem;
+                font-size: 2rem;
+
+                @include mixins.media-max("between-phone-tablet") {
+                    font-size: 1.5rem;
+                }
+
+                @include mixins.media-max("phone-down") {
+                    font-size: 1.2rem;
+                }
+            }
+        }
+
+        .my-space {
+            padding: 0 1rem;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 0 2rem;
+
+            @include mixins.media-max("phone-between") {
+                width: 100%;
+            }
+
+            .secondary-pages {
+
+                @include mixins.media-max("phone-between") {
+                    width: 100%;
+                    display: flex;
+                    justify-content: space-evenly;
+                }
+
+                a {
+                    color: v.$header-menu-color;
+                    text-decoration: none;
+                    font-size: 1.2rem;
+                    margin-right: 1rem;
+                    cursor: pointer;
+                    padding-bottom: 0.3rem;
+
+                    @include mixins.media-max("between-phone-tablet") {
+                        font-size: 1rem;
+                    }
+
+                    &:hover,
+                    &:active {
+                        border-bottom: 0.1rem solid v.$header-menu-color;
+                    }
+                }
+            }
+        }
+    }
+}

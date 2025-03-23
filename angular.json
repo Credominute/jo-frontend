@@ -30,6 +30,7 @@
               "src/assets"
             ],
             "styles": [
+              "src/scss/global.scss",
               "src/styles.scss"
             ],
             "scripts": []
@@ -84,6 +85,7 @@
               "zone.js/testing"
             ],
             "tsConfig": "tsconfig.spec.json",
+            "inlineStyleLanguage": "scss",
             "assets": [
               "src/favicon.ico",
               "src/assets"

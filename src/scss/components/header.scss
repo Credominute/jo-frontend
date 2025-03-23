@@ -58,7 +58,7 @@ header {
                 }
             }
 
-            // The menu burger ies displayed so there is more place for the title
+            // The menu burger is displayed so there is more place for the title
             @include mixins.media-max("desktop-up") {
                 width: 50%;
 

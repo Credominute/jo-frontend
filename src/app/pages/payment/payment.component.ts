@@ -12,7 +12,7 @@ import { ModalService } from '../../services/modal/modal.service';
   selector: 'app-payment',
   standalone: true,
   templateUrl: './payment.component.html',
-  styleUrl: '/src/scss/pages/payment.scss',
+  styleUrls: ['/src/scss/pages/payment.scss'],
   imports: [ReactiveFormsModule, CommonModule, ShoppingCartComponent]
 })
 export class PaymentComponent {

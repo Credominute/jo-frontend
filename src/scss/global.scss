@@ -1,21 +1,10 @@
-p {
-    margin: 0;
-}
+// Global
+@forward "./variables";
+@forward "./mixins";
 
-footer .footer-logo img,
-footer .content-info-socials img {
-  max-width: 100px;  /* Limite la largeur de l'image */
-  max-height: 100px; /* Limite la hauteur de l'image */
-  width: auto;       /* Maintient les proportions */
-  height: auto;      /* Maintient les proportions */
-  object-fit: contain; /* Garde les proportions sans les déformer */
-}
+// Component
+@forward "./components/header";
 
-footer .footer-logo svg,
-footer .content-info-socials svg {
-  max-width: 100px;  /* Limite la largeur */
-  max-height: 100px; /* Limite la hauteur */
-  width: auto;
-  height: auto;
-  object-fit: contain; /* Garde les proportions */
-}
+// Index
+@forward "./components/index";
+@forward "./pages/index";

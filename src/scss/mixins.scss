@@ -1,3 +1,5 @@
+@use "sass:map";
+
 $breakpoints: (
     "phone-up": 320px,
     "phone-between": 400px,
@@ -11,7 +13,7 @@ $breakpoints: (
 );
 
 @mixin media-max($_key) {
-    @media screen and (max-width: map-get($breakpoints, $_key)) {
+    @media screen and (max-width: map.get($breakpoints, $_key)) {
         &{ @content; }
     }
 }

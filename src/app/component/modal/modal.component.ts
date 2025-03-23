@@ -7,7 +7,7 @@ import { ModalService } from '../../services/modal/modal.service';
     templateUrl: 'modal.component.html',
     standalone: true,
     imports: [CommonModule],
-    styleUrls: ['/src/scss/component/modal.scss'],
+    styleUrls: ['/src/scss/components/modal.scss'],
     encapsulation: ViewEncapsulation.None
 })
 export class ModalComponent implements OnInit, OnDestroy {

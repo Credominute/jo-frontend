@@ -1,0 +1,64 @@
+$button-font-color: #fff !default;
+$button-font-color-hover: #000 !default;
+$button-border-color: #fff !default;
+$button-border-color-hover: #000 !default;
+$button-background-color: #000 !default;
+$button-background-color-hover: #fff !default;
+$button-fontsize: 1.1rem !default;
+$button-padding: 0.15rem 1rem !default;
+$button-fontweight: 700 !default;
+$button-border-radius: 2rem !default;
+
+a {
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    text-transform: uppercase;
+    color: $button-font-color;
+    background-color: $button-background-color;
+    font-size: 1.1rem;
+    padding: $button-padding;
+    font-weight: $button-fontweight;
+    border: $button-border-color 0.1rem solid;
+    border-radius: $button-border-radius;
+
+    &:hover {
+        transition: 0.5s;
+        background-color: $button-background-color-hover;
+        color: $button-font-color-hover;
+        border: $button-border-color-hover 0.1rem solid;
+        cursor: pointer;
+    }
+}
+
+a.selected {
+    background-color: $button-background-color-hover;
+    color: $button-font-color-hover;
+    border: $button-border-color-hover 0.1rem solid;
+}
+
+button {
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-transform: uppercase;
+    color: $button-font-color;
+    font-family: Paris2024, sans-serif;
+    background-color: $button-background-color;
+    font-size: 1.1rem;
+    padding: $button-padding;
+    font-weight: $button-fontweight;
+    border: $button-border-color 0.1rem solid;
+    border-radius: $button-border-radius;
+
+    &:hover {
+        transition: 0.5s;
+        cursor: pointer;
+        background-color: $button-background-color-hover;
+        color: $button-font-color-hover;
+        border: $button-border-color-hover 0.1rem solid;
+    }
+}

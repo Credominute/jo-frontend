@@ -6,7 +6,7 @@ import { CommonModule } from '@angular/common';
   selector: 'app-footer',
   standalone: true,
   templateUrl: './footer.component.html',
-  styleUrls: ['/src/scss/component/footer.scss'],
+  styleUrls: ['/src/scss/components/footer.scss'],
   imports: [CommonModule]
 })
 export class FooterComponent implements OnInit {
