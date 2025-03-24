@@ -13,11 +13,20 @@
     $button-border-radius: 2rem
 );
 
+main {
+    margin-top: 11rem; // Décalage de la hauteur du header
+}
+
 header {
+    position: fixed;  // ou "sticky" si l'on veut qu'il défile avec la page
+    top: 0;
+    left: 0;
     width: 100%;
     z-index: 998;
     vertical-align: middle;
-    height: 7rem;
+    min-height: 9rem;  // Ajuster cette valeur si besoin
+    padding-bottom: 2rem;  // Permettre au fond noir de descendre sous les boutons
+    //height: 7rem;
     margin: 0;
     font-family: Paris2024, sans-serif;
     background-color: v.$header-background-color;
@@ -125,6 +134,9 @@ header {
         
             // Display links horizontally
             .main_pages {
+                position: relative;
+                top: 2rem; // Ajuster cette valeur si besoin
+                margin-top: 2.7rem; // Ajuste la distance entre le titre et les boutons
                 display: flex;
                 justify-content: flex-end;
                 align-items: center;

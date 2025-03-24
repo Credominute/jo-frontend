@@ -1,10 +1,16 @@
-// Global
-@forward "./variables";
-@forward "./mixins";
+p {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
 
-// Component
-@forward "./components/header";
+.content-info-socials img {
+    width: 30px !important;
+    height: auto !important;
+    display: block;
+}
 
-// Index
-@forward "./components/index";
-@forward "./pages/index";
+
+.content-info-socials-item {
+    margin-bottom: 10px; /* Espacement horizontal entre les icônes */
+}
