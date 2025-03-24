@@ -1,0 +1,39 @@
+@use "../mixins";
+@use "../variables" as v;
+
+.offers-presentation {
+    width: 100%;
+    text-align: center;
+}
+
+.offers-content {
+    margin-top: 2rem;
+    display: grid;
+    grid-template-columns: [offers] auto;
+    gap: 5rem;
+    justify-items: center;
+
+    @include mixins.media-max("widescreen-up") {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 3rem;
+    }
+
+    .cards {
+        grid-column: offers;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1.25rem;
+        justify-content: center;
+
+        .card {
+            width: 18rem;
+
+            @include mixins.media-max("phone-up") {
+                max-width: 14rem;
+            }
+        }
+    }
+}

@@ -1,17 +1,19 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-footer',
+  standalone: true,
   templateUrl: './footer.component.html',
-  styleUrl: './footer.component.css'
+  styleUrls: ['/src/scss/components/footer.scss'],
+  imports: [CommonModule]
 })
 export class FooterComponent implements OnInit {
 
   rootImg: string = "assets/images/logo/";
   hoverImg: string = "-gold";
   extensionImg: string = ".svg";
-
   partnersData:any;
   url: string = "../../../assets/data/official-partners-list.json";
 
@@ -24,11 +26,11 @@ export class FooterComponent implements OnInit {
   }
 
   fctMouseOver(event: any, name:string) : void {
-    event.srcElement.src = event.srcElement.src.replace(name, name + "-gold");
+    event.target.src = event.target.src.replace(name, name + "-gold");
   }
  
   fctMouseOut(event: any, name:string) : void {
-    event.srcElement.src = event.srcElement.src.replace(name, "");
+    event.target.src = event.target.src.replace(name, "");
   }
 
 }

@@ -1,0 +1,25 @@
+<section class="offers-presentation">
+    <h2>Bienvenue sur la page des offres</h2>
+    <p>Vous pouvez sélectionner autant d'offres que vous voulez!</p>
+    <p>Le nombre de participant sera affiché sur un billet unique à la fin de votre achat!</p>
+</section>
+
+<section class="offers-content">
+    <div class="cards">
+        <app-offer *ngFor="let offerItem of offersArray" [offer]="offerItem"
+            (choiceEvent)="addChoice($event)" class="card"></app-offer>
+    </div>
+    <div id="shoppingcart" class="shoppingcart">
+        <h3>Mon panier</h3>
+        @if (itemsArray.length > 0) {
+        <app-shopping-cart [itemsArray]="itemsArray" (removeItemEvent)="removeItem($event)" />
+        <div class="cart-actions">
+            <button (click)="emptyCart()">Vider</button>
+            <button (click)="checkout()">Commander</button>
+        </div>
+        }
+        @else {
+        <p>Votre panier est vide</p>
+        }
+    </div>
+</section>

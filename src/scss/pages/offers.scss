@@ -1,0 +1,86 @@
+@use "../mixins";
+@use "../variables" as v;
+
+.offers-presentation {
+    width: 100%;
+    text-align: center;
+}
+
+.offers-content {
+    margin-top: 2rem;
+    display: grid;
+    grid-template-columns: [offers] auto [basket] 27rem;
+    gap: 5rem;
+    justify-items: center;
+
+    @include mixins.media-max("widescreen-up") {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 3rem;
+    }
+
+    .cards {
+        grid-column: offers;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1.25rem;
+        justify-content: center;
+
+        .card {
+            width: 18rem;
+
+            @include mixins.media-max("phone-up") {
+                max-width: 14rem;
+            }
+        }
+    }
+
+    .shoppingcart {
+        grid-column: basket;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-items: center;
+        margin: 0 auto;
+
+        @include mixins.media-max("widescreen-up") {
+            min-height: 10rem;
+        }
+
+        h3 {
+            text-align: center;
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin: 0;
+            width: 100%;
+        }
+
+        p {
+            margin-top: 1rem;
+        }
+
+        .cart-actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+
+            button {
+                padding: 0.7rem 1.5rem;
+                font-family: Paris24, sans-serif;
+                font-weight: bold;
+                font-size: 0.9rem;
+                border-radius: 0.75rem;
+                color: v.$secondary-color;
+                background-color: v.$primary-color;
+                cursor: pointer;
+
+                &:hover {
+                    background-color: v.$secondary-color;
+                    color: v.$primary-color;
+                }
+            }
+        }
+    }
+}

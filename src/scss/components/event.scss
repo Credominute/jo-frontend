@@ -1,0 +1,30 @@
+@use '../mixins.scss';
+@use '../variables.scss' as v;
+
+.event {
+    display: flex;
+    flex-direction: column;
+    border: 0.2rem solid v.$primary-color;
+    padding: 0.5rem 1.5rem;
+    border-radius: 0.3rem;
+    background-color: v.$background-color;
+    box-shadow: 0 0 1rem rgba(0, 0, 0, 0.1);
+    margin-bottom: 0.5rem;
+
+    h4 {
+        font-size: 1.2rem;
+        margin: 0.5rem 0;
+    }
+
+    .event-content {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 1rem;
+
+        @include mixins.media-max("tablet-up") {
+            flex-wrap: wrap;
+            gap: 0.5rem 1rem;
+        }
+    }
+}
+

@@ -1,0 +1,37 @@
+@use "../mixins";
+@use "../variables" as v;
+
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    .itemCart {
+        padding: 2rem 0 1rem 0;
+        border-bottom: solid 0.2rem v.$primary-color;
+        width: 100%;
+        
+        &.read {
+            @include mixins.media-max("phone-between") {
+                display: flex;
+                justify-content: center;
+                padding: 1rem 0;
+            }
+        }
+    }
+
+    .basket-total {
+        padding: 0 1rem;
+        font-size: 1.1rem;
+        text-align: center;
+
+        span {
+            font-weight: bold;
+        }
+
+        @include mixins.media-max("phone-up") {
+            font-size: 1rem;
+        }
+    }
+}
