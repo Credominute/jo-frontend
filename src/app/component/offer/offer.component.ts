@@ -9,7 +9,7 @@ import { CommonModule } from '@angular/common';
   standalone: true,
   imports: [CommonModule],
   templateUrl: './offer.component.html',
-  styleUrls: ['/src/scss/components/offer.scss']
+  styleUrls: ['../../../scss/components/offer.scss']
 })
 
 export class OfferComponent {

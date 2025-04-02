@@ -14,3 +14,15 @@ p {
 .content-info-socials-item {
     margin-bottom: 10px; /* Espacement horizontal entre les icônes */
 }
+
+.sport-card {
+    width: 100%;             
+    height: auto;           
+    overflow: hidden;      
+}
+
+.sport-card img {
+    width: 100% !important;  
+    height: auto !important; 
+    object-fit: contain !important; 
+}

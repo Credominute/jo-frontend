@@ -12,7 +12,7 @@ export class OrderService {
 
   endpointURL = environment.api + 'orders';
 
-  constructor(private authService: AuthService, private httpClient: HttpClient) { }
+  constructor(private readonly authService: AuthService, private readonly httpClient: HttpClient) { }
 
   create(order: any) {
     // Create the order object to send to the server

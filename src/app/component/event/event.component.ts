@@ -6,7 +6,7 @@ import { CommonModule } from '@angular/common';
   standalone: true,
   imports: [CommonModule],
   templateUrl: './event.component.html',
-  styleUrls: ['/src/scss/components/event.scss']
+  styleUrls: ['../../../scss/components/event.scss']
 })
 export class EventComponent {
 

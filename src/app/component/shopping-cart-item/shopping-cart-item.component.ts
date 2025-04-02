@@ -8,7 +8,7 @@ import { CommonModule, CurrencyPipe } from '@angular/common';
   standalone: true,
   imports: [CurrencyPipe, FormsModule, CommonModule],
   templateUrl: './shopping-cart-item.component.html',
-  styleUrl: '/src/scss/components/shopping-cart-item.scss'
+  styleUrl: '../../../scss/components/shopping-cart-item.scss'
 })
 
 export class ShoppingCartItemComponent {

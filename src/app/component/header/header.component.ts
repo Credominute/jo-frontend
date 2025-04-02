@@ -9,7 +9,7 @@ import { CommonModule } from '@angular/common';
   standalone: true,
   imports: [CommonModule],
   templateUrl: './header.component.html',
-  styleUrls: ['/src/scss/components/header.scss'],
+  styleUrls: ['../../../scss/components/header.scss'],
 })
 export class HeaderComponent {
   isMenuOpen = false;
