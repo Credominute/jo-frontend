@@ -1,0 +1,7 @@
+<div [ngClass]="invert ? 'flex-row-reverse' : 'flex-row'" class="flex items-center p-4 border rounded-lg shadow-lg">
+  <img [src]="image" [alt]="name" class="sport-card-img">
+  <div class="p-4">
+    <h2 class="text-xl font-bold">{{ name }}</h2>
+    <p>{{ description }}</p>
+  </div>
+</div>

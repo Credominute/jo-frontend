@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
+import { provideHttpClient } from '@angular/common/http';
 import { SignLogInComponent } from './sign-log-in.component';
 
 describe('SignLogInComponent', () => {
@@ -8,7 +8,10 @@ describe('SignLogInComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [SignLogInComponent]
+      imports: [SignLogInComponent],
+      providers: [
+        provideHttpClient(), // Fournit HttpClient pour les tests
+      ],
     })
     .compileComponents();
 

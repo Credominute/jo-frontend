@@ -14,7 +14,7 @@ import { distinctUntilChanged } from 'rxjs/internal/operators/distinctUntilChang
   standalone: true,
   imports: [ReactiveFormsModule, CommonModule],
   templateUrl: './sign-log-in.component.html',
-  styleUrls: ['/src/scss/components/sign-log-in.scss']
+  styleUrls: ['../../../scss/components/sign-log-in.scss']
 })
 
 export class SignLogInComponent {

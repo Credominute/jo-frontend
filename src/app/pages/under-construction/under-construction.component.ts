@@ -6,7 +6,7 @@ import { CommonModule } from '@angular/common';
   standalone: true,
   imports: [CommonModule],
   templateUrl: './under-construction.component.html',
-  styleUrls: ['/src/scss/pages/under-construction.scss'],
+  styleUrls: ['../../../scss/pages/under-construction.scss'],
 })
 export class UnderConstructionComponent {
 

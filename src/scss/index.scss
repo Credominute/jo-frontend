@@ -1,10 +1,12 @@
 // Global
-@forward "./variables";
-@forward "./mixins";
+@use "./variables";
+@use "./mixins";
+@use "./global" as *;
 
 // Component
-@forward "./components/header";
+@use "./components/header";
+@use "./components/event";
 
 // Index
-@forward "./components/index";
-@forward "./pages/index";
+@use "./components/index" as components;
+@use "./pages/index" as pages;

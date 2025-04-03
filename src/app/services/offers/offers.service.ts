@@ -12,7 +12,7 @@ export class OffersService {
 
   endpointURL = environment.api + 'offers';
 
-  constructor(private httpClient: HttpClient, private authService: AuthService) {
+  constructor(private readonly httpClient: HttpClient, private readonly authService: AuthService) {
   }
 
   getAll() {

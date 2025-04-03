@@ -8,7 +8,7 @@ import { TicketComponent } from '../ticket/ticket.component';
     selector: 'app-order',
     standalone: true,
     templateUrl: './order.component.html',
-    styleUrl: '/src/scss/components/order.scss',
+    styleUrl: '../../../scss/components/order.scss',
     imports: [ShoppingCartComponent, CommonModule, TicketComponent]
 })
 export class OrderComponent {

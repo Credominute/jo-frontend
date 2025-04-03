@@ -2,6 +2,25 @@
 @use '../mixins.scss';
 @use '../variables.scss' as v;
 
+.sport-card {
+    display: flex;
+    justify-content: center;  /* Centrer l'image horizontalement */
+    align-items: center;      /* Centrer l'image verticalement */
+    max-width: 100%;          /* Empêche l'image de dépasser son conteneur */
+    width: 100%;              /* Prendre toute la largeur disponible */
+    height: auto;             /* Maintenir les proportions */
+    overflow: hidden;         /* Empêcher le débordement de l'image */
+    position: relative;       /* Positionnement relatif pour l'image */
+}
+
+.sport-card img {
+    max-width: 100%;  /* Limiter l'image à la largeur du conteneur */
+    width: 100%;      /* L'image prend 100% de la largeur du conteneur */
+    height: auto;     /* Garder les proportions */
+    object-fit: contain;  /* Ne pas déformer l'image */
+    display: block;   /* Assurer que l'image est un bloc */
+}
+
 .event {
     display: flex;
     flex-direction: column;

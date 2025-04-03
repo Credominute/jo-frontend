@@ -12,7 +12,7 @@ import { ShoppingCartComponent } from '../../component/shopping-cart/shopping-ca
   selector: 'app-offers-page',
   standalone: true,
   templateUrl: './offers.component.html',
-  styleUrls: ['/src/scss/pages/offers.scss'],
+  styleUrls: ['../../../scss/pages/offers.scss'],
   imports: [CommonModule, OfferComponent, ShoppingCartComponent]
 })
 

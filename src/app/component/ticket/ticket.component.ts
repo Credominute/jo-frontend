@@ -5,7 +5,7 @@ import { Component, Input } from '@angular/core';
   standalone: true,
   imports: [],
   templateUrl: './ticket.component.html',
-  styleUrls: ['/src/scss/components/ticket.scss']
+  styleUrls: ['../../../scss/components/ticket.scss']
 })
 export class TicketComponent {
   @Input() ticket: any = {};

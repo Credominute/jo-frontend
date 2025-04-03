@@ -6,7 +6,7 @@ import { CommonModule } from '@angular/common';
   selector: 'app-footer',
   standalone: true,
   templateUrl: './footer.component.html',
-  styleUrls: ['/src/scss/components/footer.scss'],
+  styleUrls: ['../../../scss/components/footer.scss'],
   imports: [CommonModule]
 })
 export class FooterComponent implements OnInit {
@@ -17,7 +17,7 @@ export class FooterComponent implements OnInit {
   partnersData:any;
   url: string = "../../../assets/data/official-partners-list.json";
 
-  constructor(private http: HttpClient) {}
+  constructor(private readonly http: HttpClient) {}
 
   ngOnInit() {
     this.http.get(this.url).subscribe(data => {

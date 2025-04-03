@@ -11,7 +11,7 @@ import { ModalService } from '../../services/modal/modal.service';
   selector: 'app-orders',
   standalone: true,
   templateUrl: './orders.component.html',
-  styleUrl: '/src/scss/pages/orders.scss',
+  styleUrl: '../../../scss/pages/orders.scss',
   imports: [CommonModule, OrderComponent]
 })
 export class OrdersComponent {
