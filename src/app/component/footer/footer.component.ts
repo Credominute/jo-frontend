@@ -17,7 +17,7 @@ export class FooterComponent implements OnInit {
   partnersData:any;
   url: string = "../../../assets/data/official-partners-list.json";
 
-  constructor(private http: HttpClient) {}
+  constructor(private readonly http: HttpClient) {}
 
   ngOnInit() {
     this.http.get(this.url).subscribe(data => {

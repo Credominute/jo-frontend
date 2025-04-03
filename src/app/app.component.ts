@@ -15,4 +15,9 @@ export class AppComponent {
   title = 'jo-frontend';
 
   constructor(protected modalService: ModalService) {}
+
+  // Getter pour accéder à modalService dans les tests
+  get modalServiceInstance() {
+    return this.modalService;
+  }
 }

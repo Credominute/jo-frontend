@@ -49,7 +49,14 @@ export class HeaderComponent {
   });
 }
 
-  ngOnDestroy() {
+ngOnDestroy() {
+  // Vérification que la subscription existe avant d'essayer de se désabonner
+  if (this.authListenerSubs) {
     this.authListenerSubs.unsubscribe();
   }
+
+  if (this.adminListenerSubs) {
+    this.adminListenerSubs.unsubscribe();
+  }
+}
 }
