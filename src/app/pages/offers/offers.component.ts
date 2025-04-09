@@ -25,6 +25,10 @@ export class OffersPageComponent implements OnInit{
               protected router: Router) {
   }
 
+  get modalServiceGetter() {
+    return this.modalService;
+  }
+
   ngOnInit(): void {
     this.offersService.getAllVisible().subscribe({
       next: (offers: Offer[]) => {
@@ -51,9 +55,13 @@ export class OffersPageComponent implements OnInit{
   }
 
   removeItem($event: ShoppingCartItem) {
-    this.itemsArray = this.itemsArray.filter(i => i !== $event);
+    this.itemsArray = this.itemsArray.filter(i => i.offer.title !== $event.offer.title);  // Comparaison par titre de l'offre
     localStorage.setItem('cart', JSON.stringify(this.itemsArray));
   }
+  /*removeItem($event: ShoppingCartItem) {
+    this.itemsArray = this.itemsArray.filter(i => i !== $event);
+    localStorage.setItem('cart', JSON.stringify(this.itemsArray));
+  }*/
 
   emptyCart() {
     this.itemsArray = [];

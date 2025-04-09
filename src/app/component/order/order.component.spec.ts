@@ -45,4 +45,26 @@ describe('OrderComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  it('should initialize showDetailsOrder and showTicketOrder as false', () => {
+    expect(component.showDetailsOrder).toBeFalse();
+    expect(component.showTicketOrder).toBeFalse();
+  });
+
+  it('should toggle showDetailsOrder when showDetails is called', () => {
+    component.showDetails();
+    expect(component.showDetailsOrder).toBeTrue();
+  
+    component.showDetails();
+    expect(component.showDetailsOrder).toBeFalse();
+  });
+
+  it('should toggle showTicketOrder when showTicket is called', () => {
+    component.showTicket();
+    expect(component.showTicketOrder).toBeTrue();
+  
+    component.showTicket();
+    expect(component.showTicketOrder).toBeFalse();
+  });
+
 });

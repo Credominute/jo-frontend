@@ -22,13 +22,19 @@ export class OfferComponent {
   @Input() isAdmin: boolean = false;
   @Input() mode = 'view';       // view, edit, add
   
-
   changeOffer(valueStr: string) {
+    const value = parseInt(valueStr, 10);
+    if (!isNaN(value) && value > 0) {
+      this.quantity = value;
+    }
+  }
+  
+/*changeOffer(valueStr: string) {
     if (valueStr !== null) {
       console.log(valueStr);
       this.quantity = parseInt(valueStr, 10);
     }
-  }
+  }*/
 
   downOffer() {
     if(this.quantity > 1) {

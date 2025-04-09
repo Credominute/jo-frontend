@@ -82,10 +82,15 @@ export class SignLogInComponent {
     return emailRegexp.test(control.value) ? null : { email: true };
   }
 
-  passwordValidator(control: AbstractControl): ValidationErrors | null {
+  /*passwordValidator(control: AbstractControl): ValidationErrors | null {
     const emailRegexp = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     return emailRegexp.test(control.value) ? null : { email: true };
-  }
+  }*/
+
+  passwordValidator(control: AbstractControl): ValidationErrors | null {
+      const passwordRegexp = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+      return passwordRegexp.test(control.value) ? null : { passwordStrength: true };
+    }
 
 
   // check if the email exists before displaying the form
@@ -200,9 +205,6 @@ export class SignLogInComponent {
 
   // close the modal
   onClose() {
-    /*if(this.step === 'success' && this.authenticateService.getIsAdmin) {
-      this.router.navigate(['/admin']);
-    }*/
     this.step = 'checkEmail';
     this.setInfos(ConstantsInfo.infoMessageLogin.checkEmail);
     this.errorMessage = '';
