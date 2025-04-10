@@ -1,7 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { ApiService } from './api.service';
-import { Offer } from '../../models/offer.model';
+import { Offer, OfferInCart } from '../../models/offer.model';
 
 describe('ApiService', () => {
   let service: ApiService;
@@ -26,6 +26,7 @@ describe('ApiService', () => {
 
   afterEach(() => {
     httpMock.verify(); // Vérifie qu’aucune requête HTTP n’est restée en attente
+    localStorage.clear(); // Important pour éviter les effets de bord
   });
 
   it('should get offers (getOffers)', () => {
@@ -71,5 +72,25 @@ describe('ApiService', () => {
     expect(req.request.method).toBe('POST');  // Vérifie que la méthode est POST
     expect(req.request.body).toEqual(newOffer);  // Vérifie que les données envoyées sont correctes
     req.flush(mockResponse);  // Répond avec mockResponse
+  });
+
+  it('should return offers from localStorage (getOffersFromCart)', () => {
+    const mockCart = [
+      { title: 'Solo', nb_people: 1, price: 20 },
+      { title: 'Duo', nb_people: 2, price: 35 }
+    ];
+  
+    localStorage.setItem('cart', JSON.stringify(mockCart));
+  
+    const offersInCart = service.getOffersFromCart();
+  
+    expect(offersInCart.length).toBe(2);
+    expect(offersInCart[0].title).toBe('Solo');
+    expect(offersInCart[0].nb_people).toBe(1);
+    expect(offersInCart[0].price).toBe(20);
+    expect(offersInCart).toEqual([
+      jasmine.objectContaining({ title: 'Solo', nb_people: 1, price: 20 }),
+      jasmine.objectContaining({ title: 'Duo', nb_people: 2, price: 35 })
+    ]);
   });
 });

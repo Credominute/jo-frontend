@@ -117,4 +117,27 @@ describe('OfferComponent', () => {
     expect(component.visibleOffer).toHaveBeenCalled();
   });
 
+  it('should emit choiceEvent with updated quantity', () => {
+    const spy = spyOn(component.choiceEvent, 'emit');
+  
+    component.offer = new Offer(); // ou un mock plus riche si utile
+    component.quantity = 3;
+    component.choiceOffer();
+  
+    expect(spy).toHaveBeenCalledWith(
+      new ShoppingCartItem(new OfferInCart(component.offer), 3)
+    );
+    expect(component.quantity).toBe(1); // Vérifie aussi que le reset se fait bien
+  });
+
+  it('should allow switching between admin modes', () => {
+    component.mode = 'view';
+    expect(component.mode).toBe('view');
+  
+    component.mode = 'edit';
+    expect(component.mode).toBe('edit');
+  
+    component.mode = 'add';
+    expect(component.mode).toBe('add');
+  });
 });
