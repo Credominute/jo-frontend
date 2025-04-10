@@ -8,11 +8,12 @@ import { ConstantsInfo } from '../../constantsInfo';
 import { Router } from '@angular/router';
 import { debounceTime } from 'rxjs/internal/operators/debounceTime';
 import { distinctUntilChanged } from 'rxjs/internal/operators/distinctUntilChanged';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-sign-log-in',
   standalone: true,
-  imports: [ReactiveFormsModule, CommonModule],
+  imports: [ReactiveFormsModule, CommonModule, RouterModule],
   templateUrl: './sign-log-in.component.html',
   styleUrls: ['../../../scss/components/sign-log-in.scss']
 })

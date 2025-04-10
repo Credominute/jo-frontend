@@ -9,5 +9,5 @@ import { CommonModule } from '@angular/common';
   styleUrls: ['../../../scss/pages/page-non-found.scss'],
 })
 export class PageNonFoundComponent {
-
+ // Logique du composant 404
 }
