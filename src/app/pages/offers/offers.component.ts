@@ -17,10 +17,12 @@ import { ShoppingCartComponent } from '../../component/shopping-cart/shopping-ca
 })
 
 export class OffersPageComponent implements OnInit{
+  selectedOfferTitle: string | null = null;
+
   offersArray: Offer[] = [];
   itemsArray: ShoppingCartItem[] = [];
   
-  constructor(private offersService: OffersService, 
+  constructor(private readonly offersService: OffersService, 
               protected modalService: ModalService, 
               protected router: Router) {
   }
@@ -42,8 +44,9 @@ export class OffersPageComponent implements OnInit{
     this.loadCart();
   }
 
-
   addChoice(choice: ShoppingCartItem) {
+    this.selectedOfferTitle = choice.offer.title;
+
     let index = this.itemsArray.findIndex(item => item.offer.title === choice.offer.title);
     if(index !== -1) {
       // If the choice is already in the cart, increment its quantity
@@ -92,3 +95,4 @@ export class OffersPageComponent implements OnInit{
     }
   }
 }
+

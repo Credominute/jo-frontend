@@ -1,5 +1,4 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-
 import { Offer, OfferInCart } from '../../models/offer.model';
 import { ShoppingCartItem } from '../../models/shoppingCartItem.model';
 import { CommonModule } from '@angular/common';
@@ -17,6 +16,7 @@ export class OfferComponent {
   @Input() offer: Offer = new Offer();
   @Input() quantity: number = 1;
   @Output() choiceEvent = new EventEmitter<ShoppingCartItem>();
+  @Input() selected: boolean = false; 
 
   // Admin management
   @Input() isAdmin: boolean = false;
@@ -28,13 +28,6 @@ export class OfferComponent {
       this.quantity = value;
     }
   }
-  
-/*changeOffer(valueStr: string) {
-    if (valueStr !== null) {
-      console.log(valueStr);
-      this.quantity = parseInt(valueStr, 10);
-    }
-  }*/
 
   downOffer() {
     if(this.quantity > 1) {
@@ -55,28 +48,17 @@ export class OfferComponent {
     document.getElementById("shoppingcart")?.scrollIntoView({behavior: "smooth"});
   }
 
-  // Admin management
+  // Admin TODO: implémenter l'édition d'une offre
   editOffer() {
-    return;
-  }
-
+    return; }
   saveOffer() {
-    return;
-  }
-
+    return; }
   updateOffer() {
-    return;
-  }
-
+    return; }
   addOffer() {
-    return;
-  }
-
+    return; }
   hideOffer() {
-    return;
-  }
-
+    return; }
   visibleOffer() {
-    return;
-  }
+    return; }
 }
