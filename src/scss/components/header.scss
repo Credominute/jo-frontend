@@ -25,29 +25,28 @@ header {
     z-index: 998;
     vertical-align: middle;
     min-height: 9rem;  // Ajuster cette valeur si besoin
-    padding-bottom: 2rem;  // Permettre au fond noir de descendre sous les boutons
-    //height: 7rem;
+    padding-bottom: 3rem;  // Permettre au fond noir de descendre sous les boutons
     margin: 0;
     font-family: Paris2024, sans-serif;
     background-color: v.$header-background-color;
     color: v.$header-color;
+    white-space: nowrap;  // Empêche que les éléments passent à la ligne
 
     @include mixins.media-max("phone-down") {
         height: 5rem;
     }
 
     .flex-header {
-        /*conteneur flex*/
         display: flex;
         justify-content: space-between;
         align-items: center;
-        height: 100%;
+        height: 100%;  
 
         // Left part : title
         .title {
             padding: 0 1rem;
             height: 4rem;
-            width: 45%;
+            width: 50%;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -102,8 +101,8 @@ header {
             }
         }
 
-        // Middle part : logo
-        .logo {
+          // Middle part : logo
+          .logo {
             height: 85%;
 
             img {
@@ -113,7 +112,7 @@ header {
             @include mixins.media-max("phone-up") {
                 margin-left: 1rem;
             }
-        }
+        }  
 
         // Right part : navigation
         nav {
@@ -141,6 +140,9 @@ header {
                 justify-content: flex-end;
                 align-items: center;
                 height: 100%;
+                gap: 0.5rem;         // Espace entre les boutons
+                flex-wrap: nowrap;
+                margin-right: 2.5rem;
 
                 @include mixins.media-max("desktop-up") {
                     display: none;
@@ -151,17 +153,20 @@ header {
                     padding: 1rem 0 0 0;
                     z-index: 999;
                 }
-        
+
                 // display the links as a button
                 a, div button {
-                    height: 50%;
-                    width: auto;
-                    margin: 0 0.15rem;
-                    flex-shrink: 0;
+                    flex: 1 1 auto;   // Permet de prendre l'espace disponible et de se réduire
+                    white-space: nowrap;  // Autorise le passage à la ligne
+                    text-align: center;   // Pour centrer le texte sur plusieurs lignes
+                    padding: 0.8rem 1rem;  // Un padding un peu réduit pour laisser plus d'espace
+                    font-size: 1rem;      // Taille de police par défaut
+                    overflow: visible; 
+                
 
                     @include mixins.media-max("desktop-down") {
-                        font-size: 1rem;
-                        padding: 1.15rem 0.75rem;
+                        font-size: 0.6rem;
+                        padding: 0.4rem 0.7rem; 
                     }
 
                     @include mixins.media-max("desktop-up") {
