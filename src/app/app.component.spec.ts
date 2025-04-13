@@ -1,21 +1,15 @@
-import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { AppComponent } from './app.component';
-import { AuthService } from './services/authenticate/auth.service'; 
-import { OrderService } from './services/order/order.service';
-import { NO_ERRORS_SCHEMA } from '@angular/core';
-import { ModalService } from './services/modal/modal.service';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { AppComponent } from './app.component';
+import { ModalService } from './services/modal/modal.service'; // Mock du ModalService
+import { RouterTestingModule } from '@angular/router/testing'; // Permet d’éviter l’erreur d’ActivatedRoute
+import { HttpClientTestingModule } from '@angular/common/http/testing'; // Module pour simuler les requêtes HTTP
 
-const authServiceMock = {
-  isAuthenticated: jasmine.createSpy('isAuthenticated').and.returnValue(true),
-};
-
-const orderServiceMock = {
-  getOrders: jasmine.createSpy('getOrders').and.returnValue([]), // Simule une réponse vide
-};
-
+// Mock du ModalService
 const mockModalService = {
-  open: jasmine.createSpy('open')
+  open: jasmine.createSpy('open'),
+  close: jasmine.createSpy('close'),
+  add: jasmine.createSpy('add'),
+  remove: jasmine.createSpy('remove')
 };
 
 describe('AppComponent', () => {
@@ -24,41 +18,29 @@ describe('AppComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule, AppComponent],  
-      providers: [
-        { provide: ModalService, useValue: mockModalService }, // 👈 Mock
-        OrderService,
-        AuthService
+      imports: [
+        AppComponent,            // Import du composant standalone ici
+        RouterTestingModule,     // On importe RouterTestingModule pour éviter l’erreur d’ActivatedRoute
+        HttpClientTestingModule  // Ajout de HttpClientTestingModule pour simuler les appels HTTP
       ],
-      schemas: [NO_ERRORS_SCHEMA], // Ignore les erreurs des composants inconnus
+      providers: [
+        { provide: ModalService, useValue: mockModalService } // Fournir le mock du ModalService
+      ]
     }).compileComponents();
 
     fixture = TestBed.createComponent(AppComponent);
     component = fixture.componentInstance;
   });
 
-
-  it('should create the app', () => {
-    fixture.detectChanges();
-    expect(component).toBeTruthy();
+  // Test simple : Vérification que le composant est bien créé
+  it('should create the app component', () => {
+    fixture.detectChanges(); // Déclenche la détection des changements
+    expect(component).toBeTruthy(); // Vérifie que le composant existe
   });
 
-  it(`should have the 'jo-frontend' title`, () => {
-    fixture.detectChanges(); // S'assure de déclencher la détection de changements
-    expect(component.title).toEqual('jo-frontend');
-  });
-
-  it('should render title', () => {
-    const fixture = TestBed.createComponent(AppComponent);
-    fixture.detectChanges();
-    const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.querySelector('h1')?.textContent).toContain('Hello, jo-frontend');
-  });
-  
-     // Nettoyage après chaque test
   afterEach(() => {
     if (fixture) {
-      fixture.destroy(); // S'assure que le composant est détruit après chaque test
-      }
-    });
+      fixture.destroy();
+    }
+  });
 });

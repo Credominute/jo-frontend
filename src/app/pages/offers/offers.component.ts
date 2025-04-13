@@ -1,4 +1,4 @@
-import { Component, OnInit} from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Offer } from '../../models/offer.model';
 import { OffersService } from '../../services/offers/offers.service';
@@ -15,16 +15,21 @@ import { ShoppingCartComponent } from '../../component/shopping-cart/shopping-ca
   styleUrls: ['../../../scss/pages/offers.scss'],
   imports: [CommonModule, OfferComponent, ShoppingCartComponent]
 })
-
-export class OffersPageComponent implements OnInit{
+export class OffersPageComponent implements OnInit {
   selectedOfferTitle: string | null = null;
 
-  offersArray: Offer[] = [];
+  offers: Offer[] = [];
   itemsArray: ShoppingCartItem[] = [];
-  
-  constructor(private readonly offersService: OffersService, 
-              protected modalService: ModalService, 
-              protected router: Router) {
+
+  constructor(
+    private readonly offersService: OffersService,
+    protected modalService: ModalService,
+    protected router: Router
+  ) {}
+
+  // 🔄 Getter public pour usage dans le HTML
+  get cartItems(): ShoppingCartItem[] {
+    return this.itemsArray;
   }
 
   get modalServiceGetter() {
@@ -34,7 +39,7 @@ export class OffersPageComponent implements OnInit{
   ngOnInit(): void {
     this.offersService.getAllVisible().subscribe({
       next: (offers: Offer[]) => {
-        this.offersArray = offers;
+        this.offers = offers;
       },
       error: (error) => {
         console.error(error);
@@ -44,12 +49,11 @@ export class OffersPageComponent implements OnInit{
     this.loadCart();
   }
 
-  addChoice(choice: ShoppingCartItem) {
+  addChoice(choice: ShoppingCartItem): void {
     this.selectedOfferTitle = choice.offer.title;
 
     let index = this.itemsArray.findIndex(item => item.offer.title === choice.offer.title);
-    if(index !== -1) {
-      // If the choice is already in the cart, increment its quantity
+    if (index !== -1) {
       this.itemsArray[index].quantity += choice.quantity;
     } else {
       this.itemsArray.push(choice);
@@ -57,42 +61,27 @@ export class OffersPageComponent implements OnInit{
     localStorage.setItem('cart', JSON.stringify(this.itemsArray));
   }
 
-  removeItem($event: ShoppingCartItem) {
-    this.itemsArray = this.itemsArray.filter(i => i.offer.title !== $event.offer.title);  // Comparaison par titre de l'offre
+  removeItem(item: ShoppingCartItem): void {
+    this.itemsArray = this.itemsArray.filter(i => i.offer.title !== item.offer.title);
     localStorage.setItem('cart', JSON.stringify(this.itemsArray));
   }
-  /*removeItem($event: ShoppingCartItem) {
-    this.itemsArray = this.itemsArray.filter(i => i !== $event);
-    localStorage.setItem('cart', JSON.stringify(this.itemsArray));
-  }*/
 
-  emptyCart() {
+  emptyCart(): void {
     this.itemsArray = [];
+    localStorage.setItem('cart', JSON.stringify(this.itemsArray));
   }
 
-  checkout() {
-    // waitingto manage a good authentification, for now I just check if the token is present
-    if(localStorage.getItem('access_token') === null) {
-      // Save a variable to redirect to the payment page after login
-      // not the best practice but it's just to continue the project
+  checkout(): void {
+    if (localStorage.getItem('access_token') === null) {
       localStorage.setItem('redirect', '/payment');
-      
       this.modalService.open('login');
-    }
-    else {
-      // Redirect to the payment page
-      this.router.navigate(['/payment']) ;
+    } else {
+      this.router.navigate(['/payment']);
     }
   }
 
-  loadCart() {
-    let cart = localStorage.getItem('cart');
-    if(cart !== null) {
-      this.itemsArray = JSON.parse(cart);
-    }
-    else {
-      this.itemsArray = [];
-    }
+  loadCart(): void {
+    const cart = localStorage.getItem('cart');
+    this.itemsArray = cart ? JSON.parse(cart) : [];
   }
 }
-

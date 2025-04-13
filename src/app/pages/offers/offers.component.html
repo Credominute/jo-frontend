@@ -1,41 +1,42 @@
 <section class="offers-presentation">
     <h2>Bienvenue sur la page des offres et de billetterie</h2>
-    <p>Vous pouvez sélectionner soit une offre simple, soit duo, soit familliale!</p>
-    <p>Le nombre de participants sera affiché sur un billet unique à la fin de votre achat!</p>
-</section>
-
-<section class="offers-images">
+    <p>Vous pouvez sélectionner soit une offre simple, soit duo, soit familiale !</p>
+    <p>Le nombre de participants sera affiché sur un billet unique à la fin de votre achat !</p>
+  </section>
+  
+  <section class="offers-images">
     <img src="assets/images/offers/solo.png" alt="Offre simple" class="offer-img" />
     <img src="assets/images/offers/duo.png" alt="Offre duo" class="offer-img" />
     <img src="assets/images/offers/quatuor.png" alt="Offre familiale" class="offer-img" />
-</section>
-
-<section class="offers-content">
+  </section>
+  
+  <section class="offers-content">
     <div class="cards">
         <app-offer 
-        *ngFor="let offerItem of offersArray" 
-        [offer]="offerItem"
-        (choiceEvent)="addChoice($event)"
+        *ngFor="let offer of offers" 
+        [offer]="offer"
+        (selected)="addChoice($event)"
         class="card"
-         ></app-offer>
+      ></app-offer>
     </div>
-
     <div id="shoppingcart" class="shoppingcart">
         <h3>Mon panier</h3>
-
-        @if (itemsArray.length > 0) {
-        <app-shopping-cart 
-        [itemsArray]="itemsArray" 
-        (removeItemEvent)="removeItem($event)" />
-        <div class="cart-actions">
-            <button (click)="emptyCart()">Vider</button>
-            <button (click)="checkout()">Commander</button>
+      
+        <div *ngIf="itemsArray.length > 0">
+          <app-shopping-cart 
+            [itemsArray]="itemsArray" 
+            (removeItemEvent)="removeItem($event)">
+          </app-shopping-cart>
+      
+          <div class="cart-actions">
+            <button type="button" (click)="emptyCart()">Vider</button>
+            <button type="button" (click)="checkout()">Commander</button>
+          </div>
         </div>
-        }
-        @else {
-        <p>Votre panier est vide</p>
-        }
-
-
-    </div>
-</section>
+      
+        <div *ngIf="itemsArray.length === 0">
+          <p class="empty-cart-message">Votre panier est vide</p>
+        </div>
+      </div>
+  </section>
+  

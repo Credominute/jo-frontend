@@ -16,7 +16,7 @@ export class ShoppingCartComponent {
   @Input() mode: string = 'write';
   @Output() removeItemEvent = new EventEmitter<ShoppingCartItem>();
 
-  removeItem(item: ShoppingCartItem) {
+  removeItem(item: ShoppingCartItem): void {
     this.removeItemEvent.emit(item);
   }
 
@@ -28,4 +28,3 @@ export class ShoppingCartComponent {
     return this.itemsArray.reduce((places, item) => places + (item.offer.nb_people * item.quantity), 0);
   }
 }
-

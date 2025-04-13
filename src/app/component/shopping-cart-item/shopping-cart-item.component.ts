@@ -15,7 +15,7 @@ export class ShoppingCartItemComponent {
 
   @Input() item!: ShoppingCartItem;
   @Input() mode: string = 'write';
-  @Output() removeItemClicked = new EventEmitter();
+  @Output() removeItemClicked = new EventEmitter<ShoppingCartItem>();
 
   increaseQuantity() {
     this.item.quantity++;
@@ -33,7 +33,7 @@ export class ShoppingCartItemComponent {
   }
 
   removeItem() {
-    this.removeItemClicked.emit();
+    this.removeItemClicked.emit(this.item);  // Emission de l'objet item
   }
   
 }
