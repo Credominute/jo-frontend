@@ -3,6 +3,7 @@ import { environment } from '../../../environments/environment';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, Subject } from 'rxjs';
 import { Router } from '@angular/router';
+import { tap, switchMap } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -10,15 +11,15 @@ import { Router } from '@angular/router';
 export class AuthService {
   private isAuthenticated = (localStorage.getItem('access_token')!=null);     // waiting best solution
   private accessToken: string | null = null;
-  private statusAuthListener = new Subject<boolean>();
+  private readonly statusAuthListener = new Subject<boolean>();
 
   private roles: string[] = [];
   private isAdmin = false;
-  private adminAthListener = new Subject<boolean>();
+  private readonly adminAthListener = new Subject<boolean>();
 
   endpointURL = environment.api;
 
-  constructor(private httpClient: HttpClient, private router: Router){
+  constructor(private readonly httpClient: HttpClient, private readonly router: Router){
   }
 
   // get the token
@@ -95,53 +96,35 @@ export class AuthService {
   }
 
   // Login the user
-  loginUser(email: string, password: string){
-    // Create the user object to send to the server X-WWW-FORM-URLENCODED
+  loginUser(email: string, password: string): Observable<boolean> {
     const headers = new HttpHeaders({
       'Content-Type': 'application/x-www-form-urlencoded'
     });
+  
     const body = new URLSearchParams();
     body.set('username', email);
     body.set('password', password);
     body.set('grant_type', 'password');
-
-    return new Observable<boolean>(observer => {
-      this.httpClient.post(this.endpointURL + 'login', body, {headers}).subscribe({
-        next: async (data: any) => {
-          // Save the token in the local storage
-          localStorage.setItem('access_token', data.access_token);
-
-          // Save the token in the service
-          this.accessToken = data.access_token;
-
-          // Set the authentication to true and notify the listeners
-          this.isAuthenticated = true;
-          this.statusAuthListener.next(true);
-
-          // Get the roles of the user
-          this.getUserRoles().subscribe({
-            next: () => {
-              observer.next(true);
-              observer.complete();
-            },
-            error: (error) => {
-              observer.error(error);
-              observer.complete();
-            }
-          });
-
-          observer.next(true);
-          observer.complete();
-        },
-        error: (error) => {
-          observer.error(error);
-          observer.complete();
-        }
-      });
-    });
-  }
-
   
+    return this.httpClient.post<any>(this.endpointURL + 'login', body, { headers }).pipe(
+      // Étape 1 : effet de bord → sauvegarder token et mettre à jour le state local
+      tap((data) => {
+        localStorage.setItem('access_token', data.access_token);
+        this.accessToken = data.access_token;
+        this.isAuthenticated = true;
+        this.statusAuthListener.next(true);
+      }),
+  
+      // Étape 2 : appeler getUserRoles() après login
+      switchMap(() => this.getUserRoles()),
+  
+      // Étape 3 : on mappe la réponse des rôles à true car login + rôles = succès
+      switchMap(() => new Observable<boolean>((observer) => {
+        observer.next(true);
+        observer.complete();
+      }))
+    );
+  }
 
   // logout user
   logoutUser(){

@@ -1,16 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { OffersPageComponent } from './offers.component';
 import { OffersService } from '../../services/offers/offers.service';
-import { of } from 'rxjs';
 import { Offer } from '../../models/offer.model';
-
-import { ModalService } from '../../services/modal/modal.service';
-import { Router } from '@angular/router';
-import { RouterTestingModule } from '@angular/router/testing';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { OfferComponent } from '../../component/offer/offer.component';
-import { ShoppingCartComponent } from '../../component/shopping-cart/shopping-cart.component';
-import { throwError } from 'rxjs';
+import { throwError, of } from 'rxjs';
 import { ShoppingCartItem } from '../../models/shoppingCartItem.model';
 
 describe('OffersPageComponent', () => {
@@ -49,8 +41,8 @@ describe('OffersPageComponent', () => {
   it('should fetch offers from the service and populate offersArray', () => {
     component.ngOnInit();  // Appel de la méthode ngOnInit
     expect(mockOffersService.getAllVisible).toHaveBeenCalled();  // Vérifie que la méthode a bien été appelée
-    expect(component.offersArray.length).toBe(2);  // Vérifie qu'il y a bien 2 offres dans le tableau
-    expect(component.offersArray[0].title).toBe('Offre 1');  // Vérifie que la première offre a le bon titre
+    expect(component.offers.length).toBe(2);  // Vérifie qu'il y a bien 2 offres dans le tableau
+    expect(component.offers[0].title).toBe('Offre 1');  // Vérifie que la première offre a le bon titre
   });
 
   it('should handle error when fetching offers', () => {

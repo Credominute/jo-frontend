@@ -1,7 +1,9 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { HttpClient } from '@angular/common/http';
-import { HeaderComponent } from './header.component';
+import { HeaderComponent } from './header.component';  // Importer directement le HeaderComponent
 import { AuthService } from '../../services/authenticate/auth.service';
+import { ActivatedRoute } from '@angular/router';
+import { RouterTestingModule } from '@angular/router/testing';
 import { of } from 'rxjs';
 
 // Créer un mock de HttpClient
@@ -13,20 +15,27 @@ class MockHttpClient {
 
 // Créer un mock de AuthService
 class MockAuthService {
-  // Simuler la méthode getIsAuthenticated qui renvoie une valeur de type boolean
   getIsAuthenticated() {
-    return true;  // Par exemple, l'utilisateur est authentifié
+    return true;  // L'utilisateur est authentifié
   }
 
-  // Simuler la méthode getIsAdmin qui renvoie une valeur de type boolean
   getIsAdmin() {
-    return false;  // Par exemple, l'utilisateur n'est pas admin
+    return false;  // L'utilisateur n'est pas admin
   }
 
-  // Simuler les Observables pour l'authentification et le rôle admin
   getStatusAuthListener = of(true);  // L'utilisateur est authentifié
   getAdminAuthListener = of(false);  // L'utilisateur n'est pas admin
 }
+
+// Mock de ActivatedRoute
+const activatedRouteMock = {
+  snapshot: {
+    paramMap: {
+      get: (key: string) => 'test' // Simuler les paramètres de l'URL
+    }
+  },
+  queryParams: of({}) // Simuler les queryParams si nécessaire
+};
 
 describe('HeaderComponent', () => {
   let component: HeaderComponent;
@@ -34,10 +43,14 @@ describe('HeaderComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [HeaderComponent],
+      imports: [
+        RouterTestingModule,  // Ajouter RouterTestingModule
+        HeaderComponent       // Ajouter HeaderComponent directement dans "imports" pour un composant standalone
+      ],
       providers: [
-        { provide: HttpClient, useClass: MockHttpClient },  // Fournir le mock de HttpClient
-        { provide: AuthService, useClass: MockAuthService },  // Fournir le mock de AuthService
+        { provide: HttpClient, useClass: MockHttpClient },
+        { provide: AuthService, useClass: MockAuthService },
+        { provide: ActivatedRoute, useValue: activatedRouteMock }
       ]
     })
     .compileComponents();
