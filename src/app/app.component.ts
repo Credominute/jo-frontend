@@ -1,5 +1,5 @@
-import { Component, inject } from '@angular/core';
-import { RouterOutlet, RouterModule, Router } from '@angular/router'; 
+import { Component } from '@angular/core';
+import { RouterOutlet, RouterModule } from '@angular/router'; 
 import { HeaderComponent } from './component/header/header.component'; 
 import { FooterComponent } from './component/footer/footer.component'; 
 import { ModalService } from './services/modal/modal.service';
@@ -15,7 +15,8 @@ export class AppComponent {
   title = 'jo-frontend';
   
   constructor(protected modalService: ModalService) {
-    const router = inject(Router);
+  // Pour utilisation future : const router = inject(Router); 
+  // Par exemple : this.router.navigate(['/home']);
   }
 
   // Getter pour accéder à modalService dans les tests

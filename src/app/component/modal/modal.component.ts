@@ -15,17 +15,15 @@ export class ModalComponent implements OnInit, OnDestroy {
     @Input() id?: string;
     @Input() widthbody?: string = '30rem';
     isOpen = false;
-    private element: any;
+    private readonly element: any;
 
-    constructor(private modalService: ModalService, private el: ElementRef) {
+    constructor(private readonly modalService: ModalService, private readonly el: ElementRef) {
         this.element = el.nativeElement;
     }
 
     ngOnInit() {
         // Vérifie si l'id est passé, sinon génère un id unique
-        if (!this.id) {
-            this.id = uuidv4();  // Génère un id unique si nécessaire
-        }
+        this.id ??= uuidv4();
         // Enregistre ce modal dans le ModalService pour pouvoir l'ouvrir depuis n'importe quel composant
         this.modalService.add(this);
 
