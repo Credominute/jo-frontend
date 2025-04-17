@@ -6,6 +6,7 @@ import { SignLogInComponent } from './pages/sign-log-in/sign-log-in.component';
 import { PageNonFoundComponent } from './pages/page-non-found/page-non-found.component';
 import { SportsPageComponent } from './pages/sports/sports.component';
 import { UnderConstructionComponent } from './pages/under-construction/under-construction.component';
+import { ManualPageComponent } from './pages/manual/manual.component';
 
 export const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -13,7 +14,7 @@ export const routes: Routes = [
   { path: 'events', component: EventsPageComponent },
   { path: 'sports', component: SportsPageComponent },
   { path: 'login', component: SignLogInComponent },
-  { path: '**', component: PageNonFoundComponent },
-  { path: 'manual', component: UnderConstructionComponent },
-  { path: 'legal-notice', component: UnderConstructionComponent },
+  { path: 'manual', component: ManualPageComponent },
+  { path: 'under-construction', component: UnderConstructionComponent },
+  { path: '**', component: PageNonFoundComponent }
 ];
