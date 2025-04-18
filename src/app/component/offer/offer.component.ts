@@ -1,6 +1,5 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { Offer, OfferInCart } from '../../models/offer.model';
-import { ShoppingCartItem } from '../../models/shoppingCartItem.model';
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -12,13 +11,16 @@ import { CommonModule } from '@angular/common';
 })
 export class OfferComponent {
   @Input() offer!: Offer;
-  @Output() selected = new EventEmitter<ShoppingCartItem>();
+  @Output() selected = new EventEmitter<OfferInCart>();
 
+  // Méthode pour choisir l'offre et l'ajouter au panier
   choose() {
-    const item = new ShoppingCartItem(new OfferInCart(this.offer), 1);
-    this.selected.emit(item);
+    const item = new OfferInCart(this.offer, 1);
+    item.quantity = 1; // Par défaut, la quantité est 1
+    this.selected.emit(item); // Émet l'objet OfferInCart avec la quantité
   }
 }
+
 
   /* Optionnel, si on veut l’invoquer après l’ajout au panier (dans choose()).
   scroll(){

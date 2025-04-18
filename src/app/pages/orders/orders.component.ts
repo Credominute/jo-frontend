@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { OrderService } from '../../services/order/order.service';
+import { TicketingService } from '../../services/ticketing/ticketing.service';
 import { OrderComponent } from "../../component/order/order.component";
 import { Order } from '../../models/order.model';
 import { CommonModule } from '@angular/common';
@@ -18,12 +18,12 @@ export class OrdersComponent {
 
   ordersArray: Order[] = [];
 
-  constructor(private ordersService: OrderService, private authService: AuthService, private router:Router, protected modalService: ModalService) { }
+  constructor(private readonly ticketingService: TicketingService, private readonly authService: AuthService, private readonly router:Router, protected modalService: ModalService) { }
 
   ngOnInit(): void {
     // If the user is authenticated, we get the orders
     if (this.authService.getIsAuthenticated) {
-      this.ordersService.getOrdersUser().subscribe({
+      this.ticketingService.getUserOrders().subscribe({
         next:
           (orders: Order[]) => {
             this.ordersArray = orders;

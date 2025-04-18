@@ -23,13 +23,28 @@ export class Offer {
 }
 
 export class OfferInCart {
+    offer_id: number | null;
     title: string;
+    description: string;
     nb_people: number;
     price: number;
+    quantity: number;
+    image_url: string;  // Ajout de l'URL de l'image
+    visible: boolean;   // Ajout de la visibilité
 
-    constructor(offer : Offer) {
+
+    constructor(offer: Offer, quantity: number) {
+        this.offer_id = offer.offer_id; // Ajout de l'ID de l'offre
         this.title = offer.title;
+        this.description = offer.description; // Ajout de la description
         this.nb_people = offer.nb_people;
         this.price = offer.price;
+        this.quantity = quantity;
+        this.image_url = offer.image_url; // Assurer que l'image est bien prise de l'Offer
+        this.visible = offer.visible;     // Assurer que la visibilité est bien prise de l'Offer
+    }
+
+    loadfromJson(json: any) {
+        Object.assign(this, json); // Conserver la méthode loadfromJson
     }
 }

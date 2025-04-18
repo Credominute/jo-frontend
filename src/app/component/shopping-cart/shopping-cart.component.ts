@@ -1,30 +1,40 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { ShoppingCartItemComponent } from "../shopping-cart-item/shopping-cart-item.component";
-import { CurrencyPipe, CommonModule } from '@angular/common';
-import { ShoppingCartItem } from '../../models/shoppingCartItem.model';
+import { Component, Input } from '@angular/core';
+import { CommonModule, CurrencyPipe } from '@angular/common';
 
 @Component({
-    selector: 'app-shopping-cart',
-    standalone: true,
-    templateUrl: './shopping-cart.component.html',
-    styleUrl: '../../../scss/components/shopping-cart.scss',
-    imports: [ShoppingCartItemComponent, CurrencyPipe, CommonModule]
+  selector: 'app-shopping-cart',
+  standalone: true,
+  templateUrl: './shopping-cart.component.html',
+  styleUrls: ['../../../scss/components/shopping-cart.scss'],
+  imports: [CommonModule, CurrencyPipe]
 })
 export class ShoppingCartComponent {
+  @Input() offerType: 'single' | 'duo' | 'familial' = 'single';
+  @Input() quantity: number = 1;
+  @Input() pricePerOffer: number = 10;
+  @Input() itemsArray: any[] = [];
 
-  @Input() itemsArray: ShoppingCartItem[] = [];
-  @Input() mode: string = 'write';
-  @Output() removeItemEvent = new EventEmitter<ShoppingCartItem>();
+  // Propriété items pour gérer les éléments du panier
+  items = [
+    { offer: { price: 10, nb_people: 1, title: 'Offer 1' }, quantity: 2 },
+    { offer: { price: 20, nb_people: 2, title: 'Offer 2' }, quantity: 1 }
+  ];
 
-  removeItem(item: ShoppingCartItem): void {
-    this.removeItemEvent.emit(item);
+  // Mode d'affichage (par exemple : 'read', 'edit')
+  mode: string = 'read';
+
+  // Calcul du total des prix
+  get totalPrice(): number {
+    return this.items.reduce((total, item) => total + item.offer.price * item.quantity, 0);
   }
 
-  total() {
-    return this.itemsArray.reduce((total, item) => total + (item.offer.price * item.quantity), 0);
+  // Calcul du nombre total de places
+  get totalPlaces(): number {
+    return this.items.reduce((total, item) => total + item.quantity * item.offer.nb_people, 0);
   }
 
-  places() {
-    return this.itemsArray.reduce((places, item) => places + (item.offer.nb_people * item.quantity), 0);
+  // Méthode pour supprimer un item du panier
+  removeItem(itemToRemove: any): void {
+    this.items = this.items.filter(item => item !== itemToRemove);
   }
 }

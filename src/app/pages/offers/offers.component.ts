@@ -1,8 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Offer } from '../../models/offer.model';
-import { OffersService } from '../../services/offers/offers.service';
-import { ShoppingCartItem } from '../../models/shoppingCartItem.model';
+import { Offer, OfferInCart } from '../../models/offer.model';
+import { TicketingService } from '../../services/ticketing/ticketing.service';
 import { ModalService } from '../../services/modal/modal.service';
 import { Router } from '@angular/router';
 import { OfferComponent } from '../../component/offer/offer.component';
@@ -19,16 +18,16 @@ export class OffersPageComponent implements OnInit {
   selectedOfferTitle: string | null = null;
 
   offers: Offer[] = [];
-  itemsArray: ShoppingCartItem[] = [];
+  itemsArray: OfferInCart[] = [];  // Remplacer ShoppingCartItem par OfferInCart
 
   constructor(
-    private readonly offersService: OffersService,
+    private readonly ticketingService: TicketingService,
     protected modalService: ModalService,
     protected router: Router
   ) {}
 
   // 🔄 Getter public pour usage dans le HTML
-  get cartItems(): ShoppingCartItem[] {
+  get cartItems(): OfferInCart[] {  // Remplacer ShoppingCartItem par OfferInCart
     return this.itemsArray;
   }
 
@@ -37,7 +36,7 @@ export class OffersPageComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.offersService.getAllVisible().subscribe({
+    this.ticketingService.getAllVisible().subscribe({
       next: (offers: Offer[]) => {
         this.offers = offers;
       },
@@ -49,10 +48,10 @@ export class OffersPageComponent implements OnInit {
     this.loadCart();
   }
 
-  addChoice(choice: ShoppingCartItem): void {
-    this.selectedOfferTitle = choice.offer.title;
+  addChoice(choice: OfferInCart): void {
+    this.selectedOfferTitle = choice.title;  // Utiliser directement `title` de OfferInCart
 
-    let index = this.itemsArray.findIndex(item => item.offer.title === choice.offer.title);
+    let index = this.itemsArray.findIndex(item => item.title === choice.title);  // Utiliser `title` de OfferInCart
     if (index !== -1) {
       this.itemsArray[index].quantity += choice.quantity;
     } else {
@@ -61,8 +60,8 @@ export class OffersPageComponent implements OnInit {
     localStorage.setItem('cart', JSON.stringify(this.itemsArray));
   }
 
-  removeItem(item: ShoppingCartItem): void {
-    this.itemsArray = this.itemsArray.filter(i => i.offer.title !== item.offer.title);
+  removeItem(item: OfferInCart): void {
+    this.itemsArray = this.itemsArray.filter(i => i.title !== item.title);  // Utiliser `title` de OfferInCart
     localStorage.setItem('cart', JSON.stringify(this.itemsArray));
   }
 

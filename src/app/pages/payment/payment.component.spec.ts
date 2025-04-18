@@ -1,11 +1,27 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { HttpClientTestingModule,  HttpTestingController } from '@angular/common/http/testing';
 import { PaymentComponent } from './payment.component';
-import { AuthService } from '../../services/authenticate/auth.service'; 
-import { OrderService } from '../../services/order/order.service'; 
-import { NO_ERRORS_SCHEMA } from '@angular/core';
+import { TicketingService } from '../../services/ticketing/ticketing.service';
+import { AuthService } from '../../services/authenticate/auth.service';
 import { ModalService } from '../../services/modal/modal.service';
+import { Router } from '@angular/router';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { NO_ERRORS_SCHEMA } from '@angular/core';
+import { ShoppingCartComponent } from '../../component/shopping-cart/shopping-cart.component';
 import { of } from 'rxjs';
+
+const mockTicketingService = {
+  createOrder: jasmine.createSpy('createOrder').and.returnValue(of(true))
+};
+
+const mockAuthService = {
+  get getIsAuthenticated() {
+    return true;
+  }
+};
+
+const mockRouter = {
+  navigate: jasmine.createSpy('navigate')
+};
 
 const mockModalService = {
   open: jasmine.createSpy('open')
@@ -17,72 +33,85 @@ describe('PaymentComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule, PaymentComponent], 
+      imports: [PaymentComponent, ShoppingCartComponent, HttpClientTestingModule],
       providers: [
-        { provide: ModalService, useValue: mockModalService }, // 👈 Mock
-        OrderService,
-        AuthService
+        { provide: TicketingService, useValue: mockTicketingService },
+        { provide: AuthService, useValue: mockAuthService },
+        { provide: Router, useValue: mockRouter },
+        { provide: ModalService, useValue: mockModalService }
       ],
-      schemas: [NO_ERRORS_SCHEMA], // Pour éviter les erreurs sur les composants inconnus
-    })
-    .compileComponents();
+      schemas: [NO_ERRORS_SCHEMA]
+    }).compileComponents();
 
     fixture = TestBed.createComponent(PaymentComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it('should create the PaymentComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should create payment form with valid inputs', () => {
-    // Saisie des valeurs dans le formulaire
-    component.cardNumberFC.setValue('1234567812345678');
-    component.expiryDateFC.setValue('12/25');
-    component.cvvFC.setValue('123');
-    component.nameFC.setValue('John Doe');
-  
+  it('should have a valid form when all fields are filled', () => {
+    // Remplir le formulaire avec des données valides
+    component.paymentForm.setValue({
+      cardNumber: '1234567812345678',
+      expiryDate: '12/25',
+      cvv: '123',
+      name: 'John Doe'
+    });
+
     // Vérifie que le formulaire est valide
-    expect(component.paymentForm.valid).toBeTrue();
+    expect(component.paymentForm.valid).toBeTruthy();
   });
 
-  it('should call OrderService.create with correct parameters when form is valid', () => {
-    // Mock de la réponse du service
-    const mockOrderService = TestBed.inject(OrderService);
-    spyOn(mockOrderService, 'create').and.returnValue(of(true)); // Retourner un Observable<boolean> avec `true`
+  it('should call createOrder when the form is valid', () => {
+    // Remplir le formulaire avec des données valides
+    component.paymentForm.setValue({
+      cardNumber: '1234567812345678',
+      expiryDate: '12/25',
+      cvv: '123',
+      name: 'John Doe'
+    });
   
-    // Configuration du formulaire avec des valeurs valides
-    component.cardNumberFC.setValue('1234567812345678');
-    component.expiryDateFC.setValue('12/25');
-    component.cvvFC.setValue('123');
-    component.nameFC.setValue('John Doe');
+    // Simuler un panier avec un élément de type OfferInCart
+    component.itemsArray = [{
+      offer_id: 1,  // ID de l'offre
+      title: 'Offre 1',
+      description: 'Description de l\'offre 1',
+      image_url: 'url_de_limage',
+      price: 100,
+      quantity: 2,
+      nb_people: 1,
+      visible: true,  // Ajout de la propriété 'visible'
+      loadfromJson: function(json: any) {  // Ajout de la méthode 'loadfromJson'
+        this.offer_id = json.offer_id;
+        this.title = json.title;
+        this.description = json.description;
+        this.image_url = json.image_url;
+        this.price = json.price;
+        this.quantity = json.quantity;
+        this.nb_people = json.nb_people;
+        this.visible = json.visible;
+      }
+    }];  // Exemple d'offre dans le panier
   
-    // Simulation d'un élément de panier avec les propriétés manquantes
-    const mockCartItem = {
-      offer: { price: 10, nb_people: 2, title: 'Mock Offer' },
-      quantity: 1,
-      addItemQtyStorage: jasmine.createSpy('addItemQtyStorage'), // Ajout d'une méthode mockée
-      removeItemQtyStorage: jasmine.createSpy('removeItemQtyStorage') // Ajout d'une méthode mockée
-    };
-  
-    // Assigner l'élément mocké à `itemsArray` et le stocker dans localStorage
-    component.itemsArray = [mockCartItem];
-    localStorage.setItem('cart', JSON.stringify(component.itemsArray));
-  
-    // Appel de la méthode pay()
+    // Appeler la méthode pay()
     component.pay();
   
-    // Vérification que create() a bien été appelé avec les bons paramètres
-    expect(mockOrderService.create).toHaveBeenCalledWith({
-      cart: [{ offer_name: 'Mock Offer', quantity: 1 }],
+    // Vérifier que createOrder a été appelé avec les bonnes données
+    expect(mockTicketingService.createOrder).toHaveBeenCalledWith({
+      cart: jasmine.any(Array),  // Vérifie que le panier est passé comme tableau
       payment: {
         card_number: '1234567812345678',
         card_expiry: '12/25',
         card_cvc: '123',
-        mount: 10
+        mount: 200  // Montant total : 100 * 2
       },
-      nbPeople: 2
+      nbPeople: 2  // Nombre de personnes : 1 * 2 (car il y a 2 éléments dans le panier)
     });
+  
+    // Vérifier que la redirection a eu lieu après la commande
+    expect(mockRouter.navigate).toHaveBeenCalledWith(['/orders']);
   });
 });
