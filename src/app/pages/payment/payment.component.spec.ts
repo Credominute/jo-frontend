@@ -8,6 +8,7 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ShoppingCartComponent } from '../../component/shopping-cart/shopping-cart.component';
 import { of } from 'rxjs';
+import { Offer, OfferInCart } from '../../models/offer.model';
 
 const mockTicketingService = {
   createOrder: jasmine.createSpy('createOrder').and.returnValue(of(true))
@@ -74,44 +75,35 @@ describe('PaymentComponent', () => {
       name: 'John Doe'
     });
   
-    // Simuler un panier avec un élément de type OfferInCart
-    component.itemsArray = [{
-      offer_id: 1,  // ID de l'offre
-      title: 'Offre 1',
-      description: 'Description de l\'offre 1',
-      image_url: 'url_de_limage',
-      price: 100,
-      quantity: 2,
-      nb_people: 1,
-      visible: true,  // Ajout de la propriété 'visible'
-      loadfromJson: function(json: any) {  // Ajout de la méthode 'loadfromJson'
-        this.offer_id = json.offer_id;
-        this.title = json.title;
-        this.description = json.description;
-        this.image_url = json.image_url;
-        this.price = json.price;
-        this.quantity = json.quantity;
-        this.nb_people = json.nb_people;
-        this.visible = json.visible;
-      }
-    }];  // Exemple d'offre dans le panier
+    // Création explicite d'une instance valide de OfferInCart
+    const offer = new Offer();
+    offer.offer_id = 1;
+    offer.title = 'Offre 1';
+    offer.description = 'Description de l\'offre 1';
+    offer.image_url = 'url_de_limage';
+    offer.price = 100;
+    offer.nb_people = 1;
+    offer.visible = true;
+  
+    // Création de l'instance OfferInCart avec offer et quantity
+    const offerInCart = new OfferInCart(offer, 2);  // Passer l'offre et la quantité
+    component.itemsArray = [offerInCart];
   
     // Appeler la méthode pay()
     component.pay();
   
     // Vérifier que createOrder a été appelé avec les bonnes données
     expect(mockTicketingService.createOrder).toHaveBeenCalledWith({
-      cart: jasmine.any(Array),  // Vérifie que le panier est passé comme tableau
+      cart: jasmine.any(Array),
       payment: {
         card_number: '1234567812345678',
         card_expiry: '12/25',
         card_cvc: '123',
-        mount: 200  // Montant total : 100 * 2
+        mount: 200
       },
-      nbPeople: 2  // Nombre de personnes : 1 * 2 (car il y a 2 éléments dans le panier)
+      nbPeople: 2
     });
   
-    // Vérifier que la redirection a eu lieu après la commande
     expect(mockRouter.navigate).toHaveBeenCalledWith(['/orders']);
   });
 });

@@ -44,7 +44,8 @@ describe('TicketingService', () => {
       image_url: 'http://example.com/image.jpg',
       visible: true,
       loadfromJson: () => {},
-      quantity: 1
+      quantity: 1,
+      ticket_type: "single"
     }];
     
     const result = service['mapOfferInCartToOffer'](mockCart);
@@ -53,6 +54,7 @@ describe('TicketingService', () => {
     expect(result[0].offer_id).toBe(1);
     expect(result[0].title).toBe('Test Offer');
     expect(result[0].image_url).toBe('http://example.com/image.jpg');
+    expect(result[0].ticket_type).toBe("single");
   });
 
   it('should handle error when creating order', () => {
@@ -65,8 +67,9 @@ describe('TicketingService', () => {
       image_url: '',
       visible: true,
       quantity: 1,
-      loadfromJson: () => {}
-    }];
+      loadfromJson: () => {},
+      ticket_type: 'single'
+    }] as OfferInCart[];
     const payment = { cardNumber: '1234' };
     const nbPeople = 2;
 

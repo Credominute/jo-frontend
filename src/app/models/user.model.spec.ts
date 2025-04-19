@@ -4,10 +4,10 @@ describe('User model', () => {
   it('should create a User with default values', () => {
     const user = new User();
     expect(user.user_id).toBeNull();
-    expect(user.email).toBe('');
-    expect(user.firstName).toBe('');
-    expect(user.lastName).toBe('');
-    expect(user.phone).toBe('');
+    expect(user.mail).toBe('');
+    expect(user.prenom).toBe('');
+    expect(user.nom).toBe('');
+    expect(user.telephone).toBe('');
     expect(user.role_names).toEqual(['user']);
   });
 

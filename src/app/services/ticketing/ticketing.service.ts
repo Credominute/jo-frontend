@@ -30,7 +30,7 @@ export class TicketingService {
    */
   createOrder(order: { cart: OfferInCart[], payment: any, nbPeople: number }): Observable<boolean> {
     const payload = {
-      cart: this.mapOfferInCartToOffer(order.cart),  // Transformation des OfferInCart en Offer
+      cart: this.mapOfferInCartToOffer(order.cart),  
       payment: order.payment,
       nb_people: order.nbPeople,
     };
@@ -50,14 +50,15 @@ export class TicketingService {
   private mapOfferInCartToOffer(cart: OfferInCart[]): Offer[] {
     return cart.map(item => {
       return {
-        offer_id: item.offer_id,  // Id de l'offre
+        offer_id: item.offer_id, 
         title: item.title,
         description: item.description,
         nb_people: item.nb_people,
         price: item.price,
-        image_url: item.image_url,  // Assurez-vous que cette propriété existe dans OfferInCart
-        visible: item.visible,  // Assurez-vous que cette propriété existe dans OfferInCart
-        loadfromJson: item.loadfromJson,  // Inclure la méthode si nécessaire
+        image_url: item.image_url,  
+        visible: item.visible,  
+        loadfromJson: item.loadfromJson,  
+        ticket_type: item.ticket_type
       };
     });
   }
