@@ -2,7 +2,7 @@
     <header [ngClass]="{'hide': !offer.visible}">
       <h4>{{offer.title}}</h4>
     </header>
-  
+    
     <!-- Rectangle noir contenant image + prix + bouton choisir -->
     <div class="offer-box">
       <img [src]="offer.image_url" [alt]="offer.nb_people + ' stickman pour l\'offre ' + offer.title">
@@ -11,11 +11,9 @@
         <button id="choice_offer{{offer.offer_id}}" (click)="choose()" class="btn-choice">Choisir</button>
       </div>
     </div>
-  
     <div class="content">
       <p>{{offer.description}}</p>
     </div>
-  
     <div class="infos" [ngClass]="{'hide': !offer.visible}">
       <p>{{offer.nb_people}} personne(s)</p>
     </div>

@@ -64,8 +64,16 @@ export class TicketingService {
   }
   
   getAllVisible(): Observable<Offer[]> {
-    return this.http.get<Offer[]>(this.endpointURL).pipe(  // Utilisez l'URL correcte si nécessaire
-      map((offers) => offers.filter(o => o.visible))  // Filtrer pour ne retourner que les offres visibles
+    return this.http.get<any[]>(this.endpointURL).pipe(
+      map(offers =>
+        offers
+          .map(json => {
+            const offer = new Offer();
+            offer.loadfromJson(json);
+            return offer;
+          })
+          .filter(o => o.visible)
+      )
     );
   }
   /**

@@ -7,8 +7,9 @@ import { CommonModule } from '@angular/common';
   standalone: true,
   imports: [CommonModule],
   templateUrl: './offer.component.html',
-  styleUrls: ['../../../scss/components/offer.scss']
+  styleUrls: ['../../../scss/components/offer.scss'],
 })
+
 export class OfferComponent {
   @Input() offer!: Offer;
   @Output() selected = new EventEmitter<OfferInCart>();
@@ -19,10 +20,12 @@ export class OfferComponent {
     item.quantity = 1; // Par défaut, la quantité est 1
     this.selected.emit(item); // Émet l'objet OfferInCart avec la quantité
   }
+
+  constructor() {
+    console.warn('🔥 OfferComponent constructor called');
+  }
+
+  ngOnInit() {
+    console.warn('🧪 OfferComponent ngOnInit triggered');
+  }
 }
-
-
-  /* Optionnel, si on veut l’invoquer après l’ajout au panier (dans choose()).
-  scroll(){
-    document.getElementById("shoppingcart")?.scrollIntoView({behavior: "smooth"});
-  }*/

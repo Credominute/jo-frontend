@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule, CurrencyPipe } from '@angular/common';
 
 @Component({
@@ -13,6 +13,8 @@ export class ShoppingCartComponent {
   @Input() quantity: number = 1;
   @Input() pricePerOffer: number = 10;
   @Input() itemsArray: any[] = [];
+
+  @Output() removeItemEvent = new EventEmitter<any>(); 
 
   // Propriété items pour gérer les éléments du panier
   items = [
@@ -36,5 +38,6 @@ export class ShoppingCartComponent {
   // Méthode pour supprimer un item du panier
   removeItem(itemToRemove: any): void {
     this.items = this.items.filter(item => item !== itemToRemove);
+    this.removeItemEvent.emit(itemToRemove);
   }
 }

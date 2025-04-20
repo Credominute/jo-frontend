@@ -8,11 +8,11 @@ import { OfferComponent } from '../../component/offer/offer.component';
 import { ShoppingCartComponent } from '../../component/shopping-cart/shopping-cart.component';
 
 @Component({
-  selector: 'app-offers-page',
+  selector: 'app-offer',
   standalone: true,
   templateUrl: './offers.component.html',
   styleUrls: ['../../../scss/pages/offers.scss'],
-  imports: [CommonModule, OfferComponent, ShoppingCartComponent]
+  imports: [CommonModule, OfferComponent, ShoppingCartComponent],
 })
 export class OffersPageComponent implements OnInit {
   selectedOfferTitle: string | null = null;

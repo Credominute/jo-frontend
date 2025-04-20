@@ -21,9 +21,8 @@ jw-modal {
         }
 
         /* enables scrolling for tall modals */
-        & {
-            overflow: auto; /* Moved outside nested block */
-        }
+       
+        overflow: auto; /* Moved outside nested block */
     }
 
     .jw-modal-body {
