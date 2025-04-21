@@ -1,4 +1,4 @@
-<section class="offers-presentation">
+  <section class="offers-presentation">
     <h2>Bienvenue sur la page des offres et de billetterie</h2>
     <p>Vous pouvez sélectionner soit une offre simple, soit duo, soit familiale !</p>
     <p>Le nombre de participants sera affiché sur un billet unique à la fin de votre achat !</p>
@@ -12,13 +12,14 @@
   
   <section class="offers-content">
     <div class="cards">
-        <app-offer 
+        <app-offer-card 
         *ngFor="let offer of offers" 
         [offer]="offer"
         (selected)="addChoice($event)"
         class="card"
-      ></app-offer>
+      ></app-offer-card>
     </div>
+
     <div id="shoppingcart" class="shoppingcart">
         <h3>Mon panier</h3>
       

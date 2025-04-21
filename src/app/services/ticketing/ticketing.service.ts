@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable, map, catchError, throwError } from 'rxjs';
+import { Observable, map, catchError, throwError, of } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { AuthService } from '../authenticate/auth.service';
 import { Order } from '../../models/order.model';
@@ -64,17 +64,47 @@ export class TicketingService {
   }
   
   getAllVisible(): Observable<Offer[]> {
-    return this.http.get<any[]>(this.endpointURL).pipe(
-      map(offers =>
-        offers
-          .map(json => {
-            const offer = new Offer();
-            offer.loadfromJson(json);
-            return offer;
-          })
-          .filter(o => o.visible)
-      )
-    );
+    const offers = [
+      {
+        offer_id: 1,
+        title: 'Offre Solo',
+        description: 'Une place pour une personne',
+        nb_people: 1,
+        price: 50,
+        image_url: 'assets/solo.png',
+        visible: true,
+        ticket_type: 'single',
+      },
+      {
+        offer_id: 2,
+        title: 'Offre Duo',
+        description: 'Deux places côte à côte',
+        nb_people: 2,
+        price: 90,
+        image_url: 'assets/duo.png',
+        visible: true,
+        ticket_type: 'duo',
+      }, 
+      {
+        offer_id: 3,
+        title: 'Offre Familiale',
+        description: 'Quatre personnes pour partager un moment unique',
+        nb_people: 4,
+        price: 149.99,
+        image_url: 'assets/familial.png',
+        visible: true,
+        ticket_type: 'familial',
+      }
+    ];
+
+    return new Observable<Offer[]>(observer => {
+      observer.next(offers.map(json => {
+        const offer = new Offer();
+        offer.loadfromJson(json);
+        return offer;
+      }));
+      observer.complete();
+    });
   }
   /**
    * Récupère toutes les commandes de l'utilisateur.

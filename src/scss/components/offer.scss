@@ -19,87 +19,87 @@
     }
   }
 
-// Carte principale
+
+// Style principal pour chaque carte d'offre
 .offer {
-    background-color: #000;
-    border-radius: 0.75rem;
-    overflow: hidden;
-    box-shadow: 0 0 1rem rgba(0, 0, 0, 0.6);
-    color: v.$secondary-color;
+  background-color: #000;
+  border-radius: 0.75rem;
+  overflow: hidden;
+  box-shadow: 0 0 1rem rgba(0, 0, 0, 0.6);
+  color: v.$secondary-color;
+  display: flex;
+  flex-direction: column;
+
+  header {
+    padding: 0.75rem;
+    text-align: center;
+    font-size: 1.2rem;
+    font-weight: bold;
+    font-family: "Paris2024", sans-serif;
+  }
+
+  .offer-box {
     display: flex;
     flex-direction: column;
-  
-    header {
-      padding: 0.75rem;
-      text-align: center;
-      font-size: 1.2rem;
-      font-weight: bold;
-      font-family: "Paris2024", sans-serif;
+    align-items: center;
+    padding: 1rem;
+
+    img {
+      width: 100%;
+      max-height: 12rem;
+      object-fit: cover;
+      border-bottom: 0.1rem solid v.$secondary-color;
+
+      @include mixins.media-max("phone-down") {
+        max-height: 8rem;
+      }
     }
-  
-    .offer-box {
+
+    .offer-info {
       display: flex;
-      flex-direction: column;
+      justify-content: space-between;
       align-items: center;
-      padding: 1rem;
-  
-      img {
-        width: 100%;
-        max-height: 12rem;
-        object-fit: cover;
-        border-bottom: 0.1rem solid v.$secondary-color;
-  
-        @include mixins.media-max("phone-down") {
-          max-height: 8rem;
-        }
+      width: 100%;
+      margin-top: 0.5rem;
+
+      .price {
+        font-size: 1.2rem;
+        font-weight: bold;
       }
-  
-      .offer-info {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        width: 100%;
-        margin-top: 0.5rem;
-  
-        .price {
-          font-size: 1.2rem;
-          font-weight: bold;
-        }
-  
-        .btn-choice {
-          padding: 0.5rem 1rem;
-          font-size: 1rem;
-          font-family: "Paris2024", sans-serif;
-          background-color: v.$primary-color;
-          color: v.$secondary-color;
-          border: none;
-          border-radius: 0.5rem;
-          cursor: pointer;
-          transition: all 0.3s ease;
-  
-          &:hover {
-            background-color: v.$secondary-color;
-            color: v.$primary-color;
-          }
+
+      .btn-choice {
+        padding: 0.5rem 1rem;
+        font-size: 1rem;
+        font-family: "Paris2024", sans-serif;
+        background-color: v.$primary-color;
+        color: v.$secondary-color;
+        border: none;
+        border-radius: 0.5rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+
+        &:hover {
+          background-color: v.$secondary-color;
+          color: v.$primary-color;
         }
       }
     }
-  
-    .content {
-      padding: 1rem;
-      font-size: 1rem;
-      text-align: center;
-    }
-  
-    .infos {
-      padding: 0.5rem 1rem;
-      text-align: center;
-      font-size: 0.9rem;
-      font-style: italic;
-    }
   }
-  
-  // Classe de masquage (gérée par [ngClass])
-  .hide {
-    display: none;
+
+  .content {
+    padding: 1rem;
+    font-size: 1rem;
+    text-align: center;
   }
+
+  .infos {
+    padding: 0.5rem 1rem;
+    text-align: center;
+    font-size: 0.9rem;
+    font-style: italic;
+  }
+}
+
+.hide {
+  display: none;
+}

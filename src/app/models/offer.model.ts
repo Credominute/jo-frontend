@@ -27,7 +27,7 @@ export class Offer {
     }
 
     loadfromJson(json: any) {
-        Object.assign(this, json);
+        Object.assign(this, json); // Conserver la méthode loadfromJson
     }
 }
 

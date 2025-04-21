@@ -17,9 +17,6 @@
         "build": {
           "builder": "@angular-devkit/build-angular:application",
           "options": {
-            "stylePreprocessorOptions": {
-              "includePaths": ["src/scss"]
-            },
             "outputPath": "dist/jo-frontend",
             "index": "src/index.html",
             "browser": "src/main.ts",
@@ -37,6 +34,9 @@
               "src/scss/global.scss",
               "src/styles.css"
             ],
+            "stylePreprocessorOptions": {
+              "includePaths": ["src/scss"]
+            },
             "scripts": []
           },
           "configurations": {

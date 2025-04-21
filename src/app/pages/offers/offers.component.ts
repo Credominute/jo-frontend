@@ -8,7 +8,7 @@ import { OfferComponent } from '../../component/offer/offer.component';
 import { ShoppingCartComponent } from '../../component/shopping-cart/shopping-cart.component';
 
 @Component({
-  selector: 'app-offer',
+  selector: 'app-offers',
   standalone: true,
   templateUrl: './offers.component.html',
   styleUrls: ['../../../scss/pages/offers.scss'],
@@ -18,7 +18,7 @@ export class OffersPageComponent implements OnInit {
   selectedOfferTitle: string | null = null;
 
   offers: Offer[] = [];
-  itemsArray: OfferInCart[] = [];  // Remplacer ShoppingCartItem par OfferInCart
+  itemsArray: OfferInCart[] = []; 
 
   constructor(
     private readonly ticketingService: TicketingService,
@@ -26,8 +26,7 @@ export class OffersPageComponent implements OnInit {
     protected router: Router
   ) {}
 
-  // 🔄 Getter public pour usage dans le HTML
-  get cartItems(): OfferInCart[] {  // Remplacer ShoppingCartItem par OfferInCart
+  get cartItems(): OfferInCart[] { 
     return this.itemsArray;
   }
 
@@ -48,10 +47,30 @@ export class OffersPageComponent implements OnInit {
     this.loadCart();
   }
 
-  addChoice(choice: OfferInCart): void {
-    this.selectedOfferTitle = choice.title;  // Utiliser directement `title` de OfferInCart
+    /*Test for bugfix(offers)
+    ngOnInit(): void {
+      // Créer les offres de manière dynamique et les charger avec loadfromJson
+      this.offers = [{
+        offer_id: 999,
+        title: 'Offre de test',
+        description: 'Ceci est une offre de test pour vérifier l’affichage',
+        price: 42.0,
+        nb_people: 2,
+        visible: false,
+        image_url: 'assets/images/test.jpg',
+        ticket_type: 'single'
+      }].map(json => {
+        const offer = new Offer();  // Créer une nouvelle instance de l'Offer
+        offer.loadfromJson(json);  // Charger les données JSON dans l'instance
+        return offer;
+      });
+      this.loadCart(); 
+    }*/
 
-    let index = this.itemsArray.findIndex(item => item.title === choice.title);  // Utiliser `title` de OfferInCart
+  addChoice(choice: OfferInCart): void {
+    this.selectedOfferTitle = choice.title;  
+
+    let index = this.itemsArray.findIndex(item => item.title === choice.title);  
     if (index !== -1) {
       this.itemsArray[index].quantity += choice.quantity;
     } else {
@@ -61,7 +80,7 @@ export class OffersPageComponent implements OnInit {
   }
 
   removeItem(item: OfferInCart): void {
-    this.itemsArray = this.itemsArray.filter(i => i.title !== item.title);  // Utiliser `title` de OfferInCart
+    this.itemsArray = this.itemsArray.filter(i => i.title !== item.title);  
     localStorage.setItem('cart', JSON.stringify(this.itemsArray));
   }
 

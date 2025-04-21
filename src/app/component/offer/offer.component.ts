@@ -3,7 +3,7 @@ import { Offer, OfferInCart } from '../../models/offer.model';
 import { CommonModule } from '@angular/common';
 
 @Component({
-  selector: 'app-offer',
+  selector: 'app-offer-card',
   standalone: true,
   imports: [CommonModule],
   templateUrl: './offer.component.html',
@@ -27,5 +27,6 @@ export class OfferComponent {
 
   ngOnInit() {
     console.warn('🧪 OfferComponent ngOnInit triggered');
+    console.log('💡 OFFER COMPONENT REÇU :', this.offer);
   }
 }
