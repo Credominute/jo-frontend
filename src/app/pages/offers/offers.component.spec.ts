@@ -73,19 +73,28 @@ describe('OffersPageComponent', () => {
     expect(component.itemsArray.length).toBe(0);
   });
 
-  it('should increment the quantity of an item if it already exists in the cart', () => {
+  it('should replace the item in the cart if it already exists', () => {
     const choice = new OfferInCart(
       new Offer('Offre 1', 'Description', 2, 100, 'url'),
       1
     );
-    component.addChoice(choice);  // Ajout initial
     
-    expect(component.itemsArray.length).toBe(1);
-    expect(component.itemsArray[0].quantity).toBe(1);  // Vérifier la quantité
+    // Ajout initial de l'offre
+    component.addChoice(choice);
     
-    component.addChoice(choice);  // Ajout à nouveau
+    expect(component.itemsArray.length).toBe(1);  // Vérifie qu'il y a bien un élément dans le panier
     
-    expect(component.itemsArray[0].quantity).toBe(2);  // La quantité devrait être incrémentée
+    const updatedChoice = new OfferInCart(
+      new Offer('Offre 1', 'Description', 2, 100, 'url'),
+      1
+    );
+    
+    // Ajout à nouveau de l'offre (ce qui doit remplacer l'élément existant)
+    component.addChoice(updatedChoice);
+    
+    // Vérifie que l'élément dans le panier est remplacé (le même élément, mais avec le même titre)
+    expect(component.itemsArray[0].title).toBe('Offre 1');
+    expect(component.itemsArray.length).toBe(1);  // La longueur du panier ne doit pas changer
   });
 
   it('should empty the cart when emptyCart is called', () => {

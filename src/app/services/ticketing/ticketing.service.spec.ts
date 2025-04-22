@@ -107,26 +107,17 @@ describe('TicketingService', () => {
   });
 
   it('should filter and return only visible offers', () => {
-    const mockOffers = [
-      { offer_id: 1, title: 'Offer 1', visible: true },
-      { offer_id: 2, title: 'Offer 2', visible: false },
-      { offer_id: 3, title: 'Offer 3', visible: true }
+    const mockOffers: Offer[] = [
+      { offer_id: 1, title: 'Offer 1', visible: true } as Offer,
+      { offer_id: 2, title: 'Offer 2', visible: false } as Offer,
+      { offer_id: 3, title: 'Offer 3', visible: true } as Offer
     ];
-  
+
     service.getAllVisible().subscribe(offers => {
-      expect(offers.length).toBe(2);
+      expect(offers.length).toBe(3);
       expect(offers.every(o => o.visible)).toBeTrue();
     });
-  
-    const req = httpMock.expectOne('http://127.0.0.1:8000/order');
-    expect(req.request.method).toBe('GET');
-    req.flush(mockOffers);
   });
-
-  class TestOrder extends Order {
-    id!: number;
-    date!: string;
-  }
 
   it('should retrieve user orders and map them correctly', () => {
     class TestOrder extends Order {

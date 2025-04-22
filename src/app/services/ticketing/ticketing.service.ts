@@ -141,7 +141,4 @@ export class TicketingService {
       })
     );
   }
-
-  // Autres méthodes...
 }
-
