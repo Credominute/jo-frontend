@@ -15,5 +15,7 @@ export class HomeComponent implements OnInit {
   constructor() { }
 
   ngOnInit(): void 
-  {}
+  {
+  //Initialisation future
+    }
 }

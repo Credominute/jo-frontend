@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { SportCardComponent } from '../../component/sport-card/sport-card.component';
 
 @Component({
-  selector: 'app-events',
+  selector: 'app-sports-events',
   standalone: true,
   imports: [CommonModule, SportCardComponent],
   templateUrl: './sports.component.html',

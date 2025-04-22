@@ -1,8 +1,17 @@
 <div class="container">
-    <app-shopping-cart-item class="itemCart" *ngFor="let item of itemsArray" [item]="item" [mode]="mode" [ngClass]="{'read': mode === 'read'}"
-        (removeItemClicked)="removeItem($event)" />
-    <div class="basket-total">
-        <p>Montant total : <span>{{ total() | currency: 'EUR' }}</span></p>
-        <p>Nombre de participant(s) : <span>{{places()}}</span></p>
+  <div *ngFor="let item of itemsArray" class="itemCart">
+    <div class="itemDetails">
+      <h3>{{ item.title }}</h3>
+      <p>Prix : {{ item.price | currency: 'EUR' }}</p>
+      <p>Quantité : {{ item.quantity }}</p>
+      <p>Total : {{ item.price * item.quantity | currency: 'EUR' }}</p>
     </div>
+
+    <button *ngIf="mode === 'edit'" (click)="removeItem(item)">Retirer</button>
+  </div>
+
+  <div class="basket-total">
+    <p>Montant total : <span>{{ totalPrice | currency: 'EUR' }}</span></p>
+    <p>Nombre de participant(s) : <span>{{ totalPlaces }}</span></p>
+  </div>
 </div>

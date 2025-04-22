@@ -1,30 +1,34 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { ShoppingCartItemComponent } from "../shopping-cart-item/shopping-cart-item.component";
-import { CurrencyPipe, CommonModule } from '@angular/common';
-import { ShoppingCartItem } from '../../models/shoppingCartItem.model';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { CommonModule, CurrencyPipe } from '@angular/common';
+import { OfferInCart } from '../../models/offer.model';
 
 @Component({
-    selector: 'app-shopping-cart',
-    standalone: true,
-    templateUrl: './shopping-cart.component.html',
-    styleUrl: '../../../scss/components/shopping-cart.scss',
-    imports: [ShoppingCartItemComponent, CurrencyPipe, CommonModule]
+  selector: 'app-shopping-cart',
+  standalone: true,
+  templateUrl: './shopping-cart.component.html',
+  styleUrls: ['../../../scss/components/shopping-cart.scss'],
+  imports: [CommonModule, CurrencyPipe]
 })
 export class ShoppingCartComponent {
+  @Input() offerType: 'single' | 'duo' | 'familial' = 'single';
+  @Input() quantity: number = 1;
+  @Input() pricePerOffer: number = 10;
+  @Input() itemsArray: OfferInCart[] = [];
 
-  @Input() itemsArray: ShoppingCartItem[] = [];
-  @Input() mode: string = 'write';
-  @Output() removeItemEvent = new EventEmitter<ShoppingCartItem>();
+  @Output() removeItemEvent = new EventEmitter<any>(); 
 
-  removeItem(item: ShoppingCartItem): void {
-    this.removeItemEvent.emit(item);
+  // Mode d'affichage (par exemple : 'read', 'edit')
+  mode: string = 'read';
+
+  get totalPrice(): number {
+    return this.itemsArray.reduce((total, item) => total + item.price * item.quantity, 0);
   }
 
-  total() {
-    return this.itemsArray.reduce((total, item) => total + (item.offer.price * item.quantity), 0);
+  get totalPlaces(): number {
+    return this.itemsArray.reduce((total, item) => total + item.nb_people * item.quantity, 0);
   }
 
-  places() {
-    return this.itemsArray.reduce((places, item) => places + (item.offer.nb_people * item.quantity), 0);
+  removeItem(itemToRemove: OfferInCart): void {
+    this.removeItemEvent.emit(itemToRemove);
   }
 }

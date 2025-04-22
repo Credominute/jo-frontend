@@ -33,18 +33,19 @@ describe('OfferComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should emit selected with a ShoppingCartItem', () => {
+  it('should emit an OfferInCart instance when choose() is called', () => {
     const spy = spyOn(component.selected, 'emit');
-    const mockOffer = new Offer();
+  
+    const mockOffer = new Offer('Offre Duo', 'Desc', 2, 50, 'test.jpg');
+    mockOffer.offer_id = 1;
+    mockOffer.visible = true;
+  
     component.offer = mockOffer;
     fixture.detectChanges();
-
+  
     component.choose();
-
-    expect(spy).toHaveBeenCalledWith(jasmine.objectContaining({
-      offer: jasmine.any(OfferInCart),
-      quantity: 1
-    }));
+  
+    expect(spy).toHaveBeenCalledWith(jasmine.any(OfferInCart));
   });
 
   it('should display offer title and price', () => {

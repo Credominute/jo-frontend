@@ -102,8 +102,17 @@ footer {
             height: 100%;
             width: auto;
             border-radius: 50%;
-          }
+            }
         }
+            .content-info-socials-item {
+             margin-bottom: 10px; /* Espacement horizontal entre les icônes */
+          }
+
+               .content-info-socials img {
+                 width: 30px !important;
+                 height: auto !important;
+                 display: block;
+                }
 
         .footer-nav {
           display: flex;

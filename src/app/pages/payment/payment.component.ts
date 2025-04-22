@@ -1,12 +1,12 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { AbstractControl, FormBuilder, FormControl, FormGroup, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
-import { ShoppingCartItem } from '../../models/shoppingCartItem.model';
 import { ShoppingCartComponent } from "../../component/shopping-cart/shopping-cart.component";
-import { OrderService } from '../../services/order/order.service';
+import { TicketingService } from '../../services/ticketing/ticketing.service';
 import { Router } from '@angular/router';
 import { AuthService } from '../../services/authenticate/auth.service';
 import { ModalService } from '../../services/modal/modal.service';
+import { OfferInCart } from '../../models/offer.model';  // Assurez-vous d'importer OfferInCart
 
 @Component({
   selector: 'app-payment',
@@ -15,19 +15,18 @@ import { ModalService } from '../../services/modal/modal.service';
   styleUrls: ['../../../scss/pages/payment.scss'],
   imports: [ReactiveFormsModule, CommonModule, ShoppingCartComponent]
 })
-export class PaymentComponent {
+export class PaymentComponent implements OnInit {
   paymentForm: FormGroup;
-
-  itemsArray: ShoppingCartItem[] = [];
+  itemsArray: OfferInCart[] = [];  // Remplacer ShoppingCartItem par OfferInCart
   modeCart = 'read';
 
-  constructor(private formBuilder: FormBuilder,
-              private orderService: OrderService,
-              private router: Router,
-              private authService: AuthService,
-              protected modalService: ModalService
-            )
-  {
+  constructor(
+    private readonly formBuilder: FormBuilder,
+    private readonly ticketingService: TicketingService,
+    private readonly router: Router,
+    private readonly authService: AuthService,
+    protected modalService: ModalService
+  ) {
     // create the form
     this.paymentForm = this.formBuilder.group({
       cardNumber: ['', [Validators.required, Validators.pattern('^[0-9]{16}$')]],
@@ -35,25 +34,21 @@ export class PaymentComponent {
       cvv: ['', [Validators.required, Validators.pattern('^[0-9]{3}$')]],
       name: ['', [Validators.required, Validators.pattern('^[a-zA-Z ]{2,}$')]],
     });
-
-    let cart = localStorage.getItem('cart');
-    this.itemsArray = (cart !== null) ? JSON.parse(cart) : [];
-
-    // when the user is redirected from the login page, we redirect him to the payment page
-    if (localStorage.getItem('redirect') === '/payment') {
-      localStorage.removeItem('redirect');
-    }
   }
 
   ngOnInit(): void {
-    // If the user is not authenticated, we redirect him to the login modal
+    // Charger le panier depuis localStorage si présent
+    const cart = localStorage.getItem('cart');
+    this.itemsArray = (cart !== null) ? JSON.parse(cart) : [];
+
+    // Si l'utilisateur n'est pas authentifié, redirection vers la page de connexion
     if (!this.authService.getIsAuthenticated) {
-      alert("You are not authenticated");
+      alert("Vous n'êtes pas authentifié");
       this.router.navigate(['/']);
       this.modalService.open('login');
-    // If the cart is empty, we redirect him to the offers page
     } else if (this.itemsArray.length === 0) {
-      alert("Votre panier est vide. Vous allez être redirigé vars la page des offres.");
+      // Si le panier est vide, redirection vers la page des offres
+      alert("Votre panier est vide. Vous allez être redirigé vers la page des offres.");
       this.router.navigate(['/offers']);
     }
   }
@@ -63,7 +58,7 @@ export class PaymentComponent {
   }
 
   get expiryDateFC() {
-    return this.paymentForm.get('expiryDate') as FormControl<string>;;
+    return this.paymentForm.get('expiryDate') as FormControl<string>;
   }
 
   get cvvFC() {
@@ -74,6 +69,7 @@ export class PaymentComponent {
     return this.paymentForm.get('name') as FormControl<string>;
   }
 
+  // Validation pour la date d'expiration
   expiryDateValidator(control: AbstractControl): ValidationErrors | null {
     const monthExp = parseInt(control.value.split('/')[0]);
     const yearExp = parseInt(control.value.split('/')[1]);
@@ -82,12 +78,14 @@ export class PaymentComponent {
     return (yearExp > currentYear || (yearExp === currentYear && monthExp >= currentMonth)) ? null : { expiryDate: true };
   }
 
+  // Fonction de paiement
   pay() {
     if (this.paymentForm.valid) {
-      // prepare the datas to send to the server
-      // for the moment, I send the datas about the card in the server in clear, but it's not secure
-      const mountOrder = this.itemsArray.reduce((total, item) => total + (item.offer.price * item.quantity), 0);
-      const nbPeopleOrder = this.itemsArray.reduce((places, item) => places + (item.offer.nb_people * item.quantity), 0);
+      // Calcul du montant total et du nombre de personnes
+      const mountOrder = this.itemsArray.reduce((total, item) => total + (item.price * item.quantity), 0);
+      const nbPeopleOrder = this.itemsArray.reduce((places, item) => places + (item.nb_people * item.quantity), 0);
+
+      // Préparation des informations de paiement
       const payment = {
         "card_number": this.cardNumberFC.value,
         "card_expiry": this.expiryDateFC.value,
@@ -95,20 +93,18 @@ export class PaymentComponent {
         "mount": mountOrder
       };
 
+      // Mappage des éléments du panier avec toutes les informations nécessaires
       const cartOrder = this.itemsArray.map(item => {
-        return {
-          offer_name: item.offer.title,
-          quantity: item.quantity
-        }
+        return new OfferInCart(item, item.quantity); // Crée un nouvel OfferInCart avec les informations de l'Offer
       });
 
-      // send the datas to the server
-      this.orderService.create({ cart: cartOrder, payment: payment, nbPeople: nbPeopleOrder }).subscribe({
+      // Envoi des données au backend
+      this.ticketingService.createOrder({ cart: cartOrder, payment: payment, nbPeople: nbPeopleOrder }).subscribe({
         next: (data: any) => {
-          // empty the cart
+          // Vider le panier après la commande
           localStorage.removeItem('cart');
 
-          alert('Le paiment a bien été effectué. Vous allez être redirigé vers votre espace pour accéder à votre billet.');
+          alert('Le paiement a bien été effectué. Vous allez être redirigé vers votre espace pour accéder à votre billet.');
           this.router.navigate(['/orders']);
         },
         error: (error) => {

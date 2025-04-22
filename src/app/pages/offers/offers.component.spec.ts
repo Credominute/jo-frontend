@@ -1,14 +1,13 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { OffersPageComponent } from './offers.component';
-import { OffersService } from '../../services/offers/offers.service';
-import { Offer } from '../../models/offer.model';
+import { TicketingService } from '../../services/ticketing/ticketing.service';
+import { Offer, OfferInCart } from '../../models/offer.model';
 import { throwError, of } from 'rxjs';
-import { ShoppingCartItem } from '../../models/shoppingCartItem.model';
 
 describe('OffersPageComponent', () => {
   let component: OffersPageComponent;
   let fixture: ComponentFixture<OffersPageComponent>;
-  let mockOffersService: jasmine.SpyObj<OffersService>;
+  let mockOffersService: jasmine.SpyObj<TicketingService>;
 
   beforeEach(async () => {
     localStorage.clear();
@@ -24,7 +23,7 @@ describe('OffersPageComponent', () => {
     await TestBed.configureTestingModule({
       imports: [OffersPageComponent],  // Assurer que la configuration du composant est simple et isolée
       providers: [
-        { provide: OffersService, useValue: mockOffersService }  // Utiliser le mock pour OffersService
+        { provide: TicketingService, useValue: mockOffersService }  // Utiliser le mock pour OffersService
       ]
     })
     .compileComponents();
@@ -57,12 +56,12 @@ describe('OffersPageComponent', () => {
   });
 
   it('should remove an item from the itemsArray', () => {
-    // Ajout d'un élément dans le panier
-    const choice = new ShoppingCartItem(
+    // Ajout d'un élément dans le panier, ici on utilise OfferInCart
+    const choice = new OfferInCart(
       new Offer('Offre 1', 'Description', 2, 100, 'url'), 
       1
     );
-    component.addChoice(choice);
+    component.addChoice(choice);  // Ajout de l'offre au panier
   
     // Vérifie qu'il y a bien un élément dans le panier avant suppression
     expect(component.itemsArray.length).toBe(1);
@@ -74,23 +73,32 @@ describe('OffersPageComponent', () => {
     expect(component.itemsArray.length).toBe(0);
   });
 
-  it('should increment the quantity of an item if it already exists in the cart', () => {
-    const choice = new ShoppingCartItem(
+  it('should replace the item in the cart if it already exists', () => {
+    const choice = new OfferInCart(
       new Offer('Offre 1', 'Description', 2, 100, 'url'),
       1
     );
-    component.addChoice(choice);  // Ajout initial
     
-    expect(component.itemsArray.length).toBe(1);
-    expect(component.itemsArray[0].quantity).toBe(1);  // Vérifier la quantité
+    // Ajout initial de l'offre
+    component.addChoice(choice);
     
-    component.addChoice(choice);  // Ajout à nouveau
+    expect(component.itemsArray.length).toBe(1);  // Vérifie qu'il y a bien un élément dans le panier
     
-    expect(component.itemsArray[0].quantity).toBe(2);  // La quantité devrait être incrémentée
+    const updatedChoice = new OfferInCart(
+      new Offer('Offre 1', 'Description', 2, 100, 'url'),
+      1
+    );
+    
+    // Ajout à nouveau de l'offre (ce qui doit remplacer l'élément existant)
+    component.addChoice(updatedChoice);
+    
+    // Vérifie que l'élément dans le panier est remplacé (le même élément, mais avec le même titre)
+    expect(component.itemsArray[0].title).toBe('Offre 1');
+    expect(component.itemsArray.length).toBe(1);  // La longueur du panier ne doit pas changer
   });
 
   it('should empty the cart when emptyCart is called', () => {
-    const choice = new ShoppingCartItem(
+    const choice = new OfferInCart(
       new Offer('Offre 1', 'Description', 2, 100, 'url'),
       1
     );

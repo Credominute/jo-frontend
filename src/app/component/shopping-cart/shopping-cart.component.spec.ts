@@ -1,5 +1,4 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { ShoppingCartComponent } from './shopping-cart.component';
 
 describe('ShoppingCartComponent', () => {
@@ -9,8 +8,7 @@ describe('ShoppingCartComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [ShoppingCartComponent]
-    })
-    .compileComponents();
+    }).compileComponents();
 
     fixture = TestBed.createComponent(ShoppingCartComponent);
     component = fixture.componentInstance;
@@ -22,30 +20,65 @@ describe('ShoppingCartComponent', () => {
   });
 
   it('should calculate the total price correctly', () => {
-    // Préparer des données d'entrée en incluant les propriétés manquantes
-    const mockItems = [
-      { 
-        offer: { price: 10, nb_people: 1, title: 'Offer 1' }, 
-        quantity: 2, 
-        addItemQtyStorage: jasmine.createSpy(),
-        removeItemQtyStorage: jasmine.createSpy()
+    component.itemsArray = [
+      {
+        offer_id: 1,
+        price: 15,
+        nb_people: 1,
+        title: 'Offer A',
+        quantity: 2,
+        description: 'Description for Offer A',
+        image_url: 'https://example.com/image1.jpg',
+        visible: true,
+        ticket_type: 'single',
+        loadfromJson: () => {}
       },
-      { 
-        offer: { price: 20, nb_people: 2, title: 'Offer 2' }, 
-        quantity: 1, 
-        addItemQtyStorage: jasmine.createSpy(),
-        removeItemQtyStorage: jasmine.createSpy()
+      {
+        offer_id: 2,
+        price: 25,
+        nb_people: 3,
+        title: 'Offer B',
+        quantity: 1,
+        description: 'Description for Offer B',
+        image_url: 'https://example.com/image2.jpg',
+        visible: true,
+        ticket_type: 'familial',
+        loadfromJson: () => {}
       }
     ];
-  
-    // Assigner les données à l'Input du composant
-    component.itemsArray = mockItems;
-  
-    // Détecter les changements
     fixture.detectChanges();
-  
-    // Vérifier que le total est bien calculé
-    expect(component.total()).toBe(40);  // (10*2) + (20*1) = 40
+    expect(component.totalPrice).toBe(55); // 30 + 25
   });
-  
+
+  it('should calculate the total places correctly for single, duo, and familial offers', () => {
+    component.itemsArray = [
+      {
+        offer_id: 1,
+        price: 15,
+        nb_people: 1,
+        title: 'Offer A',
+        quantity: 2,
+        description: 'Description for Offer A',
+        image_url: 'https://example.com/image1.jpg',
+        visible: true,
+        ticket_type: 'single',
+        loadfromJson: () => {}
+      },
+      {
+        offer_id: 2,
+        price: 25,
+        nb_people: 3,
+        title: 'Offer B',
+        quantity: 1,
+        description: 'Description for Offer B',
+        image_url: 'https://example.com/image2.jpg',
+        visible: true,
+        ticket_type: 'familial',
+        loadfromJson: () => {}
+      }
+    ];
+    fixture.detectChanges();
+    expect(component.totalPlaces).toBe(5); // 2 + 3
+  });
 });
+

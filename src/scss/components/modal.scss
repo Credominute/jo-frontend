@@ -5,6 +5,10 @@ jw-modal {
     display: none;
 
     .jw-modal {
+
+        /* enables scrolling for tall modals */
+        overflow: auto; /* Moved outside nested block */
+
         /* modal container fixed across whole screen */
         position: fixed;
         inset: 0;
@@ -18,11 +22,6 @@ jw-modal {
 
         @include mixins.media-max("between-phone-tablet") {
             padding: 0.5rem;
-        }
-
-        /* enables scrolling for tall modals */
-        & {
-            overflow: auto; /* Moved outside nested block */
         }
     }
 

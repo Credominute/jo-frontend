@@ -1,6 +1,7 @@
 @use "../mixins";
 @use "../variables" as v;
 
+
 .offers-presentation {
     width: 100%;
     text-align: center;
@@ -9,8 +10,8 @@
 .offers-content {
     margin-top: 2rem;
     display: grid;
-    grid-template-columns: [offers] auto [basket] 27rem;
-    gap: 5rem;
+    grid-template-columns: 1fr 27rem; // Une colonne flexible pour les offres et une taille fixe pour le panier
+    gap: 3rem; // Réduction de l'espacement entre les colonnes
     justify-items: center;
 
     @include mixins.media-max("widescreen-up") {
@@ -22,10 +23,10 @@
     }
 
     .cards {
-        grid-column: offers;
+        grid-column: 1; // Utilisation de la première colonne pour les offres
         display: flex;
         flex-wrap: wrap;
-        gap: 1.25rem;
+        gap: 2rem; // Espacement réduit entre les cartes
         justify-content: center;
 
         .card {
@@ -38,7 +39,7 @@
     }
 
     .shoppingcart {
-        grid-column: basket;
+        grid-column: 2; // Le panier occupe la seconde colonne
         display: flex;
         flex-direction: column;
         align-items: center;

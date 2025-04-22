@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { OrderComponent } from './order.component';
-import { provideHttpClient } from '@angular/common/http'; // ✅ Ajout de provideHttpClient
-import { OrderService } from '../../services/order/order.service';
+import { provideHttpClient } from '@angular/common/http';
+import { TicketingService } from '../../services/ticketing/ticketing.service';
 import { AuthService } from '../../services/authenticate/auth.service';
 import { of } from 'rxjs';
 
@@ -13,29 +13,28 @@ interface AuthServiceMock {
 describe('OrderComponent', () => {
   let component: OrderComponent;
   let fixture: ComponentFixture<OrderComponent>;
-  let orderService: jasmine.SpyObj<OrderService>;
+  let ticketingService: jasmine.SpyObj<TicketingService>;
   let authService: AuthServiceMock;
 
   beforeEach(async () => {
     // Mock de AuthService
     authService = jasmine.createSpyObj<AuthServiceMock>('AuthService', ['getToken']);
-    
-    // Mock de OrderService
-    orderService = jasmine.createSpyObj<OrderService>('OrderService', ['create', 'getOrdersUser']);
 
-    // Simuler le retour des méthodes mockées
+    // ✅ Correction : noms des méthodes mockées doivent correspondre à celles de TicketingService
+    ticketingService = jasmine.createSpyObj<TicketingService>('TicketingService', ['createOrder', 'getUserOrders']);
+
+    // Configuration des valeurs de retour
     authService.getToken.and.returnValue('mockedToken');
-    orderService.getOrdersUser.and.returnValue(of([]));
+    ticketingService.getUserOrders.and.returnValue(of([]));
 
     await TestBed.configureTestingModule({
-      imports: [OrderComponent], // ✅ Composant en mode standalone
+      imports: [OrderComponent],
       providers: [
-        { provide: AuthService, useValue: authService }, // ✅ Mock de AuthService
-        { provide: OrderService, useValue: orderService }, // ✅ Mock de OrderService
-        provideHttpClient(), // ✅ Ajout du provider officiel pour HttpClient
+        { provide: AuthService, useValue: authService },
+        { provide: TicketingService, useValue: ticketingService },
+        provideHttpClient()
       ]
-    })
-    .compileComponents();
+    }).compileComponents();
 
     fixture = TestBed.createComponent(OrderComponent);
     component = fixture.componentInstance;
@@ -54,7 +53,7 @@ describe('OrderComponent', () => {
   it('should toggle showDetailsOrder when showDetails is called', () => {
     component.showDetails();
     expect(component.showDetailsOrder).toBeTrue();
-  
+
     component.showDetails();
     expect(component.showDetailsOrder).toBeFalse();
   });
@@ -62,9 +61,8 @@ describe('OrderComponent', () => {
   it('should toggle showTicketOrder when showTicket is called', () => {
     component.showTicket();
     expect(component.showTicketOrder).toBeTrue();
-  
+
     component.showTicket();
     expect(component.showTicketOrder).toBeFalse();
   });
-
 });

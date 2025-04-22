@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { OrdersComponent } from './orders.component';
 import { AuthService } from '../../services/authenticate/auth.service'; 
-import { OrderService } from '../../services/order/order.service'; 
+import { TicketingService } from '../../services/ticketing/ticketing.service'; 
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ModalService } from '../../services/modal/modal.service';
 import { Router } from '@angular/router';
@@ -20,7 +20,7 @@ describe('OrdersComponent', () => {
       imports: [HttpClientTestingModule, OrdersComponent], 
       providers: [
         { provide: ModalService, useValue: mockModalService }, // 👈 Mock
-        OrderService,
+        TicketingService,
         AuthService
       ], 
       schemas: [NO_ERRORS_SCHEMA], // Pour éviter les erreurs sur les composants inconnus
@@ -44,8 +44,8 @@ describe('OrdersComponent', () => {
     spyOnProperty(authService, 'getIsAuthenticated', 'get').and.returnValue(true);
   
     // Mock OrderService
-    const ordersService = TestBed.inject(OrderService);
-    spyOn(ordersService, 'getOrdersUser').and.returnValue({
+    const ticketingService = TestBed.inject(TicketingService);
+    spyOn(ticketingService, 'getUserOrders').and.returnValue({
       subscribe: (observer: any) => observer.next(mockOrders)
     } as any);
   

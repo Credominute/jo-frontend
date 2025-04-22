@@ -1,11 +1,17 @@
 <div class="error-page">
     <div class="error-image">
-        <img [ngSrc]="'assets/images/page-non-found.jpg'" width="800" height="600" priority="true" alt="Erreur 404">
+      <style>
+            img {
+            max-width: 800px;
+            height: auto;
+            display: block;
+            margin: 20px auto;
+        }
+      </style>
+      <body>
+        <h1>Page non trouvée</h1>
+        <p>Il semble que vous soyez perdu !</p>
+        <img [ngSrc]="'assets/images/page-non-found.jpg'" width="700" height="600" priority="true" alt="erreur 404">
+      </body>
     </div>
-    
-    <div class="error-text">
-      <h2>Page non trouvée</h2>
-      <p>Il semble que vous soyez perdu ! 
-      </p>
-    </div>
-  </div>
+</div>
