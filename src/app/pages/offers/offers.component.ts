@@ -47,35 +47,19 @@ export class OffersPageComponent implements OnInit {
     this.loadCart();
   }
 
-    /*Test for bugfix(offers)
-    ngOnInit(): void {
-      // Créer les offres de manière dynamique et les charger avec loadfromJson
-      this.offers = [{
-        offer_id: 999,
-        title: 'Offre de test',
-        description: 'Ceci est une offre de test pour vérifier l’affichage',
-        price: 42.0,
-        nb_people: 2,
-        visible: false,
-        image_url: 'assets/images/test.jpg',
-        ticket_type: 'single'
-      }].map(json => {
-        const offer = new Offer();  // Créer une nouvelle instance de l'Offer
-        offer.loadfromJson(json);  // Charger les données JSON dans l'instance
-        return offer;
-      });
-      this.loadCart(); 
-    }*/
-
   addChoice(choice: OfferInCart): void {
-    this.selectedOfferTitle = choice.title;  
-
-    let index = this.itemsArray.findIndex(item => item.title === choice.title);  
-    if (index !== -1) {
-      this.itemsArray[index].quantity += choice.quantity;
+    // Vérifier si l'offre est déjà dans le panier
+    let index = this.itemsArray.findIndex(item => item.title === choice.title);
+  
+    if (index === -1) {
+      // Si l'offre n'est pas déjà dans le panier, on l'ajoute
+      this.itemsArray = [choice];  // Remplacer tout le panier avec la nouvelle offre
     } else {
-      this.itemsArray.push(choice);
+      // Si l'offre est déjà dans le panier, on la remplace avec la nouvelle (ou rien à faire si c'est déjà la même)
+      this.itemsArray[index] = choice;  // Remplacer l'offre existante par la nouvelle
     }
+  
+    // Mettre à jour le localStorage
     localStorage.setItem('cart', JSON.stringify(this.itemsArray));
   }
 

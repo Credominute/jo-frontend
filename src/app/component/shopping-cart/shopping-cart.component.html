@@ -1,17 +1,17 @@
 <div class="container">
-    <div *ngFor="let item of items" class="itemCart">
-      <div class="itemDetails">
-        <h3>{{ item.offer.title }}</h3>
-        <p>Prix : {{ item.offer.price | currency: 'EUR' }}</p>
-        <p>Quantité : {{ item.quantity }}</p>
-        <p>Total : {{ item.offer.price * item.quantity | currency: 'EUR' }}</p>
-      </div>
-  
-      <button *ngIf="mode === 'edit'" (click)="removeItem(item)">Retirer</button>
+  <div *ngFor="let item of itemsArray" class="itemCart">
+    <div class="itemDetails">
+      <h3>{{ item.title }}</h3>
+      <p>Prix : {{ item.price | currency: 'EUR' }}</p>
+      <p>Quantité : {{ item.quantity }}</p>
+      <p>Total : {{ item.price * item.quantity | currency: 'EUR' }}</p>
     </div>
-  
-    <div class="basket-total">
-      <p>Montant total : <span>{{ totalPrice | currency: 'EUR' }}</span></p>
-      <p>Nombre de participant(s) : <span>{{ totalPlaces }}</span></p>
-    </div>
+
+    <button *ngIf="mode === 'edit'" (click)="removeItem(item)">Retirer</button>
   </div>
+
+  <div class="basket-total">
+    <p>Montant total : <span>{{ totalPrice | currency: 'EUR' }}</span></p>
+    <p>Nombre de participant(s) : <span>{{ totalPlaces }}</span></p>
+  </div>
+</div>

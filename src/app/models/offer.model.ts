@@ -43,23 +43,23 @@ export class OfferInCart {
     ticket_type: 'single' | 'duo' | 'familial';
 
     constructor(offer: Offer, quantity: number) {
-        this.offer_id = offer.offer_id; // Ajout de l'ID de l'offre
+        this.offer_id = offer.offer_id; 
         this.title = offer.title;
-        this.description = offer.description; // Ajout de la description
+        this.description = offer.description; 
         this.nb_people = offer.nb_people;
         this.price = offer.price;
         this.quantity = quantity;
-        this.image_url = offer.image_url; // Assurer que l'image est bien prise de l'Offer
-        this.visible = offer.visible;     // Assurer que la visibilité est bien prise de l'Offer
+        this.image_url = offer.image_url; 
+        this.visible = offer.visible;     
         const allowedTypes = ['single', 'duo', 'familial'] as const;
         if (allowedTypes.includes(offer.ticket_type as any)) {
         this.ticket_type = offer.ticket_type as 'single' | 'duo' | 'familial';
         } else {
-        this.ticket_type = 'single'; // fallback par défaut
+        this.ticket_type = 'single'; 
         }
     }
 
     loadfromJson(json: any) {
-        Object.assign(this, json); // Conserver la méthode loadfromJson
+        Object.assign(this, json); 
     }
 }

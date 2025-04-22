@@ -1,11 +1,16 @@
 <article class="offer card" [ngClass]="{'hide': !offer.visible}">
-  <header [ngClass]="{'hide': !offer.visible}">
+  <div class="offer-title" [ngClass]="{'hide': !offer.visible}">
     <h4>{{offer.title}}</h4>
-  </header>
- 
+  </div>
+  
+  <!-- Bug "header cover" :
+   <header [ngClass]="{'hide': !offer.visible}">
+    <h4>{{offer.title}}</h4>
+  </header> -->
   <!-- Rectangle noir contenant image + prix + bouton choisir -->
+
   <div class="offer-box">
-    <img [src]="offer.image_url" [alt]="offer.nb_people + ' stickman pour l\'offre ' + offer.title">
+    <img [src]="offer.image_url" [alt]="offer.nb_people + ' billet(s) pour l\'offre ' + offer.title">
     <div class="offer-info">
       <p class="price">{{offer.price}} €</p>
       <button id="choice_offer{{offer.offer_id}}" (click)="choose()" class="btn-choice">Choisir</button>

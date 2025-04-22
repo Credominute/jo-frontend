@@ -1,15 +1,48 @@
 @use "../mixins";
 @use "../variables" as v;
 
-// Bloc images (à conserver tel quel)
+.offers-content {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 2rem;
+  padding: 2rem;
+  height: auto;
+
+  .cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(18rem, 1fr));
+    gap: 2rem;
+    flex: 1 1 auto;
+    align-items: stretch;
+    margin-right: 1rem;
+  }
+
+  .shoppingcart {
+    flex: 0 0 35%;
+    max-width: 35%;
+    background: #f2f2f2;
+    padding: 1rem;
+    height: fit-content;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    position: sticky;
+    top: 6rem;
+    min-width: 320px;
+    min-height: 280px;
+    margin-top: 1rem;
+  }
+}
+
 .offers-images {
     display: flex;
     justify-content: space-around;
-    margin: 1.5rem 0;
+    margin: 1rem 0;
   
     .offer-img {
-      width: 30%;
-      border-radius: 10px;
+      width: 20%;
+      border-radius: 12px;
       box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
       transition: transform 0.3s ease;
   
@@ -19,18 +52,19 @@
     }
   }
 
-
-// Style principal pour chaque carte d'offre
 .offer {
   background-color: #000;
   border-radius: 0.75rem;
   overflow: hidden;
   box-shadow: 0 0 1rem rgba(0, 0, 0, 0.6);
   color: v.$secondary-color;
+  min-height: 20rem;
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
 
-  header {
+
+  .offer-title {
     padding: 0.75rem;
     text-align: center;
     font-size: 1.2rem;
