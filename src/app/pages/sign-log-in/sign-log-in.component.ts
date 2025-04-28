@@ -52,6 +52,32 @@ export class SignLogInComponent {
     this.setInfos(ConstantsInfo.infoMessageLogin.checkEmail);
   }
 
+  handleEmailVerification() {
+    const emailControl = this.loginForm.get('email');
+  
+    if (!emailControl || emailControl.invalid) {
+      emailControl?.markAsTouched();
+      emailControl?.updateValueAndValidity();
+      console.warn('Email vide ou invalide, vérification annulée.');
+      return;
+    }
+  
+    this.authService.checkEmailMock(emailControl.value).subscribe({
+      next: result => {
+        if (result) {
+          this.step = 'login';
+          this.setInfos(ConstantsInfo.infoMessageLogin.login);
+        } else {
+          this.step = 'signup';
+          this.setInfos(ConstantsInfo.infoMessageLogin.signup);
+        }
+        this.displayForm();
+      },
+      error: (error) => {
+        console.error(error);
+      }
+    });
+  }
   get emailFC() {
     return this.loginForm.controls['email'] as FormControl<string>;
   }

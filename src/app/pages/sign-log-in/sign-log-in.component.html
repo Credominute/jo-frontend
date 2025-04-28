@@ -13,14 +13,27 @@
     <div class="email-container">
         <label for="email">Email:</label>
         <input id="email" formControlName="email" type="email" placeholder="test@gmail.com" required>
+        <!-- Ancien code (à conserver) :
         <div *ngIf="emailFC.touched && emailFC.errors" class="error">
             <div *ngIf="emailFC.errors?.['required']">L'email est requis.</div>
-            <div *ngIf="emailFC.errors?.['email']">L'email n'est pas valide.</div>
-        </div>
+            <div *ngIf="emailFC.errors?.['email']">L'email n'est pas valide.</div>-->
+        <div *ngIf="emailFC.touched && emailFC.errors" class="error">
+            <div *ngIf="emailFC.hasError('required'); else emailFormatInvalid">
+              L'email est requis.
+            </div>
+            <ng-template #emailFormatInvalid>
+              <div *ngIf="emailFC.hasError('email')">
+                L'email n'est pas valide.
+              </div>
+            </ng-template>
+          </div>
         <div class="actions-container">
-            <button type="button" id="checkBtn" *ngIf="step === 'checkEmail'" (click)="checkEmail()"
-                [disabled]="emailFC.invalid">Vérifier</button>
-        </div>
+         <!-- Http code (à conserver) : 
+     <button type="button" id="checkBtn" *ngIf="step === 'checkEmail'" (click)="checkEmail()"
+        [disabled]="emailFC.invalid">Vérifier</button> -->
+        <button type="button" id="checkBtn" *ngIf="step === 'checkEmail'" 
+        (click)="handleEmailVerification()">Vérifier</button>
+    </div>
     </div>
 
     <!-- if the user doesn't exist, then display the register form to signup -->
