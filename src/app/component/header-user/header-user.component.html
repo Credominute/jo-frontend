@@ -1,0 +1,13 @@
+<header *ngIf="userIsAuthenticated && !isAdmin">
+    <div class="flex-header">
+        <div class="title">
+            <h2>Mon espace</h2>
+        </div>
+        <nav role="navigation" aria-label="Navigation secondaire" class="my-space">
+            <div class="secondary-pages">
+                <a routerLink="/profile" routerLinkActive="selected" aria-label="Mes infos">Mes infos</a>
+                <a routerLink="/orders" routerLinkActive="selected" aria-label="Mes commandes">Mes commandes</a>
+            </div>
+        </nav>
+    </div>
+</header>

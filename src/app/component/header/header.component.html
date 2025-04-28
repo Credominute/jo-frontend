@@ -1,4 +1,4 @@
-<header>
+<header *ngIf="!isAdmin">
     <div class="flex-header">
         <div class="title">
             <h1>Jeux Olympiques 2024</h1>
@@ -10,10 +10,15 @@
                 <p>☰</p>
             </div>
             <div class="main_pages" [class.is-open]="isMenuOpen">
-                <a routerLink="/" routerLinkActive="selected" aria-label="Accueil">Accueil</a>
-                <a routerLink="/offers" routerLinkActive="selected" aria-label="Offres">Offres de billets</a>
-                <a routerLink="/login" aria-label="Connexion ou inscription">Connexion ou inscription</a>
+                <a routerLink="/" routerLinkActive="selected" aria-label="Accueil" (click)="toggleMenu()" [routerLinkActiveOptions]="{ exact : true}">Accueil</a>
+                <a routerLink="/offers" routerLinkActive="selected" aria-label="Offres"(click)="toggleMenu()">Offres de billets</a>
+                <a *ngIf="!userIsAuthenticated" routerLink="/login" aria-label="Connexion ou inscription">Connexion ou inscription</a>
+                <a *ngIf="userIsAuthenticated" (click)="logout()">Se déconnecter</a>
             </div>
         </nav>
     </div>
 </header>
+
+<!-- Ancien code :
+ <a routerLink="/login" aria-label="Connexion ou inscription">Connexion ou inscription</a> 
+ -->
