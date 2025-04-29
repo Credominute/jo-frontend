@@ -7,7 +7,7 @@ import { ModalService } from './services/modal/modal.service';
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, RouterModule, HeaderComponent, FooterComponent], 
+  imports: [RouterOutlet, RouterModule, HeaderComponent, FooterComponent ], 
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })

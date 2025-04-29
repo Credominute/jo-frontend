@@ -37,6 +37,7 @@
         cursor: pointer;
         margin-top: 0.5rem;
     }
+
     
     button:hover {
         background-color: v.$secondary-color;
@@ -87,4 +88,3 @@
     border: 2px solid v.$login-form-valid-border-color;
     padding: 1rem;
 }
-

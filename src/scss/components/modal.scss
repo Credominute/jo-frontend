@@ -1,7 +1,7 @@
 @use '../mixins';
 
 jw-modal {
-    /* modals are hidden by default */
+    /* le modal est caché par défaut */
     display: none;
 
     .jw-modal {
@@ -34,9 +34,16 @@ jw-modal {
         background: #fff;
         margin: 0 auto;
 
+        max-width: 600px;
+        max-height: 90vh;
+        overflow-y: auto;
+        overflow-x: hidden;
+        border-radius: 8px;
+
         @include mixins.media-max("between-phone-tablet") {
-            width: 90%;
-            padding: 0.25rem;
+            width: 95%;
+            padding: 0.5rem;
+            max-height: 95vh; // ajusté pour mobile
         }
 
         .btn-close {
