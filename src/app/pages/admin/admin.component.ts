@@ -5,9 +5,9 @@ import { CommonModule } from '@angular/common';
   selector: 'app-admin-home',
   standalone: true,
   imports: [CommonModule],
-  templateUrl: './admin-home.component.html',
+  templateUrl: './admin.component.html',
   styleUrls: ['../../../scss/pages/admin-home.scss'],
 })
-export class AdminHomeComponent {
+export class AdminComponent {
 
 }

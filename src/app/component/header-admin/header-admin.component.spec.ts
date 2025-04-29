@@ -18,7 +18,7 @@ describe('HeaderAdminComponent', () => {
     adminAuthSubject = new BehaviorSubject<boolean>(false);   // Valeur initiale false
 
     // Création d'un mock pour AuthService
-    authServiceSpy = jasmine.createSpyObj('AuthService', [], {
+    authServiceSpy = jasmine.createSpyObj('AuthService', ['logoutUser'], {
       getStatusAuthListener: statusAuthSubject.asObservable(),
       getAdminAuthListener: adminAuthSubject.asObservable()
     });
@@ -68,6 +68,11 @@ describe('HeaderAdminComponent', () => {
     component.ngOnInit();
     expect(component.userIsAuthenticated).toBe(false);
     expect(component.isAdmin).toBe(false);
+  });
+
+  it('should call logoutUser when logout is invoked', () => {
+    component.logout();
+    expect(authServiceSpy.logoutUser).toHaveBeenCalled();
   });
 });
 

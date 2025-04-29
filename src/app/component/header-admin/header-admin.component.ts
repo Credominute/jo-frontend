@@ -16,8 +16,6 @@ export class HeaderAdminComponent {
   private authListenerSubs: any;
   private adminListenerSubs: any;
 
-  isCRUD = false;
-
   constructor(private readonly authService: AuthService, private readonly router: Router) {}
 
   ngOnInit() {
@@ -41,15 +39,5 @@ export class HeaderAdminComponent {
 
   logout() {
     this.authService.logoutUser();
-  }
-
-  toggle() {
-    if (this.isCRUD) {
-      this.router.navigate(['/admin']);
-    } else {
-      this.router.navigate(['/admin/offers']);
-    }
-
-    this.isCRUD = !this.isCRUD;
   }
 }
