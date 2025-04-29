@@ -8,7 +8,7 @@ import { RouterLink } from '@angular/router';
   standalone: true,
   imports: [CommonModule, RouterLink],
   templateUrl: './header-user.component.html',
-  styleUrl: '/src/scss/components/header-user.scss'
+  styleUrls: ['../../../scss/components/header-user.scss'],
 })
 export class HeaderUserComponent {
   userIsAuthenticated = false;
