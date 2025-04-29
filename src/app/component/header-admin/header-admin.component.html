@@ -1,0 +1,22 @@
+<header *ngIf="userIsAuthenticated && isAdmin">
+    <div class="flex-header">
+        <div class="title">
+            <h2>Espace administration</h2>
+        </div>
+        <nav role="navigation" aria-label="Navigation administratio " class="admin-space">
+            <div class="admin-pages">
+            @if(!isCRUD){
+                <a routerLink="/admin/staffs" routerLinkActive="selected" aria-label="Le staff des JO">Le staff</a>
+                <a aria-label="Crud" (click)="toggle()">CRUD</a>
+                <a routerLink="/admin/orders" routerLinkActive="selected" aria-label="Les ventes">Les ventes</a>
+            }
+            @else{
+                <a routerLink="/admin/" routerLinkActive="selected" aria-label="Retour" (click)="toggle()">Retour</a>
+                <a routerLink="/admin/offers" routerLinkActive="selected" aria-label="Les offres">Les offres</a>
+                <a routerLink="/admin/events" routerLinkActive="selected" aria-label="Les épreuves">Les épreuves</a>
+            }
+                <a (click)="logout()" aria-label="Logout">Log out</a>
+            </div>
+        </nav>
+    </div>
+</header>

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { environment } from '../../../environments/environment';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable, Subject } from 'rxjs';
+import { Observable, Subject, of } from 'rxjs';
 import { Router } from '@angular/router';
 import { tap, switchMap } from 'rxjs/operators';
 
@@ -20,6 +20,16 @@ export class AuthService {
   endpointURL = environment.api;
 
   constructor(private readonly httpClient: HttpClient, private readonly router: Router){
+  }
+
+   // Authenticateservice mocké
+  checkEmailMock(email: string): Observable<boolean> {
+    // Ici tu peux simuler des résultats différents
+    const existingEmail = 'test@gmail.com'; // Email qui existe déjà
+    if (email === existingEmail) {
+      return of(true); // Utilisateur existe déjà
+    }
+    return of(false); // Utilisateur inexistant
   }
 
   // get the token

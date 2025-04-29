@@ -2,28 +2,43 @@
     <button (click)="onClose()" (mousedown)="onClose()">
         <img src="assets/images/common/close.png" alt="close">
     </button>
+    <div class="btn-close-caption" style="margin-left: 0.7rem; font-size: 0.9rem; color: red;">
+        Effacer
+      </div>
 </div>
+
 <div [formGroup]="loginForm" class="container" [ngClass]="{'invalid' : this.loginForm.invalid, 'valid' : this.loginForm.valid}">
     <div id="info" class="info">
         <h2>{{infoTitle}}</h2>
         <p>{{infoMessage}}</p>
     </div>
-<!-- If the authentification is succeded, don't display the form, just the div.info -->
+<!-- si l'authentification réussi, un formulaire ne s'affiche pas, juste l'info de cette div -->
 @if(step != 'success'){ 
     <div class="email-container">
         <label for="email">Email:</label>
         <input id="email" formControlName="email" type="email" placeholder="test@gmail.com" required>
         <div *ngIf="emailFC.touched && emailFC.errors" class="error">
-            <div *ngIf="emailFC.errors?.['required']">L'email est requis.</div>
-            <div *ngIf="emailFC.errors?.['email']">L'email n'est pas valide.</div>
-        </div>
+            <div *ngIf="emailFC.hasError('required'); else emailFormatInvalid">
+              L'email est requis.
+            </div>
+            <ng-template #emailFormatInvalid>
+              <div *ngIf="emailFC.hasError('email')">
+                L'email n'est pas valide.
+              </div>
+            </ng-template>
+          </div>
         <div class="actions-container">
+
+        <!-- Http code (à conserver pour communication avec le Back-End) : 
             <button type="button" id="checkBtn" *ngIf="step === 'checkEmail'" (click)="checkEmail()"
-                [disabled]="emailFC.invalid">Vérifier</button>
-        </div>
+                [disabled]="emailFC.invalid">Vérifier</button> -->
+
+        <button type="button" id="checkBtn" *ngIf="step === 'checkEmail'" 
+        (click)="handleEmailVerification()">Vérifier</button>
+    </div>
     </div>
 
-    <!-- if the user doesn't exist, then display the register form to signup -->
+    <!-- si l'utilisateur n'existe pas, alors s'ouvre un formulaire d'inscription -->
     @if (step === 'signup'){
     <div class="firstname-container">
         <label for="firstName">Prénom:</label>
@@ -50,7 +65,7 @@
     </div>
     }
 
-    <!-- Display the password field -->
+    <!-- Montre le champ du mot de passe -->
     @if (['login','signup'].includes(step)){
     <div class="password-container">
         <label for="password">Mot de passe:</label>

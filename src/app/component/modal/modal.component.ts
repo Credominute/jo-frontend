@@ -13,7 +13,7 @@ import { v4 as uuidv4 } from 'uuid';  // Import de uuid pour générer un id uni
 })
 export class ModalComponent implements OnInit, OnDestroy {
     @Input() id?: string;
-    @Input() widthbody?: string = '30rem';
+    @Input() widthbody?: string = '660px';
     isOpen = false;
     private readonly element: any;
 

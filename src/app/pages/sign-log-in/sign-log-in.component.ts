@@ -1,14 +1,13 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output, AfterViewInit } from '@angular/core';
 import { FormBuilder, Validators, ReactiveFormsModule, FormGroup, AbstractControl, ValidationErrors, FormControl } from '@angular/forms';
 import { AuthService } from '../../services/authenticate/auth.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { ErrorTranslation } from '../../services/constantsError';
 import { ConstantsInfo } from '../../constantsInfo';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { debounceTime } from 'rxjs/internal/operators/debounceTime';
 import { distinctUntilChanged } from 'rxjs/internal/operators/distinctUntilChanged';
-import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-sign-log-in',
@@ -31,7 +30,7 @@ export class SignLogInComponent {
   errorMessageValidators = ErrorTranslation.errorMessageValidators;
 
 
-  constructor(private formBuilder: FormBuilder, private authService: AuthService, private router: Router) {
+  constructor(private readonly formBuilder: FormBuilder, private readonly authService: AuthService, private readonly router: Router) {
     // create the form
     this.loginForm = this.formBuilder.group({
       email: ['', [Validators.required, this.emailValidator]],
@@ -52,6 +51,53 @@ export class SignLogInComponent {
     this.setInfos(ConstantsInfo.infoMessageLogin.checkEmail);
   }
 
+  ngOnInit(): void {
+    this.resizeModal();
+  }
+
+  resizeModal() {
+    // Utilisation du bon type HTMLElement pour avoir accès à la propriété 'style'
+    const modalElement = document.querySelector('.container') as HTMLElement;
+    
+    if (modalElement) {
+      modalElement.style.maxHeight = '75vh'; 
+      modalElement.style.height = 'auto';     
+      modalElement.style.width = 'auto';      
+      modalElement.style.margin = '0 auto';   
+      modalElement.style.padding = '20px';    
+      modalElement.style.display = 'flex';
+      modalElement.style.flexDirection = 'column';
+      modalElement.style.justifyContent = 'center';
+      modalElement.style.alignItems = 'center';
+    }
+  }
+
+  handleEmailVerification() {
+    const emailControl = this.loginForm.get('email');
+  
+    if (!emailControl || emailControl.invalid) {
+      emailControl?.markAsTouched();
+      emailControl?.updateValueAndValidity();
+      console.warn('Email vide ou invalide, vérification annulée.');
+      return;
+    }
+  
+    this.authService.checkEmailMock(emailControl.value).subscribe({
+      next: result => {
+        if (result) {
+          this.step = 'login';
+          this.setInfos(ConstantsInfo.infoMessageLogin.login);
+        } else {
+          this.step = 'signup';
+          this.setInfos(ConstantsInfo.infoMessageLogin.signup);
+        }
+        this.displayForm();
+      },
+      error: (error) => {
+        console.error(error);
+      }
+    });
+  }
   get emailFC() {
     return this.loginForm.controls['email'] as FormControl<string>;
   }
