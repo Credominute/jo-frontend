@@ -7,13 +7,14 @@
       </div>
 </div>
 
-<div [formGroup]="loginForm" class="container" [ngClass]="{'invalid' : this.loginForm.invalid, 'valid' : this.loginForm.valid}">
+<form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="container" [ngClass]="{'invalid' : this.loginForm.invalid, 'valid' : this.loginForm.valid}">
     <div id="info" class="info">
         <h2>{{infoTitle}}</h2>
         <p>{{infoMessage}}</p>
     </div>
-<!-- si l'authentification réussi, un formulaire ne s'affiche pas, juste l'info de cette div -->
-@if(step != 'success'){ 
+
+    <!-- si l'authentification réussi, un formulaire ne s'affiche pas, juste l'info de la div -->
+    @if(step != 'success'){ 
     <div class="email-container">
         <label for="email">Email:</label>
         <input id="email" formControlName="email" type="email" placeholder="test@gmail.com" required>
@@ -29,16 +30,15 @@
           </div>
         <div class="actions-container">
 
-        <!-- Http code (à conserver pour communication avec le Back-End) : 
-            <button type="button" id="checkBtn" *ngIf="step === 'checkEmail'" (click)="checkEmail()"
-                [disabled]="emailFC.invalid">Vérifier</button> -->
-
+    <!-- Http code (communication Backend) : 
+        <button type="button" id="checkBtn" *ngIf="step === 'checkEmail'" (click)="checkEmail()"
+            [disabled]="emailFC.invalid">Vérifier</button> -->
         <button type="button" id="checkBtn" *ngIf="step === 'checkEmail'" 
         (click)="handleEmailVerification()">Vérifier</button>
     </div>
     </div>
 
-    <!-- si l'utilisateur n'existe pas, alors s'ouvre un formulaire d'inscription -->
+    <!-- si l'utilisateur n'existe pas, affichage du formulaire d'inscription -->
     @if (step === 'signup'){
     <div class="firstname-container">
         <label for="firstName">Prénom:</label>
@@ -60,12 +60,12 @@
             placeholder="Saisir votre téléphone en format +33 658942458" required>
         <div *ngIf="phoneFC.touched && phoneFC.invalid" class="error">
             <div *ngIf="phoneFC.errors?.['required']">Le téléphone est requis.</div>
-            <div *ngIf="phoneFC.errors?.['pattern']">Le téléphone doit être un numéro valide.</div>
+            <div *ngIf="phoneFC.errors?.['pattern']">Le téléphone doit être un numéro valide selon le format.</div>
         </div>
     </div>
     }
 
-    <!-- Montre le champ du mot de passe -->
+    <!-- Affichage du champ 'mot de passe' -->
     @if (['login','signup'].includes(step)){
     <div class="password-container">
         <label for="password">Mot de passe:</label>
@@ -81,8 +81,10 @@
         <div *ngIf="errorMessage != '' && passwordFC.invalid" class="errorServer">{{errorMessage}}</div>
     </div>
     <div class="actions-container">
-        <button (click)="onSubmit()" id="submitForm" class="submit-button">{{step==='login' ? 'Se connecter' : 'S\'inscrire'}}</button>
+        <button type="submit" id="submitForm" class="submit-button">
+            {{step==='login' ? 'Se connecter' : 'S\'inscrire'}}
+          </button>
     </div>
     }
 }
-</div>
+</form>

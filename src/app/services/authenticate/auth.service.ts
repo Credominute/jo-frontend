@@ -12,7 +12,6 @@ export class AuthService {
   private isAuthenticated = (localStorage.getItem('access_token')!=null);     // waiting best solution
   private accessToken: string | null = null;
   private readonly statusAuthListener = new Subject<boolean>();
-
   private roles: string[] = [];
   private isAdmin = false;
   private readonly adminAthListener = new Subject<boolean>();
@@ -22,17 +21,16 @@ export class AuthService {
   constructor(private readonly httpClient: HttpClient, private readonly router: Router){
   }
 
-   // Authenticateservice mocké
+   // Le servive d'authentification mocké :
   checkEmailMock(email: string): Observable<boolean> {
-    // Ici tu peux simuler des résultats différents
+    // Ici on peut simuler des résultats différents
     const existingEmail = 'test@gmail.com'; // Email qui existe déjà
     if (email === existingEmail) {
-      return of(true); // Utilisateur existe déjà
+      return of(true); // Utilisateur qui existe déjà
     }
     return of(false); // Utilisateur inexistant
   }
 
-  // get the token
   get getToken(){
     return localStorage.getItem('access_token');
   }
@@ -41,12 +39,12 @@ export class AuthService {
     return this.isAuthenticated;
   }
 
-  // get the status of the authentication
+  // get le statut de l'authentication
   get getStatusAuthListener(){
     return this.statusAuthListener.asObservable();
   }
 
-  // look if the user is an admin
+  // vois si l'utilisateur est admin
   get getAdminAuthListener(){
     return this.adminAthListener.asObservable();
   }
@@ -63,7 +61,7 @@ export class AuthService {
     return this.roles;
   }
 
-  // Check if the email exists in the database
+  // Vérifie si le mail existe bien dans la base de données
   checkEmail(email: string){
     return new Observable<boolean>(observer => {
       this.httpClient.get(this.endpointURL + 'login/' + email).subscribe({
@@ -81,7 +79,19 @@ export class AuthService {
 
 
   signupUser(user: any){
-    // Create the user object to send to the server
+    if (environment.mock) {
+      console.log('[MOCK] signupUser() appelé');
+      localStorage.setItem('access_token', 'fake-token');
+      this.isAuthenticated = true;
+      this.statusAuthListener.next(true);
+      this.roles = ['user'];
+      localStorage.setItem('roles', JSON.stringify(this.roles));
+      this.isAdmin = false;
+      this.adminAthListener.next(false);
+      return of(true);
+    }
+
+    // Crée l'objet 'user' pour l'envoyer au serveur
     const registerUser = {
       email: user.email,
       password: user.password,
@@ -105,8 +115,21 @@ export class AuthService {
     });
   }
 
-  // Login the user
+  // Login de l'utilisateur
   loginUser(email: string, password: string): Observable<boolean> {
+    if (environment.mock) {
+      console.log('[MOCK] loginUser() appelé');
+      localStorage.setItem('access_token', 'fake-token');
+      this.isAuthenticated = true;
+      this.statusAuthListener.next(true);
+      this.roles = ['user'];
+      localStorage.setItem('roles', JSON.stringify(this.roles));
+      this.isAdmin = false;
+      this.adminAthListener.next(false);
+      return of(true);
+    }
+
+    // Version réelle :
     const headers = new HttpHeaders({
       'Content-Type': 'application/x-www-form-urlencoded'
     });
@@ -136,9 +159,9 @@ export class AuthService {
     );
   }
 
-  // logout user
+  // logout de l'utilisateur
   logoutUser(){
-    // reset the token and the authentication status
+    // reset du token et du statut de l'authentification
     this.accessToken = null;
     this.isAuthenticated = false;
     this.roles = [];
@@ -182,5 +205,4 @@ export class AuthService {
       });
     });
   }
-  
 }
