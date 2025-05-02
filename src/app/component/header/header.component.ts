@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { ModalService } from '../../services/modal/modal.service';
 import { AuthService } from '../../services/authenticate/auth.service';
-
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-header',
@@ -12,16 +12,20 @@ import { AuthService } from '../../services/authenticate/auth.service';
   templateUrl: './header.component.html',
   styleUrls: ['../../../scss/components/header.scss'],
 })
+
 export class HeaderComponent {
+  mock = environment.mock;
   isMenuOpen = false;
   modalService = inject(ModalService);
   authService = inject(AuthService);
   userIsAuthenticated = false;
   private authListenerSubs: any;
-
   isAdmin = false;
   private adminListenerSubs: any;
 
+  mockLoginAdmin() {
+    this.authService.mockLoginAsAdmin().subscribe();
+  }
 
   toggleMenu() {
     this.isMenuOpen = !this.isMenuOpen;
@@ -55,5 +59,5 @@ ngOnDestroy() {
   if (this.adminListenerSubs) {
     this.adminListenerSubs.unsubscribe();
   }
-}
+ }
 }

@@ -1,0 +1,27 @@
+<section class="admin-orders-container">
+    <h2>Commandes reçues</h2>
+  
+    <table class="orders-table">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Client</th>
+          <th>Date</th>
+          <th>Offre</th>
+          <th>Quantité</th>
+          <th>Total (€)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let order of mockOrders">
+          <td>{{ order.id }}</td>
+          <td>{{ order.email }}</td>
+          <td>{{ order.date }}</td>
+          <td>{{ order.offerType }}</td>
+          <td>{{ order.quantity }}</td>
+          <td>{{ order.total | number:'1.2-2' }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+  

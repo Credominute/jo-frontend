@@ -1,8 +1,8 @@
 @use "../mixins";
 @use "../variables" as v;
 
-@use "./admin-home";
-@use "./admin-offers";
+@use "./admin";
+@use "./admin-orders";
 @use "./home";
 @use "./manual";
 @use "./offers";

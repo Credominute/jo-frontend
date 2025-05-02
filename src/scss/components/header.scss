@@ -7,8 +7,8 @@
     $button-border-color-hover: v.$header-menu-color-hover,
     $button-background-color: v.$header-menu-background-color,
     $button-background-color-hover: v.$header-menu-background-color-hover,
-    $button-fontsize: 1.1rem,
-    $button-padding: 1.15rem 1rem,
+    $button-fontsize: 0.95rem,
+    $button-padding: 0.9rem 0.9rem,
     $button-fontweight: 700,
     $button-border-radius: 2rem
 );
@@ -24,7 +24,7 @@ header {
     width: 100%;
     z-index: 998;
     vertical-align: middle;
-    min-height: 9rem;  // Ajuster cette valeur si besoin
+    min-height: 9.5rem;  // Ajuster cette valeur si besoin
     padding-bottom: 3rem;  // Permettre au fond noir de descendre sous les boutons
     margin: 0;
     font-family: Paris2024, sans-serif;
@@ -101,12 +101,20 @@ header {
             }
         }
 
-          // Middle part : logo
+        // Partie centrale : logo
           .logo {
-            height: 85%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 6rem;
+            max-width: 8rem;
 
             img {
-                height: 100%;
+                height: auto;
+                max-height: 6rem;
+                width: auto;
+                max-width: 100%;
+                display: block;
             }   
 
             @include mixins.media-max("phone-up") {
@@ -114,7 +122,7 @@ header {
             }
         }  
 
-        // Right part : navigation
+        // Partie à droite : navigation
         nav {
             margin: auto 1rem;
             height: 4rem;
@@ -131,7 +139,7 @@ header {
                 width: 75%;
             }
         
-            // Display links horizontally
+            // Display links horizontallement
             .main_pages {
                 position: relative;
                 top: 2rem; // Ajuster cette valeur si besoin
@@ -206,8 +214,7 @@ header {
                     }
                 }
             }
-        
-            .burger {
+                .burger {
                 display: none;
 
                 // Displays the menu burger

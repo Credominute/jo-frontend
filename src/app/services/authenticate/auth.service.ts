@@ -9,12 +9,12 @@ import { tap, switchMap } from 'rxjs/operators';
   providedIn: 'root'
 })
 export class AuthService {
-  private isAuthenticated = (localStorage.getItem('access_token')!=null);     // waiting best solution
+  private isAuthenticated = (localStorage.getItem('access_token')!=null);   
   private accessToken: string | null = null;
   private readonly statusAuthListener = new Subject<boolean>();
   private roles: string[] = [];
   private isAdmin = false;
-  private readonly adminAthListener = new Subject<boolean>();
+  private readonly adminAuthListener = new Subject<boolean>();
 
   endpointURL = environment.api;
 
@@ -23,7 +23,6 @@ export class AuthService {
 
    // Le servive d'authentification mocké :
   checkEmailMock(email: string): Observable<boolean> {
-    // Ici on peut simuler des résultats différents
     const existingEmail = 'test@gmail.com'; // Email qui existe déjà
     if (email === existingEmail) {
       return of(true); // Utilisateur qui existe déjà
@@ -31,24 +30,36 @@ export class AuthService {
     return of(false); // Utilisateur inexistant
   }
 
+    // La simulation d'un compte admin (mock aussi) :
+  mockLoginAsAdmin(): Observable<boolean> {
+    if (environment.mock) {
+      console.log('[MOCK] mockLoginAsAdmin() appelé');
+      localStorage.setItem('access_token', 'fake-token');
+      this.isAuthenticated = true;
+      this.statusAuthListener.next(true);
+      this.roles = ['admin'];
+      localStorage.setItem('roles', JSON.stringify(this.roles));
+      this.isAdmin = true;
+      this.adminAuthListener.next(true);
+      this.router.navigate(['/admin']);
+  
+      return of(true);
+    }
+    return of(false);
+  }
+
   get getToken(){
     return localStorage.getItem('access_token');
   }
-
   get getIsAuthenticated(){
     return this.isAuthenticated;
   }
-
-  // get le statut de l'authentication
   get getStatusAuthListener(){
     return this.statusAuthListener.asObservable();
   }
-
-  // vois si l'utilisateur est admin
   get getAdminAuthListener(){
-    return this.adminAthListener.asObservable();
+    return this.adminAuthListener.asObservable();
   }
-
   get getIsAdmin(){
     let roles_local = localStorage.getItem('roles');
     if(roles_local){
@@ -56,12 +67,11 @@ export class AuthService {
     }
     return this.isAdmin;
   }
-
   get getRoles(){
     return this.roles;
   }
 
-  // Vérifie si le mail existe bien dans la base de données
+  // Vérifie si l'adresse mail existe bien dans la base de données
   checkEmail(email: string){
     return new Observable<boolean>(observer => {
       this.httpClient.get(this.endpointURL + 'login/' + email).subscribe({
@@ -87,7 +97,7 @@ export class AuthService {
       this.roles = ['user'];
       localStorage.setItem('roles', JSON.stringify(this.roles));
       this.isAdmin = false;
-      this.adminAthListener.next(false);
+      this.adminAuthListener.next(false);
       return of(true);
     }
 
@@ -125,11 +135,11 @@ export class AuthService {
       this.roles = ['user'];
       localStorage.setItem('roles', JSON.stringify(this.roles));
       this.isAdmin = false;
-      this.adminAthListener.next(false);
+      this.adminAuthListener.next(false);
       return of(true);
     }
 
-    // Version réelle :
+    // Version réelle (non mockée) :
     const headers = new HttpHeaders({
       'Content-Type': 'application/x-www-form-urlencoded'
     });
@@ -161,25 +171,25 @@ export class AuthService {
 
   // logout de l'utilisateur
   logoutUser(){
-    // reset du token et du statut de l'authentification
+    // reset token et statut de l'authentification
     this.accessToken = null;
     this.isAuthenticated = false;
     this.roles = [];
     this.isAdmin = false;
 
-    // notify the listeners
+    // notifie aux listeners
     this.statusAuthListener.next(false);
-    this.adminAthListener.next(false);
+    this.adminAuthListener.next(false);
 
-    // remove the token from the local storage
+    // retire le token du Localstorage
     localStorage.removeItem('access_token');
     localStorage.removeItem('roles');
 
-    // redirect the user to the home page
+    // redirige l'utilisateur vers l'accueil
     this.router.navigate(['']);
   }
 
-  // Get the roles of the user connected
+  // Obtient le role de l'utilisateur connecté
   getUserRoles() {
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',
@@ -193,7 +203,7 @@ export class AuthService {
           localStorage.setItem('roles', JSON.stringify(data));
 
           this.isAdmin = this.roles.includes('admin');
-          this.adminAthListener.next(this.isAdmin);
+          this.adminAuthListener.next(this.isAdmin);
 
           observer.next(data);
           observer.complete();
