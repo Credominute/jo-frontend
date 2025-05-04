@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import { AuthService } from '../../services/authenticate/auth.service';
 import { of, throwError } from 'rxjs';
 import { FormControl } from '@angular/forms';
+import { ConstantsInfo } from '../../constantsInfo';
 
 describe('SignLogInComponent', () => {
   let component: SignLogInComponent;

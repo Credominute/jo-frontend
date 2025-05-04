@@ -38,4 +38,22 @@
     line-height: 0.9rem;  
 }
 
+// Style spécifique aux liens (boutons) dans l'en-tête admin
+// - Empile les boutons verticalement
+// - Réduit leur largeur à leur contenu
+// - Ajoute un espacement visuel modéré
+.admin-pages {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 1.2rem; // réduit l’éloignement vertical du haut
+  
+    a {
+      width: max-content;           // garde la largeur idéale
+      padding: 0.5rem 1.5rem;       // légèrement réduit
+      font-size: 1.1rem;
+      margin-bottom: 0.6rem;        // espacement vertical modéré
+      text-align: center;
+    }
+  }
   
