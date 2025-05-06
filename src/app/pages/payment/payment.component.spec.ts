@@ -104,6 +104,6 @@ describe('PaymentComponent', () => {
       nbPeople: 2
     });
   
-    expect(mockRouter.navigate).toHaveBeenCalledWith(['/orders']);
+    expect(mockRouter.navigate).toHaveBeenCalledWith(['/']);
   });
 });

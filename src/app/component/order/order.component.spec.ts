@@ -20,7 +20,7 @@ describe('OrderComponent', () => {
     // Mock de AuthService
     authService = jasmine.createSpyObj<AuthServiceMock>('AuthService', ['getToken']);
 
-    // ✅ Correction : noms des méthodes mockées doivent correspondre à celles de TicketingService
+    // Correction : noms des méthodes mockées doivent correspondre à celles de TicketingService
     ticketingService = jasmine.createSpyObj<TicketingService>('TicketingService', ['createOrder', 'getUserOrders']);
 
     // Configuration des valeurs de retour

@@ -21,7 +21,7 @@ export class OrdersComponent {
   constructor(private readonly ticketingService: TicketingService, private readonly authService: AuthService, private readonly router:Router, protected modalService: ModalService) { }
 
   ngOnInit(): void {
-    // If the user is authenticated, we get the orders
+    // Si l'utilisateur est authentifié, la commande peut être récupérée
     if (this.authService.getIsAuthenticated) {
       this.ticketingService.getUserOrders().subscribe({
         next:
@@ -33,7 +33,7 @@ export class OrdersComponent {
         }
       });
     }
-    // If the user is not authenticated, we redirect him to the login modal
+    // Si l'utilisateur n'est pas authentifié, il est redirigé vers le modal du login
     else {
       alert("You are not authenticated");
       this.router.navigate(['/']);

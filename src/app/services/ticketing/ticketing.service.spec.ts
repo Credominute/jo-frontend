@@ -5,6 +5,7 @@ import { AuthService } from '../authenticate/auth.service';
 import { Order } from '../../models/order.model';
 import { OfferInCart, Offer } from '../../models/offer.model';
 import { HttpErrorResponse } from '@angular/common/http';
+import { environment } from '../../../environments/environment';
 
 describe('TicketingService', () => {
   let service: TicketingService;
@@ -12,6 +13,7 @@ describe('TicketingService', () => {
   let authServiceSpy: jasmine.SpyObj<AuthService>;
 
   beforeEach(() => {
+    environment.mockPayment = false;
     const spy = jasmine.createSpyObj('AuthService', ['getToken'], { getToken: 'test-token' });
 
     TestBed.configureTestingModule({

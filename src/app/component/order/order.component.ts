@@ -1,27 +1,25 @@
 import { Component, Input } from '@angular/core';
-import { Order } from '../../models/order.model';
-import { ShoppingCartComponent } from "../shopping-cart/shopping-cart.component";
 import { CommonModule } from '@angular/common';
+import { Order } from '../../models/order.model';
 import { TicketComponent } from '../ticket/ticket.component';
 
 @Component({
-    selector: 'app-order',
-    standalone: true,
-    templateUrl: './order.component.html',
-    styleUrl: '../../../scss/components/order.scss',
-    imports: [ShoppingCartComponent, CommonModule, TicketComponent]
+  selector: 'app-order',
+  standalone: true,
+  templateUrl: './order.component.html',
+  styleUrls: ['../../../scss/components/order.scss'], // ✅ corrigé (styleUrls au pluriel)
+  imports: [CommonModule, TicketComponent]
 })
 export class OrderComponent {
-  @Input() order: Order = new Order();
-  showDetailsOrder: boolean = false;
-  showTicketOrder: boolean = false;
+  @Input() order!: Order; // j'évite `new Order()` (les interfaces ne sont pas des classes)
+  showDetailsOrder = false;
+  showTicketOrder = false;
 
-  showDetails() {
+  showDetails(): void {
     this.showDetailsOrder = !this.showDetailsOrder;
   }
 
-  showTicket() {
+  showTicket(): void {
     this.showTicketOrder = !this.showTicketOrder;
   }
-
 }
