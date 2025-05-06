@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable, map, catchError, throwError, of } from 'rxjs';
+import { Observable, map, catchError, throwError, of, delay } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { AuthService } from '../authenticate/auth.service';
 import { Order } from '../../models/order.model';
@@ -30,11 +30,16 @@ export class TicketingService {
    */
   createOrder(order: { cart: OfferInCart[], payment: any, nbPeople: number }): Observable<boolean> {
     const payload = {
-      cart: this.mapOfferInCartToOffer(order.cart),  
+      cart: this.mapOfferInCartToOffer(order.cart),
       payment: order.payment,
       nb_people: order.nbPeople,
     };
-
+  
+    if (environment.mockPayment) {
+      console.log('[MOCK] Simulation de création de commande avec payload :', payload);
+      return of(true).pipe(delay(1000)); // Simule un paiement réussi avec 1s de délai
+    }
+  
     return this.http.post<void>(this.endpointURL, payload, { headers: this.authHeaders }).pipe(
       map(() => true),
       catchError(error => {
@@ -43,6 +48,7 @@ export class TicketingService {
       })
     );
   }
+  
 
   /**
    * Transforme un tableau d'OfferInCart en tableau d'Offer.

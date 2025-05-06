@@ -19,6 +19,7 @@ export const routes: Routes = [
   { path: 'manual', component: ManualPageComponent },
   { path: 'admin', component: AdminComponent},
   { path: 'admin-orders', component: AdminOrdersComponent},
+  { path: 'payment', loadComponent: () => import('./pages/payment/payment.component').then(m => m.PaymentComponent) },
   { path: 'under-construction', component: UnderConstructionComponent },
   { path: '**', component: PageNonFoundComponent }
 ];
