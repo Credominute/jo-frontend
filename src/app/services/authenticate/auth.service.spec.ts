@@ -9,7 +9,6 @@ describe('AuthenticateService', () => {
   let httpClientMock: jasmine.SpyObj<HttpClient>; // Utilisation d'un spy pour HttpClient
 
   beforeEach(() => {
-
     localStorage.clear();
     // Créer un mock de HttpClient
     httpClientMock = jasmine.createSpyObj('HttpClient', ['post', 'get']);
@@ -18,14 +17,14 @@ describe('AuthenticateService', () => {
     TestBed.configureTestingModule({
       providers: [
         AuthService, 
-        { provide: HttpClient, useValue: httpClientMock }  // On remplace HttpClient par notre mock
+        { provide: HttpClient, useValue: httpClientMock}  // On remplace HttpClient par notre mock
       ]
     });
     service = TestBed.inject(AuthService);
   });
 
   it('should handle login error', (done) => {
-    environment.mock = false;  // 🛑 On force le mode non-mock
+    environment.mock = false;  // On force le mode non-mock
 
     const mockError = new HttpErrorResponse({ status: 401, statusText: 'Unauthorized' });
     httpClientMock.post.and.returnValue(throwError(() => mockError));  // Simule une erreur 401
@@ -40,7 +39,7 @@ describe('AuthenticateService', () => {
   });
 
   it('should sign up user successfully', (done) => {
-    environment.mock = false;  // 🛑 Active la vraie logique d'inscription
+    environment.mock = false;  // Active la vraie logique d'inscription
 
     const mockResponse = {};  // Simule une réponse vide mais réussie
     httpClientMock.post.and.returnValue(of(mockResponse));
@@ -62,7 +61,7 @@ describe('AuthenticateService', () => {
   });
 
   it('should login user successfully (mock)', (done) => {
-    environment.mock = true;  // ✅ Ici, on teste bien le comportement mock
+    environment.mock = true;  // Ici, on teste bien le comportement mock
 
     service.loginUser('test@example.com', 'password').subscribe({
       next: (result) => {

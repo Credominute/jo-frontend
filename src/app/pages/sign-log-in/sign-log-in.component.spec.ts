@@ -5,7 +5,6 @@ import { Router } from '@angular/router';
 import { AuthService } from '../../services/authenticate/auth.service';
 import { of, throwError } from 'rxjs';
 import { FormControl } from '@angular/forms';
-import { ConstantsInfo } from '../../constantsInfo';
 
 describe('SignLogInComponent', () => {
   let component: SignLogInComponent;
@@ -22,6 +21,9 @@ describe('SignLogInComponent', () => {
     ]);
     routerSpy = jasmine.createSpyObj('Router', ['navigate']);
 
+    authServiceSpy.loginUser.and.returnValue(of(true));
+    authServiceSpy.checkEmail.and.returnValue(of(true));
+
     await TestBed.configureTestingModule({
       imports: [SignLogInComponent],
       providers: [
@@ -35,6 +37,10 @@ describe('SignLogInComponent', () => {
     fixture = TestBed.createComponent(SignLogInComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
+  });
+
+  it('should create', () => {
+    expect(component).toBeTruthy();
   });
 
   it('should return null for a valid email', () => {
@@ -54,10 +60,6 @@ describe('SignLogInComponent', () => {
     const passwordControl = component.loginForm.controls['password'];
     expect(emailControl).toBeTruthy();
     expect(passwordControl).toBeTruthy();
-  });
-
-  it('should create', () => {
-    expect(component).toBeTruthy();
   });
 
   it('should emit close event and reset modal on onClose()', () => {
@@ -167,7 +169,52 @@ describe('SignLogInComponent', () => {
     expect(component.passwordValidator(passwordControl)).toEqual({ passwordStrength: true });
   });
 
+  it('should mark the login form as invalid when fields are empty', () => {
+    // Vérification initiale de la validité
+    expect(component.loginForm.valid).toBeFalse();
+  
+    // Rendre les champs vides (même si déjà par défaut)
+    component.loginForm.setValue({
+      email: '',
+      password: '',
+      firstName: '',
+      lastName: '',
+      phone: ''
+    });
+    fixture.detectChanges();
+  
+    // Vérification après mise à jour
+    expect(component.loginForm.valid).toBeFalse();
+  });
+
+  it('should mark the login form as valid when required fields are filled', () => {
+    // Remplir les champs requis avec des valeurs valides
+    component.loginForm.setValue({
+      email: 'valid@example.com',
+      password: 'ValidPassword123!',
+      firstName: 'John',
+      lastName: 'Doe',
+      phone: '0123456789'
+    });
+    fixture.detectChanges();
+  
+    // Vérifier que le formulaire est valide
+    expect(component.loginForm.valid).toBeTrue();
+  });
+
+  it('should return null for a valid email', () => {
+    const emailControl = component.loginForm.controls['email'];
+    emailControl.setValue('test@example.com');
+    expect(component.emailValidator(emailControl)).toBeNull();  // Validation d'email réussie
+  });
+  
+  it('should emit close event and reset modal on onClose()', () => {
+    spyOn(component.close, 'emit');
+    component.loginForm.patchValue({ email: 'test@example.com', password: '1234' });
+    component.step = 'success';
+    component.onClose();
+    expect(component.step).toBe('checkEmail');
+    expect(component.loginForm.value.email).toBeNull();
+    expect(component.close.emit).toHaveBeenCalled();
+  });
 });
-
-
-

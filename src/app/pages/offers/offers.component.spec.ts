@@ -21,7 +21,7 @@ describe('OffersPageComponent', () => {
     ]));
 
     await TestBed.configureTestingModule({
-      imports: [OffersPageComponent],  // Assurer que la configuration du composant est simple et isolée
+      imports: [OffersPageComponent],  
       providers: [
         { provide: TicketingService, useValue: mockOffersService }  // Utiliser le mock pour OffersService
       ]
@@ -120,5 +120,4 @@ describe('OffersPageComponent', () => {
     
     expect(component.modalServiceGetter.open).toHaveBeenCalledWith('login');  // Vérifie que le modal a bien été ouvert
   });
-
 });

@@ -146,5 +146,20 @@ describe('TicketingService', () => {
     expect(req.request.method).toBe('GET');
     req.flush(mockOrders);
   });
-});
 
+  it('should handle error when fetching order by ID', () => {
+    const orderId = 42;
+    service.getOrderById(orderId).subscribe({
+      next: () => fail('Expected error, but got success'),
+      error: (error) => {
+        expect(error.status).toBe(404);
+        expect(error.error).toBe('Order not found');
+      }
+    });
+  
+    const req = httpMock.expectOne(`http://127.0.0.1:8000/order/${orderId}`);
+    req.flush('Order not found', { status: 404, statusText: 'Not Found' });
+  });
+  
+
+});
