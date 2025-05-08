@@ -6,6 +6,8 @@ import { AuthService } from '../../services/authenticate/auth.service';
 import { of, throwError } from 'rxjs';
 import { FormControl } from '@angular/forms';
 
+const mockValue = of(true); // Valeur simulée pour le test
+
 describe('SignLogInComponent', () => {
   let component: SignLogInComponent;
   let fixture: ComponentFixture<SignLogInComponent>;
@@ -16,11 +18,14 @@ describe('SignLogInComponent', () => {
     authServiceSpy = jasmine.createSpyObj('AuthService', [
       'checkEmail',
       'loginUser',
-      'signupUser',
-      'getAdminAuthListener'
     ]);
-    routerSpy = jasmine.createSpyObj('Router', ['navigate']);
 
+      // Spy sur la propriété getAdminAuthListener pour qu'elle retourne un Observable
+    Object.defineProperty(authServiceSpy, 'getAdminAuthListener', {
+      get: () => of(true), // retourne un Observable comme attendu
+    });
+
+    routerSpy = jasmine.createSpyObj('Router', ['navigate']);
     authServiceSpy.loginUser.and.returnValue(of(true));
     authServiceSpy.checkEmail.and.returnValue(of(true));
 
@@ -217,4 +222,25 @@ describe('SignLogInComponent', () => {
     expect(component.loginForm.value.email).toBeNull();
     expect(component.close.emit).toHaveBeenCalled();
   });
+  
+  it('should call login when step is login', () => {
+    // Assurer que la propriété 'step' est sur 'login'
+    component.step = 'login';
+  
+    // On fait en sorte que 'loginUser' retourne un observable
+    authServiceSpy.loginUser.and.returnValue(of(true));
+  
+    // Mettre à jour le formulaire avec des valeurs valides
+    component.loginForm.patchValue({
+      email: 'user@example.com',
+      password: 'ValidPassword123!'
+    });
+  
+    // Appel de la méthode qui est censée déclencher 'loginUser'
+    component.onSubmit();
+  
+    // Vérifier que 'loginUser' a bien été appelé avec les bonnes valeurs
+    expect(authServiceSpy.loginUser).toHaveBeenCalledWith('user@example.com', 'ValidPassword123!');
+  });
+  
 });

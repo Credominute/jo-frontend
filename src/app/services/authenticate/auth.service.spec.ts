@@ -160,4 +160,22 @@ describe('AuthenticateService', () => {
       }
     });
   });
+
+  it('should handle default "user" role if roles are missing in backend response', (done) => {
+    const mockLoginResponse = { access_token: 'fake-token' };  // Réponse avec un token
+    const mockRolesResponse = ['user'];  // Réponse avec le rôle par défaut
+  
+    httpClientMock.post.and.returnValue(of(mockLoginResponse));  // Mock du login
+    httpClientMock.get.and.returnValue(of(mockRolesResponse));   // Mock du rôle
+  
+    service.loginUser('user@example.com', 'password').subscribe({
+      next: (result) => {
+        expect(result).toBeTrue();  // Vérifie que l'authentification est réussie
+        expect(service.getRoles).toEqual(['user']);  // Vérifie que le rôle "user" est bien attribué
+        expect(service.getIsAdmin).toBeFalse();  // Vérifie que l'utilisateur n'est pas admin
+        done();
+      },
+      error: done.fail
+    });
+  });
 });

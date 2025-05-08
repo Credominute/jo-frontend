@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { environment } from '../../../environments/environment';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable, Subject, of, throwError } from 'rxjs';
+import { Observable, Subject, of} from 'rxjs';
 import { Router } from '@angular/router';
 import { tap, switchMap } from 'rxjs/operators';
 
@@ -87,6 +87,16 @@ export class AuthService {
     });
   }
 
+  // Ajout d'une fonction de mappage
+  private mapFrontendToBackend(user: any): any {
+    return {
+      mail: user.email,
+      mot_de_passe: user.password,
+      prenom: user.firstName,
+      nom: user.lastName,
+      telephone: user.phone,
+    };
+  }
 
   signupUser(user: any){
     if (environment.mock) {
@@ -101,15 +111,8 @@ export class AuthService {
       return of(true);
     }
 
-    // Crée l'objet 'user' pour l'envoyer au serveur
-    const registerUser = {
-      email: user.email,
-      password: user.password,
-      first_name: user.firstName,
-      last_name: user.lastName,
-      phone_number: user.phone,
-      role_names: ['user']
-    }
+    // Crée l'objet 'user' pour l'envoyer au serveur avec un mappage
+    const registerUser = this.mapFrontendToBackend(user);
 
     return new Observable<boolean>(observer => {
       this.httpClient.post(this.endpointURL + 'signup', registerUser).subscribe({
@@ -189,30 +192,37 @@ export class AuthService {
     this.router.navigate(['']);
   }
 
-  // Obtient le role de l'utilisateur connecté
-  getUserRoles() {
-    const headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-      'Authorization': 'Bearer ' + this.getToken
-    });
+// Obtient les rôles de l'utilisateur connecté
+getUserRoles() {
+  const headers = new HttpHeaders({
+    'Content-Type': 'application/json',
+    'Authorization': 'Bearer ' + this.getToken
+  });
 
-    return new Observable<string[]>(observer => {
-      this.httpClient.get(this.endpointURL + 'users/me/roles', { headers }).subscribe({
-        next: (data: any) => {
+  return new Observable<string[]>(observer => {
+    this.httpClient.get(this.endpointURL + 'users/me/roles', { headers }).subscribe({
+      next: (data: any) => {
+        // Vérifie si le backend renvoie bien un rôle
+        if (Array.isArray(data) && data.length > 0) {
           this.roles = data;
-          localStorage.setItem('roles', JSON.stringify(data));
-
-          this.isAdmin = this.roles.includes('admin');
-          this.adminAuthListener.next(this.isAdmin);
-
-          observer.next(data);
-          observer.complete();
-        },
-        error: (error) => {
-          observer.error(error);
-          observer.complete();
+        } else {
+          // Si aucun rôle n'est renvoyé, on attribue le rôle "user" par défaut
+          this.roles = ['user'];
+          console.warn('[WARN] Aucun rôle reçu du backend. Rôle "user" attribué par défaut.');
         }
-      });
+        
+        localStorage.setItem('roles', JSON.stringify(this.roles));
+
+        this.isAdmin = this.roles.includes('admin');
+        this.adminAuthListener.next(this.isAdmin);
+
+        observer.next(this.roles);
+        observer.complete();
+      },
+      error: (error) => {
+        observer.error(error);
+        observer.complete();
+      }
     });
-  }
-}
+  });
+}}
