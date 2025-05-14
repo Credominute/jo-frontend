@@ -11,15 +11,16 @@
       </div>
     </div>
     <div class="order-content">
-      <div *ngIf="showDetailsOrder">
-        <div class="order-details">
-          <div *ngFor="let ticket of order.tickets">
-            <app-ticket [ticket]="ticket" />
+    <div *ngIf="showDetailsOrder">
+      <div class="order-details">
+        <div *ngFor="let ticket of order.tickets">
+          <div class="ticket">
+            <h4>Billet n°{{ ticket.ticket_id }}</h4>
+            <p>Nombre de places : {{ ticket.number_of_places }}</p>
+            <img [src]="ticket.safeQrcodeUrl" alt="QR Code du billet" />
           </div>
         </div>
       </div>
     </div>
   </div>
-  
-  
-  
+</div>
