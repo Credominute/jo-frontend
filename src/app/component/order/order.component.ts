@@ -30,7 +30,6 @@ export class OrderComponent {
   showDetails(): void {
     this.showDetailsOrder = !this.showDetailsOrder;
   }
-
   showTicket(): void {
     this.showTicketOrder = !this.showTicketOrder;
   }

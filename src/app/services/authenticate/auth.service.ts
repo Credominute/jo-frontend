@@ -95,6 +95,7 @@ export class AuthService {
       prenom: user.firstName,
       nom: user.lastName,
       telephone: user.phone,
+      role:  ['user'],
     };
   }
 
@@ -192,37 +193,30 @@ export class AuthService {
     this.router.navigate(['']);
   }
 
-// Obtient les rôles de l'utilisateur connecté
-getUserRoles() {
-  const headers = new HttpHeaders({
-    'Content-Type': 'application/json',
-    'Authorization': 'Bearer ' + this.getToken
-  });
-
-  return new Observable<string[]>(observer => {
-    this.httpClient.get(this.endpointURL + 'users/me/roles', { headers }).subscribe({
-      next: (data: any) => {
-        // Vérifie si le backend renvoie bien un rôle
-        if (Array.isArray(data) && data.length > 0) {
-          this.roles = data;
-        } else {
-          // Si aucun rôle n'est renvoyé, on attribue le rôle "user" par défaut
-          this.roles = ['user'];
-          console.warn('[WARN] Aucun rôle reçu du backend. Rôle "user" attribué par défaut.');
-        }
-        
-        localStorage.setItem('roles', JSON.stringify(this.roles));
-
-        this.isAdmin = this.roles.includes('admin');
-        this.adminAuthListener.next(this.isAdmin);
-
-        observer.next(this.roles);
-        observer.complete();
-      },
-      error: (error) => {
-        observer.error(error);
-        observer.complete();
-      }
+// Obtient le role de l'utilisateur connecté
+  getUserRoles() {
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer ' + this.getToken
     });
-  });
-}}
+
+    return new Observable<string[]>(observer => {
+      this.httpClient.get(this.endpointURL + 'users/me/roles', { headers }).subscribe({
+        next: (data: any) => {
+          this.roles = data;
+          localStorage.setItem('roles', JSON.stringify(data));
+
+          this.isAdmin = this.roles.includes('admin');
+          this.adminAuthListener.next(this.isAdmin);
+
+          observer.next(data);
+          observer.complete();
+        },
+        error: (error) => {
+          observer.error(error);
+          observer.complete();
+        }
+      });
+    });
+  }
+}
