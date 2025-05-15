@@ -5,6 +5,7 @@ import { AuthService } from '../authenticate/auth.service';
 import { Order } from '../../models/order.model';
 import { OfferInCart, Offer } from '../../models/offer.model';
 import { HttpErrorResponse } from '@angular/common/http';
+import { environment } from '../../../environments/environment';
 
 describe('TicketingService', () => {
   let service: TicketingService;
@@ -12,6 +13,7 @@ describe('TicketingService', () => {
   let authServiceSpy: jasmine.SpyObj<AuthService>;
 
   beforeEach(() => {
+    environment.mockPayment = false;
     const spy = jasmine.createSpyObj('AuthService', ['getToken'], { getToken: 'test-token' });
 
     TestBed.configureTestingModule({
@@ -144,5 +146,20 @@ describe('TicketingService', () => {
     expect(req.request.method).toBe('GET');
     req.flush(mockOrders);
   });
-});
 
+  it('should handle error when fetching order by ID', () => {
+    const orderId = 42;
+    service.getOrderById(orderId).subscribe({
+      next: () => fail('Expected error, but got success'),
+      error: (error) => {
+        expect(error.status).toBe(404);
+        expect(error.error).toBe('Order not found');
+      }
+    });
+  
+    const req = httpMock.expectOne(`http://127.0.0.1:8000/order/${orderId}`);
+    req.flush('Order not found', { status: 404, statusText: 'Not Found' });
+  });
+  
+
+});

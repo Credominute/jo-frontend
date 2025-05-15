@@ -1,27 +1,36 @@
 import { Component, Input } from '@angular/core';
-import { Order } from '../../models/order.model';
-import { ShoppingCartComponent } from "../shopping-cart/shopping-cart.component";
 import { CommonModule } from '@angular/common';
-import { TicketComponent } from '../ticket/ticket.component';
+import { Order } from '../../models/order.model';
+import { DomSanitizer} from '@angular/platform-browser';
 
 @Component({
-    selector: 'app-order',
-    standalone: true,
-    templateUrl: './order.component.html',
-    styleUrl: '../../../scss/components/order.scss',
-    imports: [ShoppingCartComponent, CommonModule, TicketComponent]
+  selector: 'app-order',
+  standalone: true,
+  templateUrl: './order.component.html',
+  styleUrls: ['../../../scss/components/order.scss'],
+  imports: [CommonModule]
 })
 export class OrderComponent {
-  @Input() order: Order = new Order();
-  showDetailsOrder: boolean = false;
-  showTicketOrder: boolean = false;
+  @Input() order!: Order; 
+  showDetailsOrder = false;
+  showTicketOrder = false;
 
-  showDetails() {
+  constructor(private readonly sanitizer: DomSanitizer) {}
+
+  ngOnChanges(): void {
+    if (this.order?.tickets) {
+      this.order.tickets.forEach(ticket => {
+        ticket.safeQrcodeUrl = this.sanitizer.bypassSecurityTrustUrl(
+          'data:image/png;base64,' + ticket.qrcode
+        );
+      });
+    }
+  }
+
+  showDetails(): void {
     this.showDetailsOrder = !this.showDetailsOrder;
   }
-
-  showTicket() {
+  showTicket(): void {
     this.showTicketOrder = !this.showTicketOrder;
   }
-
 }

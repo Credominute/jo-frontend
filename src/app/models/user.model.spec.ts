@@ -8,7 +8,7 @@ describe('User model', () => {
     expect(user.prenom).toBe('');
     expect(user.nom).toBe('');
     expect(user.telephone).toBe('');
-    expect(user.role_names).toEqual(['user']);
+    expect(user.role).toEqual(['user']);
   });
 
   it('should assign values from JSON correctly', () => {
@@ -18,15 +18,15 @@ describe('User model', () => {
       firstName: 'Jean',
       lastName: 'Martin',
       phone: '0601020304',
-      role_names: ['admin']
+      role: ['admin']
     };
     const user = new User();
     user.loadfromJson(json);
     expect(user.user_id).toBe(7);
-    expect(user.role_names).toContain('admin');
+    expect(user.role).toContain('admin');
   });
 
-  it('should preserve default roles if none provided in JSON', () => {
+it('should preserve default roles if none provided in JSON', () => {
     const json = {
       email: 'a@b.com',
       firstName: 'A',
@@ -35,6 +35,6 @@ describe('User model', () => {
     };
     const user = new User();
     user.loadfromJson(json);
-    expect(user.role_names).toEqual(['user']);
+    expect(user.role).toEqual(['user']);
   });
 });

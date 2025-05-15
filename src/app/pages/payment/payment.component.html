@@ -5,12 +5,12 @@
     </div>
     <div class="payment-container">
         <h2>Paiement</h2>
-        <form [formGroup]="paymentForm" class="container">
+        <form *ngIf="paymentForm" [formGroup]="paymentForm" class="container">
             <div class="cardNumber-container">
                 <label for="cardNumber">Numéro de carte</label>
                 <input type="text" class="form-control" id="cardNumber" formControlName="cardNumber"
                     placeholder="Entrer votre numéro de carte" required>
-                <div *ngIf="cardNumberFC.touched && cardNumberFC.invalid" class="error">
+                <div *ngIf="cardNumberFC && cardNumberFC.touched && cardNumberFC.invalid" class="error">
                     <div *ngIf="cardNumberFC.errors?.['required']">Le numéro de carte bleue est requis.</div>
                     <div *ngIf="cardNumberFC.errors?.['pattern']">Le numéros de carte bleue doit être une numéro à 16 chiffres</div>
                 </div>

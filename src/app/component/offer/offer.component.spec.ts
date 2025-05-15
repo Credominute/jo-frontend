@@ -19,7 +19,7 @@ describe('OfferComponent', () => {
     const mockOffer = new Offer();
     mockOffer.title = 'Offre Duo';
     mockOffer.price = 50;
-    mockOffer.image_url = 'test.jpg';
+    mockOffer.image_url = 'http://localhost/test.jpg';
     mockOffer.nb_people = 2;
     mockOffer.visible = true; // Assurez-vous que 'visible' est défini
 

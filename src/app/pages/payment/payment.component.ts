@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { AbstractControl, FormBuilder, FormControl, FormGroup, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
 import { ShoppingCartComponent } from "../../component/shopping-cart/shopping-cart.component";
 import { TicketingService } from '../../services/ticketing/ticketing.service';
 import { Router } from '@angular/router';
@@ -27,9 +27,9 @@ export class PaymentComponent implements OnInit {
     private readonly authService: AuthService,
     protected modalService: ModalService
   ) {
-    // create the form
+    // création du formulaire
     this.paymentForm = this.formBuilder.group({
-      cardNumber: ['', [Validators.required, Validators.pattern('^[0-9]{16}$')]],
+      cardNumber: ['', [Validators.required, Validators.pattern('^[0-9]{13,16}$')]],
       expiryDate: ['', [Validators.required, this.expiryDateValidator, Validators.pattern('^[0-9]{2}/[0-9]{2}$')]],
       cvv: ['', [Validators.required, Validators.pattern('^[0-9]{3}$')]],
       name: ['', [Validators.required, Validators.pattern('^[a-zA-Z ]{2,}$')]],
@@ -54,19 +54,16 @@ export class PaymentComponent implements OnInit {
   }
 
   get cardNumberFC() {
-    return this.paymentForm.get('cardNumber') as FormControl<string>;
+    return this.paymentForm.get('cardNumber') !; 
   }
-
   get expiryDateFC() {
-    return this.paymentForm.get('expiryDate') as FormControl<string>;
+    return this.paymentForm.get('expiryDate') !;
   }
-
   get cvvFC() {
-    return this.paymentForm.get('cvv') as FormControl<string>;
+    return this.paymentForm.get('cvv') !;
   }
-
   get nameFC() {
-    return this.paymentForm.get('name') as FormControl<string>;
+    return this.paymentForm.get('name') !;
   }
 
   // Validation pour la date d'expiration
@@ -80,6 +77,7 @@ export class PaymentComponent implements OnInit {
 
   // Fonction de paiement
   pay() {
+    this.paymentForm.markAllAsTouched();
     if (this.paymentForm.valid) {
       // Calcul du montant total et du nombre de personnes
       const mountOrder = this.itemsArray.reduce((total, item) => total + (item.price * item.quantity), 0);
@@ -101,11 +99,11 @@ export class PaymentComponent implements OnInit {
       // Envoi des données au backend
       this.ticketingService.createOrder({ cart: cartOrder, payment: payment, nbPeople: nbPeopleOrder }).subscribe({
         next: (data: any) => {
-          // Vider le panier après la commande
+          // Vidons le panier après la commande
           localStorage.removeItem('cart');
 
-          alert('Le paiement a bien été effectué. Vous allez être redirigé vers votre espace pour accéder à votre billet.');
-          this.router.navigate(['/orders']);
+          alert('Le paiement a bien été effectué. Vous allez être redirigé vers l\'accueil.');
+          this.router.navigate(['/']);
         },
         error: (error) => {
           console.log('Payment failed');
