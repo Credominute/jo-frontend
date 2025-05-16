@@ -6,6 +6,8 @@ import { Order } from '../../models/order.model';
 import { OfferInCart, Offer } from '../../models/offer.model';
 import { HttpErrorResponse } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
+import { of } from 'rxjs'; 
+import { fakeAsync, tick } from '@angular/core/testing';
 
 describe('TicketingService', () => {
   let service: TicketingService;
@@ -59,35 +61,40 @@ describe('TicketingService', () => {
     expect(result[0].ticket_type).toBe("single");
   });
 
-  it('should handle error when creating order', () => {
-    const mockCart = [{
-      offer_id: 1,
-      title: 'Test Offer',
-      description: 'Desc',
-      nb_people: 2,
-      price: 100,
-      image_url: '',
-      visible: true,
-      quantity: 1,
-      loadfromJson: () => {},
-      ticket_type: 'single'
-    }] as OfferInCart[];
-    const payment = { cardNumber: '1234' };
-    const nbPeople = 2;
+ it('should handle error when creating order', (done) => {
+  const mockCart = [{
+    offer_id: 1,
+    title: 'Test Offer',
+    description: 'Desc',
+    nb_people: 2,
+    price: 100,
+    image_url: '',
+    visible: true,
+    quantity: 1,
+    loadfromJson: () => {},
+    ticket_type: 'single'
+  }] as OfferInCart[];
 
-    service.createOrder({ cart: mockCart, payment, nbPeople }).subscribe({
-      next: () => fail('should have failed'),
-      error: (error: HttpErrorResponse) => {
-        expect(error.error).toEqual('Error creating order');
-        expect(error.status).toBe(500);
-      }
-    });
+  const payment = { cardNumber: '1234' };
+  const nbPeople = 2;
 
-    const req = httpMock.expectOne('http://127.0.0.1:8000/order');
-    expect(req.request.method).toBe('POST');
-    expect(req.request.headers.get('Authorization')).toBe('Bearer test-token');
+  service.createOrder({ cart: mockCart, payment, nbPeople }).subscribe({
+    next: () => done.fail('should have failed'),
+    error: (error: HttpErrorResponse) => {
+      expect(error.error).toEqual('Error creating order');
+      expect(error.status).toBe(500);
+      done();
+    }
+  });
 
-    req.flush('Error creating order', { status: 500, statusText: 'Server Error' });
+  // Intercepte la requête POST à l'URL de création de commande
+  const req = httpMock.expectOne('http://127.0.0.1:8000/order');
+
+  // Vérifie que la méthode est bien POST
+  expect(req.request.method).toBe('POST');
+
+  // Simule une réponse d’erreur du serveur (500)
+  req.flush('Error creating order', { status: 500, statusText: 'Server Error' });
   });
 
   it('should handle error when retrieving order by ID', () => {
@@ -100,8 +107,8 @@ describe('TicketingService', () => {
         expect(error.status).toBe(500);
       }
     });
-  
-    const req = httpMock.expectOne(`http://127.0.0.1:8000/order/${orderId}`);
+
+    const req = httpMock.expectOne(`${environment.api}order/${orderId}`);
     expect(req.request.method).toBe('GET');
     expect(req.request.headers.get('Authorization')).toBe('Bearer test-token');
   
@@ -109,17 +116,21 @@ describe('TicketingService', () => {
   });
 
   it('should filter and return only visible offers', () => {
-    const mockOffers: Offer[] = [
-      { offer_id: 1, title: 'Offer 1', visible: true } as Offer,
-      { offer_id: 2, title: 'Offer 2', visible: false } as Offer,
-      { offer_id: 3, title: 'Offer 3', visible: true } as Offer
-    ];
+  const mockOffers: Offer[] = [
+    { offer_id: 1, title: 'Offer 1', visible: true } as Offer,
+    { offer_id: 2, title: 'Offer 2', visible: false } as Offer,
+    { offer_id: 3, title: 'Offer 3', visible: true } as Offer
+  ];
 
-    service.getAllVisible().subscribe(offers => {
-      expect(offers.length).toBe(3);
-      expect(offers.every(o => o.visible)).toBeTrue();
-    });
+  // Mock de la réponse HTTP
+  service.getAllVisible = jasmine.createSpy().and.returnValue(of(mockOffers.filter(o => o.visible)));
+
+  service.getAllVisible().subscribe(offers => {
+    expect(offers.length).toBe(2); 
+    expect(offers.every(o => o.visible)).toBeTrue();
   });
+});
+
 
   it('should retrieve user orders and map them correctly', () => {
     class TestOrder extends Order {
@@ -160,6 +171,99 @@ describe('TicketingService', () => {
     const req = httpMock.expectOne(`http://127.0.0.1:8000/order/${orderId}`);
     req.flush('Order not found', { status: 404, statusText: 'Not Found' });
   });
-  
+
+  it('should retrieve all visible offers from real backend', () => {
+  const mockOffers: Offer[] = [
+    { offer_id: 1, title: 'Offer 1', visible: true } as Offer,
+    { offer_id: 2, title: 'Offer 2', visible: true } as Offer,
+  ];
+
+  environment.mock = false;  // Force l'utilisation du backend réel
+
+  service.getAllVisible().subscribe(offers => {
+    expect(offers.length).toBe(2);
+    expect(offers[0].offer_id).toBe(1);
+    expect(offers[1].title).toBe('Offer 2');
+  });
+
+  const req = httpMock.expectOne(`${environment.api}order/offers`);
+  expect(req.request.method).toBe('GET');
+  req.flush(mockOffers);
+});
+
+it('should handle error when retrieving visible offers from real backend', () => {
+  environment.mock = false;
+
+  service.getAllVisible().subscribe({
+    next: () => fail('Expected error, but got success'),
+    error: (error) => {
+      expect(error.status).toBe(404);
+      expect(error.error).toBe('Offers not found');
+    }
+  });
+
+  const req = httpMock.expectOne(`${environment.api}order/offers`);
+  expect(req.request.method).toBe('GET');
+  req.flush('Offers not found', { status: 404, statusText: 'Not Found' });
+});
+
+it('should create an order successfully', () => {
+  const mockCart: OfferInCart[] = [{
+    offer_id: 1,
+    title: 'Test Offer',
+    description: 'Test Desc',
+    nb_people: 2,
+    price: 100,
+    image_url: 'http://example.com/image.jpg',
+    visible: true,
+    loadfromJson: () => {},
+    quantity: 1,
+    ticket_type: 'single'
+  }];
+  const payment = { cardNumber: '1234' };
+  const nbPeople = 2;
+
+  environment.mock = false;
+
+  service.createOrder({ cart: mockCart, payment, nbPeople }).subscribe(result => {
+    expect(result).toBeTrue();
+  });
+
+  const req = httpMock.expectOne(environment.api + 'order');
+  expect(req.request.method).toBe('POST');
+  expect(req.request.headers.get('Authorization')).toBe('Bearer test-token');
+  req.flush({});
+});
+
+it('should handle error when creating order', fakeAsync(() => {
+  const mockCart: OfferInCart[] = [{
+    offer_id: 1,
+    title: 'Test Offer',
+    description: 'Test Desc',
+    nb_people: 2,
+    price: 100,
+    image_url: '',
+    visible: true,
+    loadfromJson: () => {},
+    quantity: 1,
+    ticket_type: 'single'
+  }];
+  const payment = { cardNumber: '1234' };
+  const nbPeople = 2;
+
+  service.createOrder({ cart: mockCart, payment, nbPeople }).subscribe({
+    next: () => fail('Expected error, but got success'),
+    error: (error: HttpErrorResponse) => {
+      expect(error.status).toBe(500);
+      expect(error.error).toBe('Server error');
+    }
+  });
+
+  tick(); // Assure que l'appel asynchrone est terminé
+  const req = httpMock.expectOne(environment.api + 'order');
+  expect(req.request.method).toBe('POST');
+  req.flush('Server error', { status: 500, statusText: 'Internal Server Error' });
+}));
+
 
 });

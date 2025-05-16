@@ -24,22 +24,25 @@ export class TicketingService {
     });
   }
 
-  /**
-   * Crée une commande basée sur les éléments du panier.
-   * Attente de { cart: OfferInCart[], payment: any, nbPeople: number }
-   */
+  // ===================
+  // Méthodes de commande
+  // ===================
+
   createOrder(order: { cart: OfferInCart[], payment: any, nbPeople: number }): Observable<boolean> {
+    return environment.mock ? this.createOrderMock(order) : this.createOrderReal(order);
+  }
+
+  private createOrderMock(order: { cart: OfferInCart[], payment: any, nbPeople: number }): Observable<boolean> {
+    console.log('[MOCK] Commande simulée avec payload :', order);
+    return of(true).pipe(delay(1000)); // Simulation d'un succès avec délai
+  }
+
+  private createOrderReal(order: { cart: OfferInCart[], payment: any, nbPeople: number }): Observable<boolean> {
     const payload = {
       cart: this.mapOfferInCartToOffer(order.cart),
       payment: order.payment,
       nb_people: order.nbPeople,
     };
-  
-    if (environment.mockPayment) {
-      console.log('[MOCK] Simulation de création de commande avec payload :', payload);
-      return of(true).pipe(delay(1000)); // Simule un paiement réussi avec 1s de délai
-    }
-  
     return this.http.post<void>(this.endpointURL, payload, { headers: this.authHeaders }).pipe(
       map(() => true),
       catchError(error => {
@@ -48,11 +51,44 @@ export class TicketingService {
       })
     );
   }
-  
 
-  /**
-   * Transforme un tableau d'OfferInCart en tableau d'Offer.
-   */
+  // =======================
+  // Méthodes de récupération
+  // =======================
+
+  getAllVisible(): Observable<Offer[]> {
+    return environment.mock ? this.getAllVisibleMock() : this.getAllVisibleReal();
+  }
+
+  private getAllVisibleMock(): Observable<Offer[]> {
+    console.log('[MOCK] Chargement des offres simulées');
+    const offers = [
+      { offer_id: 1, title: 'Solo', description: 'Une place', nb_people: 1, price: 50, image_url: 'assets/solo.png', visible: true, ticket_type: 'single' },
+      { offer_id: 2, title: 'Duo', description: 'Deux places', nb_people: 2, price: 90, image_url: 'assets/duo.png', visible: true, ticket_type: 'duo' },
+      { offer_id: 3, title: 'Familial', description: 'Quatre places', nb_people: 4, price: 149.99, image_url: 'assets/familial.png', visible: true, ticket_type: 'familial' },
+    ];
+    const mappedOffers = offers.map(json => {
+    const offer = new Offer();
+    offer.loadfromJson(json);
+    return offer;
+  });
+
+  return of(mappedOffers).pipe(delay(500));
+  }
+
+  private getAllVisibleReal(): Observable<Offer[]> {
+    return this.http.get<Offer[]>(`${this.endpointURL}/offers`, { headers: this.authHeaders }).pipe(
+      catchError(error => {
+        console.error('Erreur lors du chargement des offres', error);
+        return throwError(() => error);
+      })
+    );
+  }
+
+  // ================
+  // Gestion des mocks
+  // ================
+
   private mapOfferInCartToOffer(cart: OfferInCart[]): Offer[] {
     return cart.map(item => {
       return {
@@ -68,53 +104,10 @@ export class TicketingService {
       };
     });
   }
-  
-  getAllVisible(): Observable<Offer[]> {
-    const offers = [
-      {
-        offer_id: 1,
-        title: 'Offre Solo',
-        description: 'Une place pour une personne',
-        nb_people: 1,
-        price: 50,
-        image_url: 'assets/solo.png',
-        visible: true,
-        ticket_type: 'single',
-      },
-      {
-        offer_id: 2,
-        title: 'Offre Duo',
-        description: 'Deux places côte à côte',
-        nb_people: 2,
-        price: 90,
-        image_url: 'assets/duo.png',
-        visible: true,
-        ticket_type: 'duo',
-      }, 
-      {
-        offer_id: 3,
-        title: 'Offre Familiale',
-        description: 'Quatre personnes pour partager un moment unique',
-        nb_people: 4,
-        price: 149.99,
-        image_url: 'assets/familial.png',
-        visible: true,
-        ticket_type: 'familial',
-      }
-    ];
 
-    return new Observable<Offer[]>(observer => {
-      observer.next(offers.map(json => {
-        const offer = new Offer();
-        offer.loadfromJson(json);
-        return offer;
-      }));
-      observer.complete();
-    });
-  }
-  /**
-   * Récupère toutes les commandes de l'utilisateur.
-   */
+
+  // Récupère toutes les commandes de l'utilisateur.
+
   getUserOrders(): Observable<Order[]> {
     return this.http.get<any[]>(this.endpointURL, { headers: this.authHeaders }).pipe(
       map(data =>
@@ -131,9 +124,8 @@ export class TicketingService {
     );
   }
 
-  /**
-   * Récupère une commande spécifique.
-   */
+  // Récupère une commande spécifique.
+
   getOrderById(orderId: number): Observable<Order> {
     return this.http.get<any>(`${this.endpointURL}/${orderId}`, { headers: this.authHeaders }).pipe(
       map(json => {

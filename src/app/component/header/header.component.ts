@@ -24,7 +24,7 @@ export class HeaderComponent {
   private adminListenerSubs: any;
 
   mockLoginAdmin() {
-    this.authService.mockLoginAsAdmin().subscribe();
+    this.authService.loginMock('admin').subscribe();
   }
 
   toggleMenu() {
