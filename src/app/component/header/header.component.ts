@@ -37,18 +37,32 @@ export class HeaderComponent {
   }
 
   ngOnInit() {
+  // Vérifie si l'utilisateur est authentifié  
   this.userIsAuthenticated = this.authService.getIsAuthenticated;
-  // listen to the status of the authentication
+
+  // Écoute l'état d'authentification
   this.authListenerSubs = this.authService.getStatusAuthListener.subscribe((isAuthenticated: boolean) => {
     this.userIsAuthenticated = isAuthenticated;
   });
 
+  // Vérifie si l'utilisateur est admin
   this.isAdmin = this.authService.getIsAdmin;
-  // listen to the status of the authentication
+
+  // Écoute l'état d'authentification admin
   this.adminListenerSubs = this.authService.getAdminAuthListener.subscribe((isAdmin: boolean) => {
     this.isAdmin = isAdmin;
   });
 }
+
+// Vérifie la visibilité du bouton admin
+  isAdminVisible(): boolean {
+    // En développement, toujours afficher
+    if (!environment.production) {
+      return true;
+    }
+    // En production, afficher uniquement si l'utilisateur est admin
+    return this.isAdmin;
+  }
 
 ngOnDestroy() {
   // Vérification que la subscription existe avant d'essayer de se désabonner

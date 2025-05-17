@@ -16,7 +16,7 @@ describe('SignLogInComponent', () => {
 
   beforeEach(async () => {
     authServiceSpy = jasmine.createSpyObj('AuthService', [
-      'checkEmail',
+      'checkEmailMethod',
       'loginUser',
     ]);
 
@@ -91,26 +91,26 @@ describe('SignLogInComponent', () => {
     expect(component.firstNameFC.validator).toBeTruthy();
   });
 
-  it('should handle checkEmail returning true', () => {
-    authServiceSpy.checkEmail.and.returnValue(of(true));
-    component.loginForm.get('email')?.setValue('user@example.com');
-    component.checkEmail();
-    expect(component.step).toBe('login');
-  });
+it('should handle checkEmailMethod returning true', () => {
+  authServiceSpy.checkEmail.and.returnValue(of(true));  // Méthode correcte
+  component.loginForm.get('email')?.setValue('user@example.com');
+  component.handleEmailVerification();  // Méthode correcte du composant
+  expect(component.step).toBe('login');
+});
 
-  it('should handle checkEmail returning false', () => {
-    authServiceSpy.checkEmail.and.returnValue(of(false));
-    component.loginForm.get('email')?.setValue('user@example.com');
-    component.checkEmail();
-    expect(component.step).toBe('signup');
-  });
+it('should handle checkEmailMethod returning false', () => {
+  authServiceSpy.checkEmail.and.returnValue(of(false));  // Méthode correcte
+  component.loginForm.get('email')?.setValue('user@example.com');
+  component.handleEmailVerification();  // Méthode correcte du composant
+  expect(component.step).toBe('signup');
+});
 
-  it('should handle checkEmail error case gracefully', () => {
-    authServiceSpy.checkEmail.and.returnValue(throwError(() => new Error('Network error')));
-    spyOn(console, 'error');
-    component.checkEmail();
-    expect(console.error).toHaveBeenCalled();
-  });
+it('should handle checkEmailMethod error case gracefully', () => {
+  authServiceSpy.checkEmail.and.returnValue(throwError(() => new Error('Network error')));
+  spyOn(console, 'error');
+  component.handleEmailVerification();  // Méthode correcte du composant
+  expect(console.error).toHaveBeenCalled();
+});
 
   it('should expose FormControls via getters', () => {
     expect(component.emailFC instanceof FormControl).toBeTrue();
@@ -242,5 +242,4 @@ describe('SignLogInComponent', () => {
     // Vérifier que 'loginUser' a bien été appelé avec les bonnes valeurs
     expect(authServiceSpy.loginUser).toHaveBeenCalledWith('user@example.com', 'ValidPassword123!');
   });
-  
 });

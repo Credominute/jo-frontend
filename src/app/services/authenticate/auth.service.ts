@@ -20,16 +20,16 @@ export class AuthService {
 
   constructor(private readonly httpClient: HttpClient, private readonly router: Router) {}
 
-  // Constants for role management
-  private readonly ADMIN_ROLE = 'admin';
+  // Constantes pour la gestion des rôles
+  public readonly ADMIN_ROLE = 'admin';
   private readonly USER_ROLE = 'user';
 
-  // Centralized HTTP POST method
+  // Methode POST centralisée HTTP
   private httpPost(url: string, body: any, headers: HttpHeaders): Observable<any> {
     return this.httpClient.post<any>(`${this.endpointURL}${url}`, body, { headers });
   }
 
-  // Mock login for both user and admin
+  // Login mock pour l'utilisateur et l'admin
   public loginMock(role: string): Observable<boolean> {
     console.log(`[MOCK] loginUser() called as ${role}`);
     localStorage.setItem('access_token', 'fake-token');
@@ -42,7 +42,7 @@ export class AuthService {
     return of(true);
   }
 
-  // Centralized role update method
+  // Méthode centralisée d'actualisation des rôles
   private updateRoles(): void {
     let roles_local = localStorage.getItem('roles');
     if (roles_local) {
@@ -52,7 +52,7 @@ export class AuthService {
     }
   }
 
-  // Authentication status getters
+  // Authentification status getters
   get getToken() {
     return localStorage.getItem('access_token');
   }
@@ -78,7 +78,7 @@ export class AuthService {
     return this.roles;
   }
 
-  // Login user
+  // Login utilisateur
   loginUser(email: string, password: string): Observable<boolean> {
     if (environment.mock) {
       return this.loginMock(this.USER_ROLE);
@@ -105,7 +105,7 @@ export class AuthService {
     );
   }
 
-  // Mock admin login
+  // Login mock admin
   loginAsAdmin(): Observable<boolean> {
     if (environment.mock) {
       return this.loginMock(this.ADMIN_ROLE);
@@ -113,7 +113,7 @@ export class AuthService {
     return of(false);
   }
 
-  // User logout
+  // Logout utilisateur
   logoutUser() {
     this.accessToken = null;
     this.isAuthenticated = false;
@@ -126,7 +126,7 @@ export class AuthService {
     this.router.navigate(['']);
   }
 
-  // Get user roles from backend
+  // Obtient le rôle de l'utilisateur du backend
   getUserRoles(): Observable<string[]> {
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',
@@ -143,10 +143,21 @@ export class AuthService {
     );
   }
 
-  // Check if email exists in the database
+  // Vérifie si le mail existe dans la BDD
   checkEmail(email: string): Observable<boolean> {
     if (environment.mock) {
-      return this.checkEmailMock(email);  // Utilisation de la méthode mockée
+      return this.checkEmailMock(email); 
+    }
+
+    // Vérifier si le mail est l'admin prédéfini
+    const adminEmail = 'admin@hotmail.com';  // Mail administrateur fictif
+    if (email === adminEmail) {
+    // Met à jour les rôles et l'authentification pour l'admin
+      this.roles = [this.ADMIN_ROLE];
+      localStorage.setItem('roles', JSON.stringify(this.roles));
+      this.isAdmin = true;
+      this.adminAuthListener.next(true);
+      return of(true);  // Admin reconnu
     }
   
     return new Observable<boolean>(observer => {
@@ -163,16 +174,16 @@ export class AuthService {
    });
   }
 
-  // Vérifie si l'adresse email existe dans un contexte mocké
+  // Vérifie si l'adresse mail existe dans un contexte mocké
   checkEmailMock(email: string): Observable<boolean> {
-    const existingEmail = 'test@gmail.com'; // Email qui existe déjà
+    const existingEmail = 'test@gmail.com'; // Mail qui existe déjà
     if (email === existingEmail) {
       return of(true); // Utilisateur qui existe déjà
     }
     return of(false); // Utilisateur inexistant
   }
 
-  // Map frontend user to backend format
+  // Map l'utilisateur frontend au format backend
   private mapFrontendToBackend(user: any): any {
     return {
       mail: user.email,
@@ -184,7 +195,7 @@ export class AuthService {
     };
   }
 
-  // User registration
+  // Enregistrement de l'utilisateur
   signupUser(user: any): Observable<boolean> {
     if (environment.mock) {
       return this.loginMock(this.USER_ROLE);

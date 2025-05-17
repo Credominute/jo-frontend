@@ -6,8 +6,8 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { ErrorTranslation } from '../../services/constantsError';
 import { ConstantsInfo } from '../../constantsInfo';
 import { Router, RouterModule } from '@angular/router';
-import { debounceTime } from 'rxjs/internal/operators/debounceTime';
-import { distinctUntilChanged } from 'rxjs/internal/operators/distinctUntilChanged';
+import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-sign-log-in',
@@ -28,7 +28,11 @@ export class SignLogInComponent {
   errorMessageValidators = ErrorTranslation.errorMessageValidators;
 
 
-  constructor(private readonly formBuilder: FormBuilder, private readonly authService: AuthService, private readonly router: Router) {
+  constructor(
+    private readonly formBuilder: FormBuilder, 
+    private readonly authService: AuthService, 
+    private readonly router: Router
+  ) {
     // création du formulaire
     this.loginForm = this.formBuilder.group({
       email: ['', [Validators.required, this.emailValidator]],
@@ -38,14 +42,13 @@ export class SignLogInComponent {
       phone: ['']
     });
 
-    // si le mail est modifié, on reset le formulaire parce que le mail doit être de nouveau vérifié
+    // Réinitialisation du formulaire si l'email change
     this.loginForm.get('email')?.valueChanges.pipe(debounceTime(350), distinctUntilChanged()).subscribe(value => {
       if (['login','signup'].includes(this.step)) {
         this.resetForm();
       }
     });
 
-    // montre la div.info en fonction du statut du formulaire (email verified, user exists, auth success)
     this.setInfos(ConstantsInfo.infoMessageLogin.checkEmail);
   }
 
@@ -54,19 +57,19 @@ export class SignLogInComponent {
   }
 
   resizeModal() {
-    // Utilisation du bon type HTMLElement pour avoir accès à la propriété 'style'
     const modalElement = document.querySelector('.container') as HTMLElement;
-    
     if (modalElement) {
-      modalElement.style.maxHeight = '75vh'; 
-      modalElement.style.height = 'auto';     
-      modalElement.style.width = 'auto';      
-      modalElement.style.margin = '0 auto';   
-      modalElement.style.padding = '20px';    
-      modalElement.style.display = 'flex';
-      modalElement.style.flexDirection = 'column';
-      modalElement.style.justifyContent = 'center';
-      modalElement.style.alignItems = 'center';
+      Object.assign(modalElement.style, {
+        maxHeight: '75vh',
+        height: 'auto',
+        width: 'auto',
+        margin: '0 auto',
+        padding: '20px',
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center',
+      });
     }
   }
 
@@ -79,8 +82,25 @@ export class SignLogInComponent {
       console.warn('Email vide ou invalide, vérification annulée.');
       return;
     }
-  
-    this.authService.checkEmailMock(emailControl.value).subscribe({
+
+     const email = emailControl.value;
+
+    // Vérification spécifique pour l'email admin 
+    if (email === 'admin@hotmail.com') {
+      console.log('[INFO] Admin login détecté');
+      this.step = 'login';  // Forcer l'étape "login"
+      this.authService.loginMock(this.authService.ADMIN_ROLE).subscribe(() => {
+        this.setInfos(ConstantsInfo.infoMessageLogin.login);
+        this.displayForm();
+      });
+      return;
+     }
+
+    // Appel à la méthode appropriée selon l'environnement
+  if (environment.production) {
+    this.checkEmail();  // Appel direct à la méthode existante pour les tests
+  } else {
+    this.authService.checkEmailMock(email).subscribe({
       next: result => {
         if (result) {
           this.step = 'login';
@@ -92,10 +112,12 @@ export class SignLogInComponent {
         this.displayForm();
       },
       error: (error) => {
-        console.error(error);
+        console.error('Erreur lors de la vérification de l\'email :', error);
       }
     });
   }
+}
+
   get emailFC() {
     return this.loginForm.controls['email'] as FormControl<string>;
   }
