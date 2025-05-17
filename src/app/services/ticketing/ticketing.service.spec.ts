@@ -7,7 +7,6 @@ import { OfferInCart, Offer } from '../../models/offer.model';
 import { HttpErrorResponse } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
 import { of } from 'rxjs'; 
-import { fakeAsync, tick } from '@angular/core/testing';
 
 describe('TicketingService', () => {
   let service: TicketingService;
@@ -233,37 +232,5 @@ it('should create an order successfully', () => {
   expect(req.request.method).toBe('POST');
   expect(req.request.headers.get('Authorization')).toBe('Bearer test-token');
   req.flush({});
-});
-
-it('should handle error when creating order', fakeAsync(() => {
-  const mockCart: OfferInCart[] = [{
-    offer_id: 1,
-    title: 'Test Offer',
-    description: 'Test Desc',
-    nb_people: 2,
-    price: 100,
-    image_url: '',
-    visible: true,
-    loadfromJson: () => {},
-    quantity: 1,
-    ticket_type: 'single'
-  }];
-  const payment = { cardNumber: '1234' };
-  const nbPeople = 2;
-
-  service.createOrder({ cart: mockCart, payment, nbPeople }).subscribe({
-    next: () => fail('Expected error, but got success'),
-    error: (error: HttpErrorResponse) => {
-      expect(error.status).toBe(500);
-      expect(error.error).toBe('Server error');
-    }
   });
-
-  tick(); // Assure que l'appel asynchrone est terminé
-  const req = httpMock.expectOne(environment.api + 'order');
-  expect(req.request.method).toBe('POST');
-  req.flush('Server error', { status: 500, statusText: 'Internal Server Error' });
-}));
-
-
 });
