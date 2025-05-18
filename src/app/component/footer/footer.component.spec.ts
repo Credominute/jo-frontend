@@ -50,4 +50,15 @@ describe('FooterComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  it('should load partners data on initialization', () => {
+  // Déclencher la détection des changements pour initier le ngOnInit
+  fixture.detectChanges();
+
+  // Vérifier que les données des partenaires ont bien été chargées
+  expect(component.partnersData).toEqual([
+    { name: 'Footer Item 1' },
+    { name: 'Footer Item 2' }
+  ]);
+});
 });

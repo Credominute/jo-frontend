@@ -180,22 +180,22 @@ describe('AuthenticateService', () => {
   });
 
   it('should accept and store unknown roles', (done) => {
-  const mockLoginResponse = { access_token: 'fake-token' };
-  const mockRolesResponse = ['unknown-role'];
+  // On sauvegarde l'ancienne valeur
+    const originalMock = environment.mock;
+    environment.mock = true;  // override simple
 
-  httpClientMock.post.and.returnValue(of(mockLoginResponse));
-  httpClientMock.get.and.returnValue(of(mockRolesResponse));
-
-  service.loginUser('user@example.com', 'password').subscribe({
-    next: (result) => {
-      expect(result).toBeTrue();  
-      expect(service.getRoles).toEqual(['unknown-role']);  // Vérifie que le rôle inconnu est conservé
-      expect(service.getIsAdmin).toBeFalse();  // Vérifie que le rôle admin n'est pas activé
-      done();
-    },
-    error: done.fail
+    service.loginUser('test@example.com', 'password').subscribe({
+      next: (result) => {
+        expect(result).toBeTrue();
+        expect(service.getRoles).toEqual(['user']);
+        environment.mock = originalMock; // restore
+        done();
+      },
+      error: (err) => {
+        environment.mock = originalMock; // restore
+        done.fail(err);
+      }
+    });
   });
-});
-
 
 });

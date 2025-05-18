@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import { AuthService } from '../../services/authenticate/auth.service';
 import { of, throwError } from 'rxjs';
 import { FormControl } from '@angular/forms';
+import { fakeAsync, tick } from '@angular/core/testing';
 
 const mockValue = of(true); // Valeur simulée pour le test
 
@@ -16,8 +17,10 @@ describe('SignLogInComponent', () => {
 
   beforeEach(async () => {
     authServiceSpy = jasmine.createSpyObj('AuthService', [
-      'checkEmailMethod',
+      'checkEmail',
+      'checkEmailMock',
       'loginUser',
+      'signupUser'
     ]);
 
       // Spy sur la propriété getAdminAuthListener pour qu'elle retourne un Observable
@@ -28,6 +31,7 @@ describe('SignLogInComponent', () => {
     routerSpy = jasmine.createSpyObj('Router', ['navigate']);
     authServiceSpy.loginUser.and.returnValue(of(true));
     authServiceSpy.checkEmail.and.returnValue(of(true));
+    authServiceSpy.checkEmailMock.and.returnValue(of(true));
 
     await TestBed.configureTestingModule({
       imports: [SignLogInComponent],
@@ -91,26 +95,33 @@ describe('SignLogInComponent', () => {
     expect(component.firstNameFC.validator).toBeTruthy();
   });
 
-it('should handle checkEmailMethod returning true', () => {
-  authServiceSpy.checkEmail.and.returnValue(of(true));  // Méthode correcte
-  component.loginForm.get('email')?.setValue('user@example.com');
-  component.handleEmailVerification();  // Méthode correcte du composant
-  expect(component.step).toBe('login');
-});
+  it('should handle checkEmail returning true', () => {
+    authServiceSpy.checkEmailMock.and.returnValue(of(true));  // Méthode correcte
+    component.loginForm.get('email')?.setValue('user@example.com');
+    component.handleEmailVerification();  // Méthode correcte du composant
+    expect(component.step).toBe('login');
+  });
 
-it('should handle checkEmailMethod returning false', () => {
-  authServiceSpy.checkEmail.and.returnValue(of(false));  // Méthode correcte
-  component.loginForm.get('email')?.setValue('user@example.com');
-  component.handleEmailVerification();  // Méthode correcte du composant
-  expect(component.step).toBe('signup');
-});
+  it('should handle checkEmailMethod returning false', () => {
+    authServiceSpy.checkEmailMock.and.returnValue(of(false));  // Méthode correcte
+    component.loginForm.get('email')?.setValue('user@example.com');
+    component.handleEmailVerification();  // Méthode correcte du composant
+    expect(component.step).toBe('signup');
+  });
 
-it('should handle checkEmailMethod error case gracefully', () => {
-  authServiceSpy.checkEmail.and.returnValue(throwError(() => new Error('Network error')));
-  spyOn(console, 'error');
-  component.handleEmailVerification();  // Méthode correcte du composant
-  expect(console.error).toHaveBeenCalled();
-});
+  it('should handle checkEmailMock error case gracefully', fakeAsync(() => {
+    authServiceSpy.checkEmailMock.and.returnValue(throwError(() => new Error('Network error')));
+    spyOn(console, 'error');
+  
+    component.loginForm.get('email')?.setValue('user@example.com');
+    component.handleEmailVerification();
+  
+    // Avancer dans la file d'attente des tâches asynchrones
+    tick();
+
+    expect(console.error).toHaveBeenCalledWith('Erreur lors de la vérification de l\'email :', new Error('Network error'));
+  }));
+
 
   it('should expose FormControls via getters', () => {
     expect(component.emailFC instanceof FormControl).toBeTrue();
@@ -242,4 +253,5 @@ it('should handle checkEmailMethod error case gracefully', () => {
     // Vérifier que 'loginUser' a bien été appelé avec les bonnes valeurs
     expect(authServiceSpy.loginUser).toHaveBeenCalledWith('user@example.com', 'ValidPassword123!');
   });
+
 });

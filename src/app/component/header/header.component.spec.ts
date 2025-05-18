@@ -5,12 +5,18 @@ import { AuthService } from '../../services/authenticate/auth.service';
 import { ActivatedRoute } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 import { of } from 'rxjs';
+import { environment } from '../../../environments/environment';
 
 // Créer un mock de HttpClient
 class MockHttpClient {
   get() {
     return of({}); // Retourner un Observable vide (ou simuler les données que l'on veut)
   }
+}
+
+// Mock du Router
+class MockRouter {
+  navigate = jasmine.createSpy('navigate');
 }
 
 // Créer un mock de AuthService
@@ -62,5 +68,13 @@ describe('HeaderComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  it('should toggle menu open state', () => {
+    expect(component.isMenuOpen).toBeFalse();
+    component.toggleMenu();
+    expect(component.isMenuOpen).toBeTrue();
+    component.toggleMenu();
+    expect(component.isMenuOpen).toBeFalse();
   });
 });
