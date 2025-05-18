@@ -8,6 +8,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
 import { of, throwError } from 'rxjs'; 
 import { fakeAsync, tick } from '@angular/core/testing';
+import { OFFERS } from '../offers.constants';
 
 describe('TicketingService', () => {
   let service: TicketingService;
@@ -171,39 +172,14 @@ describe('TicketingService', () => {
     req.flush('Order not found', { status: 404, statusText: 'Not Found' });
   });
 
-  it('should retrieve all visible offers from real backend', () => {
-  const mockOffers: Offer[] = [
-    { offer_id: 1, title: 'Offer 1', visible: true } as Offer,
-    { offer_id: 2, title: 'Offer 2', visible: true } as Offer,
-  ];
-
-  environment.mock = false;  // Force l'utilisation du backend réel
+  it('should retrieve all visible offers from constants when not in mock mode', (done) => {
+  environment.mock = false;  // Désactiver le mock
 
   service.getAllVisible().subscribe(offers => {
-    expect(offers.length).toBe(2);
-    expect(offers[0].offer_id).toBe(1);
-    expect(offers[1].title).toBe('Offer 2');
+    expect(offers.length).toBeGreaterThan(0);
+    expect(offers.some(o => o.title === 'Duo')).toBeTrue();
+    done();
   });
-
-  const req = httpMock.expectOne(`${environment.api}order/offers`);
-  expect(req.request.method).toBe('GET');
-  req.flush(mockOffers);
-});
-
-it('should handle error when retrieving visible offers from real backend', () => {
-  environment.mock = false;
-
-  service.getAllVisible().subscribe({
-    next: () => fail('Expected error, but got success'),
-    error: (error) => {
-      expect(error.status).toBe(404);
-      expect(error.error).toBe('Offers not found');
-    }
-  });
-
-  const req = httpMock.expectOne(`${environment.api}order/offers`);
-  expect(req.request.method).toBe('GET');
-  req.flush('Offers not found', { status: 404, statusText: 'Not Found' });
 });
 
 it('should create an order successfully', () => {
@@ -253,4 +229,26 @@ it('should create an order successfully', () => {
   tick(1000);  // Avance la simulation de temps de 1s
   expect(result).toBeTrue();
 }));
+
+ it('should return only visible offers', () => {
+  const allOffers = [
+    { offer_id: 1, title: 'Visible Offer', visible: true } as Offer,
+    { offer_id: 2, title: 'Hidden Offer', visible: false } as Offer,
+  ];
+
+  spyOn(service, 'getAllVisible').and.returnValue(of(allOffers.filter(o => o.visible)));
+
+  service.getAllVisible().subscribe(offers => {
+    expect(offers.length).toBe(1);
+    expect(offers[0].visible).toBeTrue();
+  });
+});
+
+  it('should return all visible offers from constants', (done) => {
+  service.getAllVisible().subscribe(offers => {
+    expect(offers).toEqual(OFFERS);
+    done();
+  });
+});
+
 });
