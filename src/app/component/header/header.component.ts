@@ -1,6 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { RouterModule, Router } from '@angular/router';
 import { ModalService } from '../../services/modal/modal.service';
 import { AuthService } from '../../services/authenticate/auth.service';
 import { environment } from '../../../environments/environment';
@@ -22,21 +22,37 @@ export class HeaderComponent {
   private authListenerSubs: any;
   isAdmin = false;
   private adminListenerSubs: any;
-
-  mockLoginAdmin() {
-    this.authService.loginMock('admin').subscribe();
-  }
+  router = inject(Router);
 
   toggleMenu() {
     this.isMenuOpen = !this.isMenuOpen;
   }
 
-// logout the user
+// Déconnexion de l'utilisateur
   logout() {
   this.authService.logoutUser();
   }
 
-  ngOnInit() {
+// Vérifie la visibilité du bouton admin
+  isAdminVisible(): boolean {
+    // En développement, toujours afficher
+    if (!environment.production) {
+      return true;
+    }
+    // En production, afficher uniquement si l'utilisateur est admin
+    return this.isAdmin;
+  }
+
+// Méthode pour accéder à la page admin
+  goToAdmin() {
+    if (!environment.production || this.isAdmin) {
+      this.router.navigate(['/admin']);
+    } else {
+      console.warn('Accès à la page admin refusé');
+    }
+  }
+
+ngOnInit() {
   // Vérifie si l'utilisateur est authentifié  
   this.userIsAuthenticated = this.authService.getIsAuthenticated;
 
@@ -54,18 +70,7 @@ export class HeaderComponent {
   });
 }
 
-// Vérifie la visibilité du bouton admin
-  isAdminVisible(): boolean {
-    // En développement, toujours afficher
-    if (!environment.production) {
-      return true;
-    }
-    // En production, afficher uniquement si l'utilisateur est admin
-    return this.isAdmin;
-  }
-
 ngOnDestroy() {
-  // Vérification que la subscription existe avant d'essayer de se désabonner
   if (this.authListenerSubs) {
     this.authListenerSubs.unsubscribe();
   }

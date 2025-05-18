@@ -14,7 +14,7 @@
                 <a routerLink="/offers" routerLinkActive="selected" aria-label="Offres"(click)="toggleMenu()">Offres de billets</a>
                 <a *ngIf="!userIsAuthenticated" routerLink="/login" aria-label="Connexion ou inscription">Connexion ou inscription</a>
                 <a *ngIf="userIsAuthenticated" (click)="logout()">Se déconnecter</a>
-                <button *ngIf="isAdminVisible()" (click)="mockLoginAdmin()" class="mock-btn">admin</button>
+                <button *ngIf="isAdminVisible()" (click)="goToAdmin()" class="mock-btn">admin</button>
             </div>
         </nav>
     </div>

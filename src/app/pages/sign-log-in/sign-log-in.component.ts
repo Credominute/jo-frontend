@@ -88,10 +88,10 @@ export class SignLogInComponent {
     // Vérification spécifique pour l'email admin 
     if (email === 'admin@hotmail.com') {
       console.log('[INFO] Admin login détecté');
-      this.step = 'login';  // Forcer l'étape "login"
+      this.step = 'success';  // Forcer l'étape "success"
       this.authService.loginMock(this.authService.ADMIN_ROLE).subscribe(() => {
-        this.setInfos(ConstantsInfo.infoMessageLogin.login);
-        this.displayForm();
+        this.setInfos(ConstantsInfo.infoMessageLogin.success);
+        this.router.navigate(['/admin']);  // Redirection vers la page admin
       });
       return;
      }
@@ -155,7 +155,7 @@ export class SignLogInComponent {
   // vérification de l'existence du mail avant d'afficher le formulaire
   checkEmail()
   {
-    this.authService.checkEmail(this.loginForm.get('mail')?.value).subscribe({
+    this.authService.checkEmail(this.loginForm.get('email')?.value).subscribe({
       next: result => {
         if (result) {
           this.step = 'login';
