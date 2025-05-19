@@ -3,9 +3,9 @@
         <h2>Récapitulatif de la commande</h2>
         <app-shopping-cart [itemsArray]="itemsArray" mode="read" />
     </div>
-    <div class="payment-container">
+    <div class="payment-container" style="min-width: 60%; max-width: 100%; min-height: 350px;">
         <h2>Paiement</h2>
-        <form *ngIf="paymentForm" [formGroup]="paymentForm" class="container">
+        <form *ngIf="paymentForm" [formGroup]="paymentForm" class="container" style="min-height: 350px;">
             <div class="cardNumber-container">
                 <label for="cardNumber">Numéro de carte</label>
                 <input type="text" class="form-control" id="cardNumber" formControlName="cardNumber"

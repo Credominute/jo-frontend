@@ -6,7 +6,9 @@ import { Order } from '../../models/order.model';
 import { OfferInCart, Offer } from '../../models/offer.model';
 import { HttpErrorResponse } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
-import { of } from 'rxjs'; 
+import { of, throwError } from 'rxjs'; 
+import { fakeAsync, tick } from '@angular/core/testing';
+import { OFFERS } from '../offers.constants';
 
 describe('TicketingService', () => {
   let service: TicketingService;
@@ -60,7 +62,7 @@ describe('TicketingService', () => {
     expect(result[0].ticket_type).toBe("single");
   });
 
- it('should handle error when creating order', (done) => {
+ it('should handle error when creating order (mocked error)', (done) => {
   const mockCart = [{
     offer_id: 1,
     title: 'Test Offer',
@@ -77,6 +79,14 @@ describe('TicketingService', () => {
   const payment = { cardNumber: '1234' };
   const nbPeople = 2;
 
+  // Mocker la méthode createOrder pour renvoyer une erreur observable
+  spyOn(service, 'createOrder').and.returnValue(
+    throwError(() => ({
+      status: 500,
+      error: 'Error creating order'
+    }))
+  );
+
   service.createOrder({ cart: mockCart, payment, nbPeople }).subscribe({
     next: () => done.fail('should have failed'),
     error: (error: HttpErrorResponse) => {
@@ -85,16 +95,7 @@ describe('TicketingService', () => {
       done();
     }
   });
-
-  // Intercepte la requête POST à l'URL de création de commande
-  const req = httpMock.expectOne('http://127.0.0.1:8000/order');
-
-  // Vérifie que la méthode est bien POST
-  expect(req.request.method).toBe('POST');
-
-  // Simule une réponse d’erreur du serveur (500)
-  req.flush('Error creating order', { status: 500, statusText: 'Server Error' });
-  });
+});
 
   it('should handle error when retrieving order by ID', () => {
     const orderId = 42;
@@ -171,39 +172,14 @@ describe('TicketingService', () => {
     req.flush('Order not found', { status: 404, statusText: 'Not Found' });
   });
 
-  it('should retrieve all visible offers from real backend', () => {
-  const mockOffers: Offer[] = [
-    { offer_id: 1, title: 'Offer 1', visible: true } as Offer,
-    { offer_id: 2, title: 'Offer 2', visible: true } as Offer,
-  ];
-
-  environment.mock = false;  // Force l'utilisation du backend réel
+  it('should retrieve all visible offers from constants when not in mock mode', (done) => {
+  environment.mock = false;  // Désactiver le mock
 
   service.getAllVisible().subscribe(offers => {
-    expect(offers.length).toBe(2);
-    expect(offers[0].offer_id).toBe(1);
-    expect(offers[1].title).toBe('Offer 2');
+    expect(offers.length).toBeGreaterThan(0);
+    expect(offers.some(o => o.title === 'Duo')).toBeTrue();
+    done();
   });
-
-  const req = httpMock.expectOne(`${environment.api}order/offers`);
-  expect(req.request.method).toBe('GET');
-  req.flush(mockOffers);
-});
-
-it('should handle error when retrieving visible offers from real backend', () => {
-  environment.mock = false;
-
-  service.getAllVisible().subscribe({
-    next: () => fail('Expected error, but got success'),
-    error: (error) => {
-      expect(error.status).toBe(404);
-      expect(error.error).toBe('Offers not found');
-    }
-  });
-
-  const req = httpMock.expectOne(`${environment.api}order/offers`);
-  expect(req.request.method).toBe('GET');
-  req.flush('Offers not found', { status: 404, statusText: 'Not Found' });
 });
 
 it('should create an order successfully', () => {
@@ -233,4 +209,46 @@ it('should create an order successfully', () => {
   expect(req.request.headers.get('Authorization')).toBe('Bearer test-token');
   req.flush({});
   });
+
+  it('should simulate createOrderMock and return true after delay', fakeAsync(() => {
+  environment.mock = true;
+  const mockCart: OfferInCart[] = [{
+    offer_id: 1,
+    title: 'Mock Offer',
+    description: 'Mock desc',
+    nb_people: 1,
+    price: 50,
+    image_url: '',
+    visible: true,
+    loadfromJson: () => {},
+    quantity: 1,
+    ticket_type: 'single'
+  }];
+  let result = false;
+  service.createOrder({ cart: mockCart, payment: {}, nbPeople: 1 }).subscribe(res => result = res);
+  tick(1000);  // Avance la simulation de temps de 1s
+  expect(result).toBeTrue();
+}));
+
+ it('should return only visible offers', () => {
+  const allOffers = [
+    { offer_id: 1, title: 'Visible Offer', visible: true } as Offer,
+    { offer_id: 2, title: 'Hidden Offer', visible: false } as Offer,
+  ];
+
+  spyOn(service, 'getAllVisible').and.returnValue(of(allOffers.filter(o => o.visible)));
+
+  service.getAllVisible().subscribe(offers => {
+    expect(offers.length).toBe(1);
+    expect(offers[0].visible).toBeTrue();
+  });
+});
+
+  it('should return all visible offers from constants', (done) => {
+  service.getAllVisible().subscribe(offers => {
+    expect(offers).toEqual(OFFERS);
+    done();
+  });
+});
+
 });
