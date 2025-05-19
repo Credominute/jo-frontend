@@ -153,26 +153,40 @@ export class SignLogInComponent {
     }
 
   // vérification de l'existence du mail avant d'afficher le formulaire
-  checkEmail()
-  {
-    this.authService.checkEmail(this.loginForm.get('email')?.value).subscribe({
-      next: result => {
-        if (result) {
-          this.step = 'login';
-          this.setInfos(ConstantsInfo.infoMessageLogin.login);
-        }
-        else {
-          this.step = 'signup';
-          this.setInfos(ConstantsInfo.infoMessageLogin.signup);
-        }
+  checkEmail() {
+  const email = this.loginForm.get('email')?.value;
 
+  if (!email) {
+    console.error("Email non renseigné");
+    return;
+  }
+
+  if (environment.mock) {
+    // Mode Mock
+    this.authService.checkEmailMock(email).subscribe({
+      next: (result) => {
+        this.step = result ? 'login' : 'signup';
+        this.setInfos(result ? ConstantsInfo.infoMessageLogin.login : ConstantsInfo.infoMessageLogin.signup);
         this.displayForm();
       },
       error: (error) => {
-        console.error(error);
+        console.error('Erreur lors de la vérification de l\'email (mock) :', error);
+      }
+    });
+  } else {
+    // Mode Production : vérification via l'API
+    this.authService.checkEmail(email).subscribe({
+      next: (result) => {
+        this.step = result ? 'login' : 'signup';
+        this.setInfos(result ? ConstantsInfo.infoMessageLogin.login : ConstantsInfo.infoMessageLogin.signup);
+        this.displayForm();
+      },
+      error: (error) => {
+        console.error('Erreur lors de la vérification de l\'email (API) :', error);
       }
     });
   }
+}
 
   // affichage du formulaire en fonction du status de l'utilisateur :
   displayForm()

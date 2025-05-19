@@ -52,31 +52,33 @@ export class AuthService {
     }
   }
 
-  // Authentification status getters
+  // Getters du statut de l'authentification
   get getToken() {
     return localStorage.getItem('access_token');
   }
-
   get getIsAuthenticated() {
     return this.isAuthenticated;
   }
-
   get getStatusAuthListener() {
     return this.statusAuthListener.asObservable();
   }
-
   get getAdminAuthListener() {
     return this.adminAuthListener.asObservable();
   }
-
   get getIsAdmin() {
-    this.updateRoles();  // Refresh roles from storage
+    this.updateRoles(); 
     return this.isAdmin;
   }
-
   get getRoles() {
     return this.roles;
   }
+
+  private mapLoginData(email: string, password: string): any {
+  return {
+    mail: email,
+    mot_de_passe: password
+  };
+}
 
   // Login utilisateur
   loginUser(email: string, password: string): Observable<boolean> {
@@ -85,15 +87,12 @@ export class AuthService {
     }
 
     const headers = new HttpHeaders({
-      'Content-Type': 'application/x-www-form-urlencoded'
+      'Content-Type': 'application/json'
     });
 
-    const body = new URLSearchParams();
-    body.set('username', email);
-    body.set('password', password);
-    body.set('grant_type', 'password');
+    const body = this.mapLoginData(email, password);
 
-    return this.httpPost('login', body, headers).pipe(
+    return this.httpPost('auth/login', body, headers).pipe(
       tap((data) => {
         localStorage.setItem('access_token', data.access_token);
         this.accessToken = data.access_token;
@@ -143,35 +142,31 @@ export class AuthService {
     );
   }
 
-  // Vérifie si le mail existe dans la BDD
+  // Vérifie si le mail existe via l'API
   checkEmail(email: string): Observable<boolean> {
     if (environment.mock) {
-      return this.checkEmailMock(email); 
+      return this.checkEmailMock(email);
     }
 
-    // Vérifier si le mail est l'admin prédéfini
-    const adminEmail = 'admin@hotmail.com';  // Mail administrateur fictif
-    if (email === adminEmail) {
-    // Met à jour les rôles et l'authentification pour l'admin
-      this.roles = [this.ADMIN_ROLE];
-      localStorage.setItem('roles', JSON.stringify(this.roles));
-      this.isAdmin = true;
-      this.adminAuthListener.next(true);
-      return of(true);  // Admin reconnu
-    }
-  
-    return new Observable<boolean>(observer => {
-      this.httpClient.get(this.endpointURL + 'login/' + email).subscribe({
-        next: (data: any) => {
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json'
+    });
+
+    const body = { mail: email };
+
+    return new Observable<boolean>((observer) => {
+      this.httpClient.post<{ exist: boolean }>(`${this.endpointURL}auth/verify`, body, { headers }).subscribe({
+        next: (data) => {
           observer.next(data.exist);
           observer.complete();
         },
         error: (error) => {
+          console.error("Erreur lors de la vérification d'email via l'API :", error);
           observer.error(error);
           observer.complete();
         }
       });
-   });
+    });
   }
 
   // Vérifie si l'adresse mail existe dans un contexte mocké
