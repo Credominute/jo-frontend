@@ -34,7 +34,7 @@
 
         .container {
             width: 100%;
-            max-width: 30rem;
+            max-width: 35rem;
             margin: auto;
 
             .cardNumber-container,
@@ -42,20 +42,21 @@
                 width: 100%;
                 max-width: 30rem;
                 margin: auto;
+                min-height: 5.5rem;
             }
 
             .cardNumber-container input,
             .name-container input {
                 width: 100%;
-                min-width: 20rem;
+                min-width: 25rem;
                 max-width: 50rem;
-
+                height: 2.5rem;
             }
 
             .expiryCvv-container {
                 display: flex;
                 justify-content: space-between;
-                gap: 1rem;
+                gap: 1.5rem;
 
                 .expiryDate-container,
                 .cvv-container {
@@ -63,6 +64,7 @@
                     flex-direction: column;
                     gap: 0.5rem;
                     width: 50%;
+                    min-height: 4.5rem;
                 }
 
                 .expiryDate-container input {
@@ -70,7 +72,7 @@
                 }
 
                 .cvv-container input {
-                    width: 3rem;
+                    height: 2.5rem;
                 }
             }
 
@@ -103,20 +105,23 @@
             .ng-valid[required],
             .ng-valid.required {
                 border-left: 5px solid v.$login-form-valid-border-color;
-                /* green */
+                /* vert */
             }
 
             .ng-invalid:not(form) {
                 border-left: 5px solid v.$login-form-invalid-border-color;
                 padding-left: 0.2rem;
-                /* red */
+                /* rouge */
             }
 
             .error div {
                 background-color: v.$login-form-message-background-color;
                 color: v.$login-form-message-color;
-                padding: 1rem;
-                margin-bottom: 1rem;
+                padding: 0.5rem; 
+                margin-bottom: 0.5rem; 
+                line-height: 1.1; 
+                white-space: normal;
+                max-width: 28rem;
             }
         }
     }
