@@ -142,32 +142,29 @@ export class AuthService {
     );
   }
 
-  // Vérifie si le mail existe via l'API
-  checkEmail(email: string): Observable<boolean> {
-    if (environment.mock) {
-      return this.checkEmailMock(email);
-    }
-
-    const headers = new HttpHeaders({
-      'Content-Type': 'application/json'
-    });
-
-    const body = { mail: email };
-
-    return new Observable<boolean>((observer) => {
-      this.httpClient.post<{ exist: boolean }>(`${this.endpointURL}auth/verify`, body, { headers }).subscribe({
-        next: (data) => {
-          observer.next(data.exist);
-          observer.complete();
-        },
-        error: (error) => {
-          console.error("Erreur lors de la vérification d'email via l'API :", error);
-          observer.error(error);
-          observer.complete();
-        }
-      });
-    });
+  // Vérifie si le mail existe via l'API (mode réel, GET)
+checkEmail(email: string): Observable<boolean> {
+  if (environment.mock) {
+    return this.checkEmailMock(email);
   }
+
+  const encodedEmail = encodeURIComponent(email); // Sécurise les caractères spéciaux dans l’URL
+  const url = `${this.endpointURL}auth/verify?mail=${encodedEmail}`;
+
+  return new Observable<boolean>((observer) => {
+    this.httpClient.get<{ exists: boolean }>(url).subscribe({
+      next: (data) => {
+        observer.next(data.exists);
+        observer.complete();
+      },
+      error: (error) => {
+        console.error("Erreur lors de la vérification d'email via l'API :", error);
+        observer.error(error);
+        observer.complete();
+      }
+    });
+  });
+}
 
   // Vérifie si l'adresse mail existe dans un contexte mocké
   checkEmailMock(email: string): Observable<boolean> {
@@ -198,7 +195,7 @@ export class AuthService {
 
     const registerUser = this.mapFrontendToBackend(user);
 
-    return this.httpPost('signup', registerUser, new HttpHeaders({ 'Content-Type': 'application/json' })).pipe(
+    return this.httpPost('auth/register', registerUser, new HttpHeaders({ 'Content-Type': 'application/json' })).pipe(
       tap(() => {
         this.isAuthenticated = true;
         this.statusAuthListener.next(true);
