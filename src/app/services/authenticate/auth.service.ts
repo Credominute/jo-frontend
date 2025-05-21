@@ -183,7 +183,6 @@ checkEmail(email: string): Observable<boolean> {
       prenom: user.firstName,
       nom: user.lastName,
       telephone: user.phone,
-      role: [this.USER_ROLE],
     };
   }
 

@@ -15,8 +15,8 @@ export class ErrorTranslation {
         required: 'Le nom est requis'
         },
         phone: {
-        required: 'Le numéro de éléphone est requis',
-        pattern: "Le numéto de téléphone n'est pas valide",
+        required: 'Le numéro de téléphone est requis',
+        pattern: "Le numéro de téléphone doit commencer par +33 et et contenir 9 chiffres",
         }
     };
 

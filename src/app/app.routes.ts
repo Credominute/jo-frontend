@@ -18,7 +18,7 @@ export const routes: Routes = [
   { path: 'login', component: SignLogInComponent },
   { path: 'manual', component: ManualPageComponent },
   { path: 'admin', component: AdminComponent},
-  { path: 'admin-orders', component: AdminOrdersComponent},
+  { path: 'admin-orders', component: AdminOrdersComponent}, // administration des ventes (à venir)
   { path: 'payment', loadComponent: () => import('./pages/payment/payment.component').then(m => m.PaymentComponent) },
   { path: 'under-construction', component: UnderConstructionComponent },
   { path: '**', component: PageNonFoundComponent }

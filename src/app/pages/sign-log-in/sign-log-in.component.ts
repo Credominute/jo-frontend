@@ -199,7 +199,7 @@ export class SignLogInComponent {
       this.passwordFC.setValidators([Validators.required, Validators.pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/)]);
       this.firstNameFC.setValidators([Validators.required]);
       this.lastNameFC.setValidators([Validators.required]);
-      this.phoneFC.setValidators([Validators.required, Validators.pattern(/^\+?[1-9]\d{0,2}(\s?\d\s?){4,14}$/)]);
+      this.phoneFC.setValidators([Validators.required, Validators.pattern(/^\+33\s?[1-9](\s?\d{2}){4}$/)]);
     }
 
     this.loginForm.updateValueAndValidity();
