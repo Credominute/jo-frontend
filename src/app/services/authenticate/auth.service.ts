@@ -94,12 +94,18 @@ export class AuthService {
 
     return this.httpPost('auth/login', body, headers).pipe(
       tap((data) => {
+        // Authentification
         localStorage.setItem('access_token', data.access_token);
         this.accessToken = data.access_token;
         this.isAuthenticated = true;
         this.statusAuthListener.next(true);
+
+       // Gestion des rôles à partir de la réponse
+        this.roles = [data.role]; // par exemple: 'admin' ou 'user'
+        localStorage.setItem('roles', JSON.stringify(this.roles));
+        this.isAdmin = data.role === this.ADMIN_ROLE;
+        this.adminAuthListener.next(this.isAdmin);
       }),
-      switchMap(() => this.getUserRoles()),
       switchMap(() => of(true))
     );
   }
@@ -123,23 +129,6 @@ export class AuthService {
     localStorage.removeItem('access_token');
     localStorage.removeItem('roles');
     this.router.navigate(['']);
-  }
-
-  // Obtient le rôle de l'utilisateur du backend
-  getUserRoles(): Observable<string[]> {
-    const headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-      'Authorization': 'Bearer ' + this.getToken
-    });
-
-    return this.httpClient.get<string[]>(`${this.endpointURL}users/me/roles`, { headers }).pipe(
-      tap((data) => {
-        this.roles = data;
-        localStorage.setItem('roles', JSON.stringify(data));
-        this.isAdmin = data.includes(this.ADMIN_ROLE);
-        this.adminAuthListener.next(this.isAdmin);
-      })
-    );
   }
 
   // Vérifie si le mail existe via l'API (mode réel, GET)

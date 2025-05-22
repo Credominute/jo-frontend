@@ -130,55 +130,6 @@ describe('AuthenticateService', () => {
     });
   });
 
-  it('should retrieve user roles and update isAdmin accordingly', (done) => {
-    const mockRoles = ['user', 'admin'];
-    const mockResponse = mockRoles;
-  
-    httpClientMock.get.and.returnValue(of(mockResponse));
-    localStorage.setItem('access_token', 'fake_token'); // Simule un token existant
-  
-    service.getUserRoles().subscribe({
-      next: (roles) => {
-        expect(roles).toEqual(mockRoles);
-        expect(service.getRoles).toEqual(mockRoles);
-        expect(service.getIsAdmin).toBeTrue();
-        done();
-      },
-      error: done.fail
-    });
-  });
-
-  it('should handle getUserRoles with missing token', (done) => {
-    localStorage.removeItem('access_token');
-    httpClientMock.get.and.returnValue(throwError(() => new Error('No token')));
-  
-    service.getUserRoles().subscribe({
-      next: () => done.fail('Should not succeed'),
-      error: (err) => {
-        expect(err.message).toContain('No token');
-        done();
-      }
-    });
-  });
-
-  it('should handle default "user" role if roles are missing in backend response', (done) => {
-    const mockLoginResponse = { access_token: 'fake-token' };  // Réponse avec un token
-    const mockRolesResponse = ['user'];  // Réponse avec le rôle par défaut
-  
-    httpClientMock.post.and.returnValue(of(mockLoginResponse));  // Mock du login
-    httpClientMock.get.and.returnValue(of(mockRolesResponse));   // Mock du rôle
-  
-    service.loginUser('user@example.com', 'password').subscribe({
-      next: (result) => {
-        expect(result).toBeTrue();  // Vérifie que l'authentification est réussie
-        expect(service.getRoles).toEqual(['user']);  // Vérifie que le rôle "user" est bien attribué
-        expect(service.getIsAdmin).toBeFalse();  // Vérifie que l'utilisateur n'est pas admin
-        done();
-      },
-      error: done.fail
-    });
-  });
-
   it('should accept and store unknown roles', (done) => {
   // On sauvegarde l'ancienne valeur
     const originalMock = environment.mock;
@@ -198,4 +149,43 @@ describe('AuthenticateService', () => {
     });
   });
 
+  it('should login user and store roles with admin flag', (done) => {
+  const originalMock = environment.mock;
+  environment.mock = true;
+
+  service.loginMock('admin').subscribe(res => {
+    expect(res).toBeTrue();
+    expect(service.getRoles).toContain('admin');
+    expect(service.getIsAdmin).toBeTrue();
+
+    environment.mock = originalMock;
+    done();
+  });
+});
+
+  it('should update roles and set isAdmin flag correctly', () => {
+  localStorage.setItem('roles', JSON.stringify(['admin']));
+  expect(service.getIsAdmin).toBeTrue();
+
+  localStorage.setItem('roles', JSON.stringify(['user']));
+  expect(service.getIsAdmin).toBeFalse();
+
+  localStorage.removeItem('roles');
+  expect(service.getIsAdmin).toBeFalse();
+});
+
+  it('should handle login error', (done) => {
+  environment.mock = false;
+  const mockError = new HttpErrorResponse({ status: 401, statusText: 'Unauthorized' });
+
+  httpClientMock.post.and.returnValue(throwError(() => mockError));
+
+  service.loginUser('test@example.com', 'wrongpassword').subscribe({
+    next: () => done.fail('Expected an error, but got success'),
+    error: (error) => {
+      expect(error.status).toBe(401);
+      done();
+    }
+  });
+});
 });

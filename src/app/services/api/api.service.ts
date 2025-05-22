@@ -2,14 +2,15 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Offer, OfferInCart } from '../../models/offer.model'; 
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ApiService {
 
-  private readonly apiUrlOrder: string = 'http://127.0.0.1:8000/order';
-  private readonly apiUrlTicket: string = 'http://127.0.0.1:8000/ticket';  
+  private readonly apiUrlOrder: string = `${environment.api}order`;
+  private readonly apiUrlTicket: string = `${environment.api}ticket`;  
 
   constructor(private readonly http: HttpClient) { }
 

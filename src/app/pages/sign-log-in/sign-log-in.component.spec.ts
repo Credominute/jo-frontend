@@ -254,4 +254,23 @@ describe('SignLogInComponent', () => {
     expect(authServiceSpy.loginUser).toHaveBeenCalledWith('user@example.com', 'ValidPassword123!');
   });
 
+  it('should set step to "login" if email exists, "signup" if not', fakeAsync(() => {
+    const emailControl = component.loginForm.get('email');
+  
+    // Cas 1 : email existe
+    authServiceSpy.checkEmailMock.and.returnValue(of(true));
+    emailControl?.setValue('existing@example.com');
+    component.handleEmailVerification();
+    tick();
+    expect(component.step).toBe('login');
+
+    // Cas 2 : email n’existe pas
+    authServiceSpy.checkEmailMock.and.returnValue(of(false));
+    emailControl?.setValue('new@example.com');
+    component.handleEmailVerification();
+    tick();
+    expect(component.step).toBe('signup');
+}));
+
+
 });
