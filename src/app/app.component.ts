@@ -3,6 +3,7 @@ import { RouterOutlet, RouterModule } from '@angular/router';
 import { HeaderComponent } from './component/header/header.component'; 
 import { FooterComponent } from './component/footer/footer.component'; 
 import { ModalService } from './services/modal/modal.service';
+import { environment } from '../environments/environment';
 
 @Component({
   selector: 'app-root',
@@ -15,9 +16,9 @@ export class AppComponent {
   title = 'jo-frontend';
   
   constructor(protected modalService: ModalService) {
-  // Pour utilisation future : const router = inject(Router); 
-  // Par exemple : this.router.navigate(['/home']);
+  console.log('ENV:', environment); // Affiche les valeurs d’environnement dans la console du navigateur
   }
+
 
   // Getter pour accéder à modalService dans les tests
   get modalServiceInstance() {

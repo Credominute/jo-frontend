@@ -18,7 +18,9 @@ export class AuthService {
 
   endpointURL = environment.api;
 
-  constructor(private readonly httpClient: HttpClient, private readonly router: Router) {}
+  constructor(private readonly httpClient: HttpClient, private readonly router: Router) {
+    console.log('[AuthService] ENV:', environment); 
+  }
 
   // Constantes pour la gestion des rôles
   public readonly ADMIN_ROLE = 'admin';

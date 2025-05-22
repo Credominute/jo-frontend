@@ -34,7 +34,7 @@ export class TicketingService {
       nb_people: order.nbPeople,
     };
 
-    return environment.mock ? of(true) : this.createOrderReal(payload);
+    return (environment.mock || environment.mockPayment) ? of(true) : this.createOrderReal(payload);
   }
 
   private createOrderReal(payload: any): Observable<boolean> {
