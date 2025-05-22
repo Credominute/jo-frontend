@@ -1,0 +1,59 @@
+@use "../mixins";
+@use "../variables" as v;
+
+.flex-header {
+    padding: 1rem 2rem;
+    background-color: v.$primary-color;
+    color: v.$secondary-color;
+    text-transform: uppercase;
+    font-family: Paris2024, sans-serif;
+    width: 100%;
+    letter-spacing: 0.4rem;
+    box-sizing: border-box;
+
+    @include mixins.media-max('tablet-up') {
+        padding: 1rem 1.5rem;
+    }
+    
+    @include mixins.media-max('phone-up') {
+        padding: 0.8rem 1rem;
+    }
+}
+
+.title {
+    text-align: center;
+    flex-shrink: 0;
+    width: 100%;  // Assure que le titre prend toute la largeur disponible
+
+    h1 {
+        margin: 0;
+        padding: 0.5rem 2rem;
+        font-size: 1.5rem;
+        font-weight: 700;
+    }
+}
+
+.mock-btn {
+    letter-spacing: 0.4rem;
+    line-height: 0.9rem;  
+}
+
+// Style spécifique aux liens (boutons) dans l'en-tête admin
+// - Empile les boutons verticalement
+// - Réduit leur largeur à leur contenu
+// - Ajoute un espacement visuel modéré
+.admin-pages {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 1.2rem; // réduit l’éloignement vertical du haut
+  
+    a {
+      width: max-content;           // garde la largeur idéale
+      padding: 0.5rem 1.5rem;       // légèrement réduit
+      font-size: 1.1rem;
+      margin-bottom: 0.6rem;        // espacement vertical modéré
+      text-align: center;
+    }
+  }
+  

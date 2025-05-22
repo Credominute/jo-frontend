@@ -1,12 +1,26 @@
 import { Component } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { RouterOutlet, RouterModule } from '@angular/router'; 
+import { HeaderComponent } from './component/header/header.component'; 
+import { FooterComponent } from './component/footer/footer.component'; 
+import { ModalService } from './services/modal/modal.service';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet],
+  standalone: true,
+  imports: [RouterOutlet, RouterModule, HeaderComponent, FooterComponent ], 
   templateUrl: './app.component.html',
-  styleUrl: './app.component.css'
+  styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
-  title = 'webJO24';
+  title = 'jo-frontend';
+  
+  constructor(protected modalService: ModalService) {
+  // Pour utilisation future : const router = inject(Router); 
+  // Par exemple : this.router.navigate(['/home']);
+  }
+
+  // Getter pour accéder à modalService dans les tests
+  get modalServiceInstance() {
+    return this.modalService;
+  }
 }

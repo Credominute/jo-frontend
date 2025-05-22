@@ -1,0 +1,36 @@
+/*.sport-card-img {
+  width: 100%; /* L'image prend toute la largeur du conteneur 
+  height: auto; /* Maintient les proportions 
+  object-fit: contain; /* Garde les proportions sans déformation 
+  max-height: 200px; /* Limite la hauteur pour éviter les images trop grandes 
+  border-radius: 8px; /* Ajoute un arrondi à l'image 
+}*/
+
+.sport-card-img {
+  margin-right: 1.5rem;
+  margin-left: 1.5rem;
+  width: 100%;
+  max-width: 600px;       
+  height: auto;
+  max-height: 300px;      
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); 
+  display: block;
+  object-fit: cover; 
+}
+
+.flex-row {
+  display: flex;
+  flex-direction: row;
+}
+
+.flex-row-reverse {
+  display: flex;
+  flex-direction: row-reverse;
+}
+
+.sport-card {
+  width: 100%;             
+  height: auto;           
+  overflow: hidden;      
+}

@@ -1,0 +1,12 @@
+// Global styles
+@use "./variables";
+@use "./mixins";
+
+// Global reset or typography
+@use "./global" as global;
+
+// Components groupés
+@use "./components/index" as components;
+
+// Pages groupées
+@use "./pages/index" as pages;

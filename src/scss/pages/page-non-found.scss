@@ -1,0 +1,12 @@
+.container {
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    height: 100vh !important;
+  
+    img {
+      object-fit: contain;  // Utilisez contain au lieu de cover pour garder l'intégralité de l'image
+      max-width: 100%;
+      max-height: 100%;
+    }
+  }  

@@ -1,0 +1,15 @@
+<header *ngIf="userIsAuthenticated && isAdmin">
+    <div class="flex-header">
+      <div class="title">
+        <h2>Espace administration</h2>
+      </div>
+      <nav role="navigation" aria-label="Navigation administration" class="admin-space">
+        <div class="admin-pages">
+          <a routerLink="/admin-orders" routerLinkActive="selected" aria-label="Les ventes">Les ventes</a>
+          <a routerLink="/" routerLinkActive="selected" aria-label="Retour">Retour</a>
+          <a (click)="logout()" aria-label="Logout">Log out</a>
+        </div>
+      </nav>
+    </div>
+</header>
+  

@@ -1,0 +1,17 @@
+<div class="w-full flex flex-col justify-center items-center py-10 gap-10 px-4">
+    <h1 class="text-4xl text-center uppercase">Découvrez les nouveaux sports des JO 2024</h1>
+  
+    <div class="w-full flex flex-row justify-center">
+      <div class="w-2/3 p-4 flex flex-col justify-center align-middle items-center content-center gap-4">
+        <ng-container *ngFor="let item of sports; let i = index">
+          <app-sport-card
+            [invert]="i % 2 !== 0"
+            [color]="item.color"
+            [image]="item.image"
+            [name]="item.name"
+            [description]="item.description">
+          </app-sport-card>
+        </ng-container>
+      </div>
+    </div>
+  </div>

@@ -1,0 +1,102 @@
+[
+    {
+        "id": 1,
+        "name": "Toyota"
+    },
+    {
+        "id": 2,
+        "name": "Airbnb"
+    },
+    {
+        "id": 3,
+        "name": "Alibaba Group"
+    },
+    {
+        "id": 4,
+        "name": "Coca-Cola"
+    },
+    {
+        "id": 5,
+        "name": "Samsung"
+    },
+    {
+        "id": 6,
+        "name": "Visa"
+    },
+    {
+        "id": 7,
+        "name": "Omega"
+    },
+    {
+        "id": 8,
+        "name": "Bridgestone"
+    },
+    {
+        "id": 9,
+        "name": "Atos"
+    },
+    {
+        "id": 10,
+        "name": "GE"
+    },
+    {
+        "id": 11,
+        "name": "McDonald's"
+    },
+    {
+        "id": 12,
+        "name": "Intel"
+    },
+    {
+        "id": 13,
+        "name": "Panasonic"
+    },
+    {
+        "id": 14,
+        "name": "Procter & Gamble"
+    },
+    {
+        "id": 15,
+        "name": "Samsung Electronics"
+    },
+    {
+        "id": 16,
+        "name": "Bosch"
+    },
+    {
+        "id": 17,
+        "name": "Adecco"
+    },
+    {
+        "id": 18,
+        "name": "L'Oreal"
+    },
+    {
+        "id": 19,
+        "name": "Bouygues Telecom"
+    },
+    {
+        "id": 20,
+        "name": "Vivendi"
+    },
+    {
+        "id": 21,
+        "name": "Dow Chemical"
+    },
+    {
+        "id": 22,
+        "name": "Alibaba"
+    },
+    {
+        "id": 23,
+        "name": "Lagardère"
+    },
+    {
+        "id": 24,
+        "name": "BPCE"
+    },
+    {
+        "id": 25,
+        "name": "JCDecaux"
+    }
+]

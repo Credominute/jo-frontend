@@ -1,0 +1,244 @@
+@use "../mixins";
+@use "../variables" as v;
+@use "./link_button" with(
+    $button-font-color: v.$header-menu-color,
+    $button-font-color-hover: v.$header-menu-color-hover,
+    $button-border-color: v.$header-menu-color,
+    $button-border-color-hover: v.$header-menu-color-hover,
+    $button-background-color: v.$header-menu-background-color,
+    $button-background-color-hover: v.$header-menu-background-color-hover,
+    $button-fontsize: 0.95rem,
+    $button-padding: 0.9rem 0.9rem,
+    $button-fontweight: 700,
+    $button-border-radius: 2rem
+);
+
+main {
+    margin-top: 11rem; // Décalage de la hauteur du header
+}
+
+header {
+    position: fixed;  // ou "sticky" si l'on veut qu'il défile avec la page
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 998;
+    vertical-align: middle;
+    min-height: 9.5rem;  // Ajuster cette valeur si besoin
+    padding-bottom: 3rem;  // Permettre au fond noir de descendre sous les boutons
+    margin: 0;
+    font-family: Paris2024, sans-serif;
+    background-color: v.$header-background-color;
+    color: v.$header-color;
+    white-space: nowrap;  // Empêche que les éléments passent à la ligne
+
+    @include mixins.media-max("phone-down") {
+        height: 5rem;
+    }
+
+    .flex-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        height: 100%;  
+
+        // Left part : title
+        .title {
+            padding: 0 1rem;
+            height: 4rem;
+            width: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            h1 {
+                text-align: center;
+                margin: 0;
+                padding: 0;
+                font-size: 3rem;
+            }
+
+            @include mixins.media-max("desktop-down") {
+                width: 40%;
+
+                h1 {
+                    font-size: 2.5rem;
+                }
+            }
+
+            // The menu burger is displayed so there is more place for the title
+            @include mixins.media-max("desktop-up") {
+                width: 50%;
+
+                h1 {
+                    font-size: 2rem;
+                }
+            }
+
+            @include mixins.media-max("tablet-up") {
+                width: 45%;
+
+                h1 {
+                    font-size: 1.6rem;
+                }
+            }
+
+            @include mixins.media-max("phone-down") {
+                h1 {
+                    font-size: 1.2rem;
+                }
+            }
+
+            @include mixins.media-max("phone-between") {
+                width: 40%;
+                h1 {
+                    font-size: 1rem;
+                }
+            }
+
+            @include mixins.media-max("phone-up") {
+                display: none;
+            }
+        }
+
+        // Partie centrale : logo
+          .logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 6rem;
+            max-width: 8rem;
+
+            img {
+                height: auto;
+                max-height: 6rem;
+                width: auto;
+                max-width: 100%;
+                display: block;
+            }   
+
+            @include mixins.media-max("phone-up") {
+                margin-left: 1rem;
+            }
+        }  
+
+        // Partie à droite : navigation
+        nav {
+            margin: auto 1rem;
+            height: 4rem;
+            width: 45%;
+
+            @include mixins.media-max("desktop-up") {
+                display: flex;
+                flex-direction: column;
+                align-items: flex-end;
+                margin:0;
+            }
+
+            @include mixins.media-max("phone-up") {
+                width: 75%;
+            }
+        
+            // Display links horizontallement
+            .main_pages {
+                position: relative;
+                top: 2rem; // Ajuster cette valeur si besoin
+                margin-top: 2.7rem; // Ajuste la distance entre le titre et les boutons
+                display: flex;
+                justify-content: flex-end;
+                align-items: center;
+                height: 100%;
+                gap: 0.5rem;         // Espace entre les boutons
+                flex-wrap: nowrap;
+                margin-right: 2.5rem;
+
+                @include mixins.media-max("desktop-up") {
+                    display: none;
+                    flex-direction: column;
+                    background: v.$header-background-color;
+                    width:auto;
+                    height: auto;
+                    padding: 1rem 0 0 0;
+                    z-index: 999;
+                }
+
+                // display the links as a button
+                a, div button {
+                    flex: 1 1 auto;   // Permet de prendre l'espace disponible et de se réduire
+                    white-space: nowrap;  // Autorise le passage à la ligne
+                    text-align: center;   // Pour centrer le texte sur plusieurs lignes
+                    padding: 0.8rem 1rem;  // Un padding un peu réduit pour laisser plus d'espace
+                    font-size: 1rem;      // Taille de police par défaut
+                    overflow: visible; 
+                
+
+                    @include mixins.media-max("desktop-down") {
+                        font-size: 0.6rem;
+                        padding: 0.4rem 0.7rem; 
+                    }
+
+                    @include mixins.media-max("desktop-up") {
+                        font-size: 1.1rem;
+                        padding: 1.25rem 1rem;
+                        border-right: v.$header-menu-background-color 0.5rem solid;
+                        border-left: v.$header-menu-background-color 0.5rem solid;
+                        border-bottom: none;
+                        border-top: none;
+                        border-radius: 0;
+                        height: 2rem;
+                        margin: 0;
+                        width: 100%;
+
+                        &:hover, &:active {
+                            border: none;
+                            background-color: v.$header-menu-background-color;
+                            color: v.$header-menu-color;
+                            border-right: v.$header-menu-color 0.5rem solid;
+                            border-left: v.$header-menu-color 0.5rem solid;
+                        }
+                    }
+
+                    @include mixins.media-max("phone-down") {
+                        font-size: 0.95rem;
+                        padding: 1.15rem 0.9rem;
+                    }
+
+                    @include mixins.media-max("phone-between") {
+                        font-size: 0.8rem;
+                        padding: 1.1rem 0.65rem;
+                    }
+
+                    @include mixins.media-max("phone-up") {
+                        font-size: 0.9rem;
+                        padding: 1.15rem 0.75rem;
+                    }
+                }
+            }
+                .burger {
+                display: none;
+
+                // Displays the menu burger
+                @include mixins.media-max("desktop-up") {
+                    display: flex;
+                    font-size: 2.75rem;
+                    font-weight: 800;
+                    padding-left: 0.5rem;
+                    color: v.$header-menu-color;
+                    cursor: pointer;
+                    margin-right: 1rem;
+
+                    p {
+                        margin: 0;
+                    }
+                }
+            }
+
+            // when the menu burger is clicked, the links are displayed
+            @include mixins.media-max("desktop-up") {      
+                .is-open {
+                    display: flex;
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,90 @@
+@use '../mixins';
+@use '../variables' as v;
+
+.form-group {
+    margin-bottom: 1rem;
+}
+
+.container {
+    max-width: 25rem;
+    margin: 5rem auto;
+
+    @include mixins.media-max("between-phone-tablet") {
+        margin: 0.5rem auto;
+    }
+
+    div {
+        margin-bottom: 10px;
+    }
+
+    label {
+        display: block;
+        margin-bottom: 5px;
+    }
+
+    input {
+        padding: 8px;
+        width: 100%;
+        box-sizing: border-box;
+    }
+    
+    button {
+        padding: 10px 15px;
+        background-color: v.$primary-color;
+        color: v.$secondary-color;
+        font-weight: bold;
+        border: none;
+        cursor: pointer;
+        margin-top: 0.5rem;
+    }
+
+    
+    button:hover {
+        background-color: v.$secondary-color;
+        color: v.$primary-color;
+    
+    }
+
+    .info {
+        text-align: center;
+    }
+    
+    .ng-valid[required],
+    .ng-valid.required {
+        border-left: 5px solid v.$login-form-valid-border-color;
+        /* green */
+    }
+
+    .ng-invalid:not(form) {
+        border-left: 5px solid v.$login-form-invalid-border-color;
+        padding-left: 0.2rem;
+        /* red */
+    }
+    
+    .error div {
+        background-color: v.$login-form-message-background-color;
+        color: v.$login-form-message-color;
+        padding: 1rem;
+        margin-bottom: 1rem;
+    }
+
+    .actions-container {
+        display: flex;
+        justify-content: center;
+    }
+
+    .errorServer {
+        color: v.$login-form-message-color;
+        font-size: 0.9rem;
+    }
+}
+
+.invalid {
+    border: 2px solid v.$login-form-invalid-border-color;
+    padding: 1rem;
+}
+
+.valid {
+    border: 2px solid v.$login-form-valid-border-color;
+    padding: 1rem;
+}
