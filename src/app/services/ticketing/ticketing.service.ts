@@ -26,7 +26,11 @@ export class TicketingService {
     });
   }
 
-  // Création de commande
+// Création de commande (mockée ou réelle selon les flags d’environnement)
+//
+// NB : Dans ce projet éducatif, le paiement reste volontairement simulé même en production.
+// La logique réelle (`createOrderReal`) est incluse à des fins de démonstration/extension,
+// mais ne sera jamais exécutée tant que `environment.mockPayment` est true.
   createOrder(order: { cart: OfferInCart[], payment: any, nbPeople: number }): Observable<boolean> {
     const payload = {
       cart: this.mapOfferInCartToOffer(order.cart),
@@ -35,14 +39,14 @@ export class TicketingService {
     };
 
     return (environment.mock || environment.mockPayment) ? of(true) : this.createOrderReal(payload);
-  }
+    }
 
-  private createOrderReal(payload: any): Observable<boolean> {
-    return this.http.post<void>(this.endpointURL, payload, { headers: this.authHeaders }).pipe(
-      map(() => true),
-      catchError(error => {
-        console.error('Erreur lors de la création de la commande', error);
-        return throwError(() => error);
+    private createOrderReal(payload: any): Observable<boolean> {
+      return this.http.post<void>(this.endpointURL, payload, { headers: this.authHeaders }).pipe(
+        map(() => true),
+        catchError(error => {
+          console.error('Erreur lors de la création de la commande', error);
+          return throwError(() => error);
       })
     );
   }

@@ -251,4 +251,22 @@ it('should create an order successfully', () => {
   });
 });
 
+it('should return all offers from constant', () => {
+  const service: TicketingService = TestBed.inject(TicketingService);
+
+  service.getAllVisible().subscribe(offers => {
+    expect(offers).toEqual(OFFERS); // ou à minima vérifier .length ou un champ
+  });
+});
+
+it('devrait utiliser le mock si environment.mockPayment est à true', (done) => {
+  // Force le flag mock à true
+  (environment as any).mockPayment = true;
+
+  service.createOrder({ cart: [], payment: {}, nbPeople: 1 }).subscribe(result => {
+    expect(result).toBeTrue();
+    done();
+  });
+});
+
 });
